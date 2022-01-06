@@ -12,6 +12,7 @@ exports.config = {
     "db_name": process.env.DB_NAME,
     "db_host": process.env.DB_HOST,
     "db_url": process.env.DB_URL,
+    "db_username": process.env.DB_USER,
     "mail_username": process.env.MAIL_USERNAME,
     "mail_password": process.env.MAIL_PASSWORD,
     "mail_encryption": process.env.MAIL_ENCRYPTION,
