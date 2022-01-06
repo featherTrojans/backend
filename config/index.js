@@ -1,3 +1,4 @@
+require('custom-env').env();
 const pino = require('pino')
 const expressPino = require('express-pino-logger');
 
