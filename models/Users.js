@@ -64,27 +64,18 @@ const Users = db_con.define("users", {
     },
     "password": {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
 
     },
-    "createdAt": {
-        defaultValue: Sequelize.TIME,
+    "refId": {
         allowNull: false,
-        type: Sequelize.DATE,
-        set (valueToBeSet) { 
-            this.setDataValue('createdAt', valueToBeSet)
-        }
-    },
-    "updatedAt": {
-        defaultValue: Sequelize.TIME,
-        allowNull: false,
-        type: Sequelize.DATE,
-        set (valueToBeSet) { 
-            this.setDataValue('updatedAt', valueToBeSet)
+        unique: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
         }
     }
 })
