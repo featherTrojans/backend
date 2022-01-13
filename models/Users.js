@@ -62,6 +62,15 @@ const Users = db_con.define("users", {
         }
 
     },
+    "userLevel": {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+        validate : {
+           notEmpty: true
+        }
+
+    },
     "password": {
         allowNull: false,
         type: Sequelize.STRING,
