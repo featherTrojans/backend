@@ -1,7 +1,7 @@
-const HomeController = require('./controllers/HomeController')
-const AuthController = require('./controllers/AuthController')
+const Controller = require('./controllers')
 
 exports.controller = {
-    "home": HomeController.home,
-    "signup": AuthController.signup
+    "home": Controller.HomeController.home,
+    "signup": Controller.AuthController.signup,
+    "confirmCode": Controller.AuthController.confirmCode,
 }
