@@ -15,7 +15,6 @@ router.group('/api/v1/', (router) => {
         [
             body('username').toUpperCase(),
             body('email').isEmail(),
-            body('password').isLength({ min: 6 }),
             body('username').isLength({ min: 4 }),
             body('fullName').toUpperCase(),
             body('phoneNumber').isNumeric(),

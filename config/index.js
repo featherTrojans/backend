@@ -1,6 +1,8 @@
 require('custom-env').env();
 const pino = require('pino')
-const expressPino = require('express-pino-logger');
+const expressPino = require('express-pino-logger')
+const events = require('events')
+const eventEmitter = new events.EventEmitter();
 
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
@@ -21,8 +23,9 @@ exports.config = {
     "mail_from_address": process.env.MAIL_FROM_ADDRESS,
     "jwt_secret": process.env.JWT_SECRET,
     "log_level" : process.env.LOG_LEVEL,
-    "expressLogger": expressLogger,
-    "logger" : logger
+    expressLogger,
+    logger,
+    eventEmitter
     
 
 }

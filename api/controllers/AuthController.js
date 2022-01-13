@@ -1,13 +1,14 @@
 const { validationResult } = require('express-validator')
-const bcrypt = require('bcryptjs')
 const { config } = require("../../config")
 const logger = config.logger
 const services = require("../../services").services
 const Users = require("../../models/Users")
+require('../../subscribers')
+const eventEmitter = config.eventEmitter
+
 
 exports.signup = ( async (req, res) => {
 
-    logger.info("calling Sign up")
     try
     {
         const {...data} = req.body
@@ -17,7 +18,7 @@ exports.signup = ( async (req, res) => {
 
         if (!errors.isEmpty()) {
 
-          return res.status(400).json({ errors: errors.array() });
+          return res.status(403).json({ errors: errors.array() });
 
         } else {
 
@@ -25,26 +26,29 @@ exports.signup = ( async (req, res) => {
             const checkEmail = await services.confirmData({data: data.email, type: 'email'});
             const checkPhoneNumber = await services.confirmData({data: data.phoneNumber, type: 'phoneNumber'});
 
-            const password = await bcrypt.hash(data.password, 10);
+            if (!(data.username && data.phoneNumber && data.email && data.fullName)){
 
-            if (!(data.username && data.phoneNumber && data.password && data.email && data.fullName)){
                 return res.status(400).json({
                     status : false,
                     data: {},
                     message: "All input are required"
                 })
-            }else if ( checkUsername == null && checkEmail == null && checkPhoneNumber == null ) {
-                Users.create({
 
+            }else if ( checkUsername == null && checkEmail == null && checkPhoneNumber == null ) {
+
+                code = services.codeGenerator(6)
+
+                Users.create({
                     userUid: userId,
                     username: data.username,
                     fullName: data.fullName,
                     phoneNumber: data.phoneNumber,
                     email: data.email,
                     refId,
-                    password
+                    code
+                }).then( () => {
 
-                }).then(() => {
+                    eventEmitter.emit('signup', code)
                     return res.status(201).json({
                         status : true,
                         data: {
@@ -62,7 +66,7 @@ exports.signup = ( async (req, res) => {
                     logger.debug(error)
                     return res.status(400).json({
                         status : false,
-                        data: {error},
+                        data: error,
                         message: "Cannot sign up"
                     })
 
@@ -70,18 +74,18 @@ exports.signup = ( async (req, res) => {
 
             } else {
 
-                return res.status(409).json({
+                return res.status(404).json({
                     status : false,
                     data: {},
                     message: "Invalid data provided"
                 }) 
             }
 
-
         }
 
     }
     catch (error) {
+
         logger.debug(error)
         res.status(409).json({
             status: false,
