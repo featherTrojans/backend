@@ -16,6 +16,7 @@ const Authenticate = ((req, res, next) =>{
             message: "Unauthorized request"
         })
     }
+    
     try
     {
         const decoded = jwt.verify(token, config.jwt_secret)
