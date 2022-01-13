@@ -3,8 +3,10 @@ const { config } = require("../../config")
 const logger = config.logger
 const services = require("../../services").services
 const Users = require("../../models/Users")
+const TokenServices = services.TokenServices
 require('../../subscribers')
 const eventEmitter = config.eventEmitter
+
 
 
 exports.signup = ( async (req, res) => {
@@ -37,26 +39,33 @@ exports.signup = ( async (req, res) => {
             }else if ( checkUsername == null && checkEmail == null && checkPhoneNumber == null ) {
 
                 code = services.codeGenerator(6)
+                const phoneNumber = data.phoneNumber
+                const username = data.username
+                const fullName = data.fullName
+                const email = data.email
+
 
                 Users.create({
                     userUid: userId,
-                    username: data.username,
-                    fullName: data.fullName,
-                    phoneNumber: data.phoneNumber,
-                    email: data.email,
+                    username,
+                    fullName,
+                    phoneNumber,
+                    email,
                     refId,
                     code
                 }).then( () => {
 
                     eventEmitter.emit('signup', code)
+                    const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(201).json({
                         status : true,
                         data: {
                             userId,
-                            fullName: data.fullName,
-                            username: data.username,
-                            email: data.email,
-                            phoneNumber: data.phoneNumber,
+                            fullName,
+                            username,
+                            email,
+                            phoneNumber,
+                            token
                         },
                         message: "Signed up Successfully"
                     })
@@ -88,6 +97,57 @@ exports.signup = ( async (req, res) => {
 
         logger.debug(error)
         res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        })
+    }
+
+})
+
+
+exports.confirmCode = ( async (req, res) => {
+
+    const {code} = req.body
+    const {userId} = req.user
+    try
+    {
+        Users.findOne({attributes: ['code'], where: {userUid: userId, code}})
+        .then((data) => {
+
+            if ( data.code == code ) {
+
+                eventEmitter.emit('signupSuccess')
+                return res.status(200).json({
+                    status: true,
+                    data : {
+                        userId,
+                        code
+                    },
+                    message: "Code validated successfully"
+                })
+
+            } else {
+                return res.status(404).json({
+                    status: false,
+                    data : {},
+                    message: "Code not valid"
+                })
+            }
+        })
+        .catch((error) => {
+
+            return res.status(403).json({
+                status: false,
+                data : error,
+                message: "error occur"
+            })
+        })
+    }
+    catch(error) {
+        
+        logger.info(error)
+        return res.status(409).json({
             status: false,
             data : error,
             message: "error occur"
