@@ -7,4 +7,3 @@ exports.home = ((req, res) => {
         message: "Working Successfully"
     })
 })
-

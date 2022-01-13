@@ -13,7 +13,7 @@ const {
 describe('Server Test', () => {
   it('it should connect to server', (done) => {
     chai.request(app)
-      .get('/home')
+      .get('/api/v1/home')
       .end((error, res) => {
         expect(res).to.have.status(200);
         done();
