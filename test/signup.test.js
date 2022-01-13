@@ -14,12 +14,12 @@ const {
 describe('Sign User Up', () => {
   it("it should create a new user's data", (done) => {
     chai.request(app)
-      .post('/api/v1/signup')
+      .post('/api/v1/auth/signup')
       .send({
-        username: "ezeko",
-        email: "ezeko2017@gmail.com",
-        phoneNumber: "07068006837",
-        fullName : "Ezekiel Adejobi"
+        username: "tester",
+        email: "tester@gmail.com",
+        phoneNumber: "09023676363",
+        fullName : "Tester Testing"
     })
       .end((error, res) => {
         expect(res).to.have.status(201);
