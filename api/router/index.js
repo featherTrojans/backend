@@ -13,12 +13,13 @@ router.group('/api/v1/', (router) => {
 
 
     router.group('/auth', (router) => {
+
         router.post('/signup', 
         [
-            body('username').toUpperCase(),
+            body('firstName').toUpperCase(),
             body('email').isEmail(),
-            body('username').isLength({ min: 4 }),
-            body('fullName').toUpperCase(),
+            body('firstName').isLength({ min: 2 }),
+            body('lastName').toUpperCase(),
             body('phoneNumber').isNumeric(),
             body('phoneNumber').isLength({ max: 11 }),
             body('email').toUpperCase(),
@@ -27,6 +28,7 @@ router.group('/api/v1/', (router) => {
         controller.signup
         );
 
+        
         router.post('/verify/code',
         [   
             Authenticate,

@@ -1,3 +1,7 @@
+const { config } = require("../../config")
+const logger = config.logger
+const jwt = require('jsonwebtoken')
+
 const TokenServices = (data = {}, duration ) => {
     try
     {

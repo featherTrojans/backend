@@ -17,6 +17,7 @@ exports.signup = ( async (req, res) => {
         const userId = services.idGenService(10)
         const refId = services.idGenService(7)
         const errors = validationResult(req);
+        const username = "feather" + services.codeGenerator(5)
 
         if (!errors.isEmpty()) {
 
@@ -24,11 +25,11 @@ exports.signup = ( async (req, res) => {
 
         } else {
 
-            const checkUsername = await services.confirmData({data: data.username, type: 'username'});
+            const checkUsername = await services.confirmData({data: data.email, type: 'username'});
             const checkEmail = await services.confirmData({data: data.email, type: 'email'});
             const checkPhoneNumber = await services.confirmData({data: data.phoneNumber, type: 'phoneNumber'});
 
-            if (!(data.username && data.phoneNumber && data.email && data.fullName)){
+            if (!(username && data.firstName && data.phoneNumber && data.email && data.lastName)){
 
                 return res.status(400).json({
                     status : false,
@@ -40,8 +41,7 @@ exports.signup = ( async (req, res) => {
 
                 code = services.codeGenerator(6)
                 const phoneNumber = data.phoneNumber
-                const username = data.username
-                const fullName = data.fullName
+                const fullName = data.lastName + " " + data.firstName
                 const email = data.email
 
 
@@ -72,7 +72,7 @@ exports.signup = ( async (req, res) => {
 
                 }).catch((error) => {
 
-                    logger.debug(error)
+                    logger.info(error)
                     return res.status(400).json({
                         status : false,
                         data: error,
@@ -95,7 +95,7 @@ exports.signup = ( async (req, res) => {
     }
     catch (error) {
 
-        logger.debug(error)
+        logger.info(error)
         res.status(409).json({
             status: false,
             data : error,
@@ -145,7 +145,7 @@ exports.confirmCode = ( async (req, res) => {
         })
     }
     catch(error) {
-        
+
         logger.info(error)
         return res.status(409).json({
             status: false,
