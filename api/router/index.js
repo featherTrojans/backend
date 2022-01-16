@@ -39,6 +39,44 @@ router.group('/api/v1/', (router) => {
         controller.confirmCode
         );
 
+        router.put('/password/set',
+        [   
+            Authenticate,
+            body('password').isAlphanumeric(),
+            body('password').isLength({ min: 8 }),
+            
+        ], 
+        controller.setPassword
+        );
+
+        router.put('/pin/set',
+        [   
+            Authenticate,
+            body('pin').isNumeric(),
+            body('pin').isLength({ min: 4, max: 4 }),
+            
+        ], 
+        controller.setPin
+        );
+
+        router.put('/username/set',
+        [   
+            Authenticate,
+            body('newUsername').isEmpty(false),
+            body('newUsername').isLength({ min: 4 }),
+            
+        ], 
+        controller.setUsername
+        );
+
+        router.post('/signin',
+        [   
+            body('username').isEmpty(false),
+            body('password').isLength({ min: 4 }),
+            
+        ], 
+        controller.setUsername
+        );
     })
 })
 

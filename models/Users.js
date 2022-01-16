@@ -79,6 +79,14 @@ const Users = db_con.define("users", {
            notEmpty: true
         }
     },
+    "pin": {
+        allowNull: true,
+        unique: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
     "password": {
         allowNull: true,
         type: Sequelize.STRING,
