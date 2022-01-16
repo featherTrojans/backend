@@ -3,6 +3,8 @@ require('express-group-routes');
 const router = express.Router();
 const controller = require('../index').controller
 const { body, validationResult } = require('express-validator');
+const services = require("../../services").services
+const Authenticate = services.Authenticate
 
 
 
@@ -11,17 +13,70 @@ router.group('/api/v1/', (router) => {
 
 
     router.group('/auth', (router) => {
+
         router.post('/signup', 
         [
-            body('username').toUpperCase(),
+            body('firstName').toUpperCase(),
             body('email').isEmail(),
-            body('username').isLength({ min: 4 }),
-            body('fullName').toUpperCase(),
+            body('firstName').isLength({ min: 2 }),
+            body('lastName').toUpperCase(),
             body('phoneNumber').isNumeric(),
             body('phoneNumber').isLength({ max: 11 }),
             body('email').toUpperCase(),
 
-        ], controller.signup)
+        ], 
+        controller.signup
+        );
+
+        
+        router.post('/verify/code',
+        [   
+            Authenticate,
+            body('code').isNumeric(),
+            body('code').isLength({ min: 6, max: 6 }),
+            
+        ], 
+        controller.confirmCode
+        );
+
+        router.put('/password/set',
+        [   
+            Authenticate,
+            body('password').isAlphanumeric(),
+            body('password').isLength({ min: 8 }),
+            
+        ], 
+        controller.setPassword
+        );
+
+        router.put('/pin/set',
+        [   
+            Authenticate,
+            body('pin').isNumeric(),
+            body('pin').isLength({ min: 4, max: 4 }),
+            
+        ], 
+        controller.setPin
+        );
+
+        router.put('/username/set',
+        [   
+            Authenticate,
+            body('newUsername').isEmpty(false),
+            body('newUsername').isLength({ min: 4 }),
+            
+        ], 
+        controller.setUsername
+        );
+
+        router.post('/signin',
+        [   
+            body('username').isEmpty(false),
+            body('password').isLength({ min: 4 }),
+            
+        ], 
+        controller.setUsername
+        );
     })
 })
 
