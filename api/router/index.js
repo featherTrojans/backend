@@ -62,8 +62,8 @@ router.group('/api/v1/', (router) => {
         router.put('/username/set',
         [   
             Authenticate,
-            body('newUsername').isEmpty(false),
             body('newUsername').isLength({ min: 4 }),
+            body('newUsername').toUpperCase()
             
         ], 
         controller.setUsername
@@ -71,11 +71,11 @@ router.group('/api/v1/', (router) => {
 
         router.post('/signin',
         [   
-            body('username').isEmpty(false),
+            body('username').toUpperCase(),
             body('password').isLength({ min: 4 }),
             
         ], 
-        controller.setUsername
+        controller.signIn
         );
     })
 })

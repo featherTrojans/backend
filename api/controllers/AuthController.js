@@ -111,6 +111,7 @@ exports.confirmCode = ( async (req, res) => {
 
     const {code} = req.body
     const { userId, username, email, fullName } = req.user
+    const errors = validationResult(req);
     try
     {
 
@@ -122,7 +123,7 @@ exports.confirmCode = ( async (req, res) => {
             Users.findOne({attributes: ['code'], where: {userUid: userId, code}})
             .then((data) => {
 
-                if ( data.code == code ) {
+                if ( data.code != null && data.code == code ) {
 
                     eventEmitter.emit('signupSuccess')
                     const token = TokenServices({userId, username, email, fullName}, '2h')
@@ -160,7 +161,7 @@ exports.confirmCode = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "Something went wrong could not confirm code"
         })
     }
 
@@ -170,7 +171,8 @@ exports.confirmCode = ( async (req, res) => {
 
 exports.setPassword = (async (req, res) => {
     const {password} = req.body
-    const {userId, username} = req.user
+    const {userId, username, email, fullName} = req.user
+    const errors = validationResult(req);
 
     try
     {
@@ -193,10 +195,10 @@ exports.setPassword = (async (req, res) => {
                 })
             } else {
                 //set password in database
-                Users.update({
-                    password: pwd,
-                    where: {userUid: userId}
-                }).then(()=>{
+                Users.update(
+                    {password: pwd},
+                    {where: {userUid: userId}}
+                ).then(()=>{
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(202).json({
                         status: true,
@@ -208,9 +210,10 @@ exports.setPassword = (async (req, res) => {
                         message: "Password set successfully"
                     })
                 }).catch((err) => {
+                    logger.info(err)
                     res.status(400).json({
                         status: false,
-                        data: error,
+                        data: err,
                         message: "Cannot set password"
                     })
                 })
@@ -231,7 +234,8 @@ exports.setPassword = (async (req, res) => {
 
 exports.setPin = (async (req, res) => {
     const {pin} = req.body
-    const {userId, username} = req.user
+    const {userId, username, email, fullName} = req.user
+    const errors = validationResult(req);
 
     try
     {
@@ -271,7 +275,7 @@ exports.setPin = (async (req, res) => {
                 }).catch((err) => {
                     res.status(400).json({
                         status: false,
-                        data: error,
+                        data: err,
                         message: "Cannot set pin"
                     })
                 })
@@ -291,7 +295,8 @@ exports.setPin = (async (req, res) => {
 
 exports.setUsername = (async (req, res) => {
     const {newUsername} = req.body
-    const {userId, username} = req.user
+    let {userId, username, email, fullName} = req.user
+    const errors = validationResult(req);
 
     try
     {
@@ -326,12 +331,13 @@ exports.setUsername = (async (req, res) => {
                    { username: newUsername},
                     {where: {userUid: userId}}
                 ).then(()=>{
+                    username = newUsername
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(202).json({
                         status: true,
                         data: {
                             userId,
-                            username: newUsername,
+                            username,
                             token
                         },
                         message: "Username set successfully"
@@ -339,7 +345,7 @@ exports.setUsername = (async (req, res) => {
                 }).catch((err) => {
                     res.status(400).json({
                         status: false,
-                        data: error,
+                        data: err,
                         message: "Cannot set username"
                     })
                 })
@@ -359,6 +365,8 @@ exports.setUsername = (async (req, res) => {
 
 exports.signIn = async (req, res) => {
     const { username, password} = req.body
+    const errors = validationResult(req);
+
     try{
         if (!(username && password)){
 
