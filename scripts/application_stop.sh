@@ -2,4 +2,4 @@
 #Stopping existing
 
 echo "Stopping existing node servers"
-pkill node
+pkill -SIGINT -f server.js
