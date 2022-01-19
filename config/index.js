@@ -25,7 +25,10 @@ exports.config = {
     "log_level" : process.env.LOG_LEVEL,
     expressLogger,
     logger,
-    eventEmitter
+    eventEmitter,
+    "twilio_sid": process.env.TWILIO_ACCOUNT_SID,
+    "twilio_auth_token": process.env.TWILIO_AUTH_TOKEN,
+    "twilio_sender_number": process.env.TWILIO_SENDER_NUMBER
     
 
 }
