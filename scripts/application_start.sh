@@ -12,10 +12,10 @@ ENV_VAR=".env"
 ENV_EX=".env.example"
 
 if [ -d "$ENV_VAR" ]; then
-    echo "$ENV_VAR exists"
+    echo "{$ENV_VAR} exists"
 else
-    echo "Creating $ENV_VAR directory"
-    cp "$ENV_EX" "$ENV_VAR"
+    echo "Creating {$ENV_VAR} file"
+    cp {$ENV_EX} {$ENV_VAR}
 fi
 # install node modules
 npm install

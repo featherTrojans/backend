@@ -8,8 +8,8 @@ nvm install node
 #create working directory
 DIR="home/ec2-user/feather-app"
 if [ -d "$DIR" ]; then
-    echo "$DIR exists"
+    echo "{$DIR} exists"
 else
-    echo "Creating $DIR directory"
-    mkdir $DIR
+    echo "Creating {$DIR} directory"
+    mkdir {$DIR}
 fi
