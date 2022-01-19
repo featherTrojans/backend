@@ -56,7 +56,7 @@ exports.signup = ( async (req, res) => {
                     code
                 }).then( () => {
 
-                    eventEmitter.emit('signup', code)
+                    eventEmitter.emit('signup', {code, phoneNumber, email, fullName})
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(201).json({
                         status : true,
@@ -368,7 +368,11 @@ exports.signIn = async (req, res) => {
     const errors = validationResult(req);
 
     try{
-        if (!(username && password)){
+        if (!errors.isEmpty()) {
+
+            return res.status(403).json({ errors: errors.array() });
+  
+        }else if (!(username && password)){
 
             return res.status(400).json({
                 status : false,
