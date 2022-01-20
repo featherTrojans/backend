@@ -9,7 +9,7 @@
 DIR="/home/ec2-user/feather-app"
 if [ -d "$DIR" ]; then
   echo "${DIR} exists and deleting"
-  unlink ${DIR}
+  rm -d ${DIR}
   echo "Creating ${DIR} directory"
   mkdir ${DIR}
 else
