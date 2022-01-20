@@ -14,5 +14,5 @@ else
   mkdir ${DIR}
 fi
 if [ -f ".env.example"]; then
-    rm .env.example
+    unlink .env.example
 fi
