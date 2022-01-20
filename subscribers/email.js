@@ -4,9 +4,9 @@ const logger = config.logger
 const eventEmitter = config.eventEmitter
 
 
-eventEmitter.addListener('signup', async (code) => {
+eventEmitter.addListener('signup', async (data) => {
     //send email
-    logger.info(`email code: ${code} sent`);
+    logger.info(`email code: ${data.code} sent`);
 })
 
 eventEmitter.addListener('signupSuccess', async () => {
