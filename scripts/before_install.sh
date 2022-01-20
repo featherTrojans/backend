@@ -13,3 +13,6 @@ else
   echo "Creating ${DIR} directory"
   mkdir ${DIR}
 fi
+if [ -f ".env.example"]; then
+    rm .env.example
+fi
