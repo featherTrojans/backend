@@ -18,7 +18,7 @@ exports.feeCalculator = async (amount) => {
         logger.debug(ex.message)
         console.error(ex.message);
         return false;
-        
+
     }
 
 }
@@ -44,13 +44,12 @@ exports.listBanks = async () => {
 }
 
 
-exports.initializeTransaction = async () => {
+exports.initializeTransaction = async (payload) => {
     try {
         let { body: { status, message, data } } =  await paystack.initializeTransaction({
-            reference: "7PVGX8MEk85tgeEpVDtD",
-            amount: 500000, // 5,000 Naira (remember you have to pass amount in kobo)
-            email: "seun045olayinka@gmail.com",
-            Authorization: `Bearer ${APIKEY}`
+            reference: payload.reference,
+            amount: payload.amount, // 5,000 Naira (remember you have to pass amount in kobo)
+            email: payload.email,
         })
         
           if(status === false){

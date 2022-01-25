@@ -8,5 +8,6 @@ exports.controller = {
     "setPin": Controller.AuthController.setPin,
     "setUsername": Controller.AuthController.setUsername,
     "signIn": Controller.AuthController.signIn,
-    "dashboard": Controller.DashboardController.dashboard
+    "dashboard": Controller.DashboardController.dashboard,
+    "makePayment": Controller.FundsController.makePayment
 }

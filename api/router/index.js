@@ -86,6 +86,14 @@ router.group('/api/v1/', (router) => {
     ], 
     controller.dashboard
     );
+
+    router.post('/pay',
+    [   
+        Authenticate
+        
+    ], 
+    controller.makePayment
+    );
 })
 
 
