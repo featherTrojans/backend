@@ -78,6 +78,14 @@ router.group('/api/v1/', (router) => {
         controller.signIn
         );
     })
+
+    router.get('/dashboard',
+    [   
+        Authenticate
+        
+    ], 
+    controller.dashboard
+    );
 })
 
 
