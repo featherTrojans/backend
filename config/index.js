@@ -28,7 +28,9 @@ exports.config = {
     eventEmitter,
     "twilio_sid": process.env.TWILIO_ACCOUNT_SID,
     "twilio_auth_token": process.env.TWILIO_AUTH_TOKEN,
-    "twilio_sender_number": process.env.TWILIO_SENDER_NUMBER
+    "twilio_sender_number": process.env.TWILIO_SENDER_NUMBER,
+    "paystack_test_key": process.env.PAYSTACK_PRY_KEY,
+    "paystack_secret_key": process.env.PAYSTACK_SECRET_KEY,
     
 
 }
