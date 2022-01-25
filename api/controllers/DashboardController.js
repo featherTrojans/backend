@@ -1,6 +1,5 @@
 const { config } = require("../../config");
-const { Users } = require("../../models");
-const Transactions = require("../../models/Transactions");
+const { Users, Transactions } = require("../../models");
 const logger = config.logger
 
 exports.dashboard = ( async (req, res) => {
