@@ -56,7 +56,8 @@ exports.signup = ( async (req, res) => {
                     code
                 }).then( () => {
 
-                    eventEmitter.emit('signup', {code, phoneNumber, email, fullName})
+                    const message = `Dear ${fullName}, your verification code is: ${code}. DO NOT DISCLOSE TO ANYONE`;
+                    eventEmitter.emit('signup', {code, phoneNumber, email, message})
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(201).json({
                         status : true,
