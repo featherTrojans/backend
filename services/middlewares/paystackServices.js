@@ -67,3 +67,24 @@ exports.initializeTransaction = async (payload) => {
         
 }
 
+exports.verifyTransaction = async (payload) => {
+    try {
+        let { body: { status, message, data } } =  await paystack.verifyTransaction({
+            reference: payload.reference
+          })
+        
+          if(status === false){
+              logger.info(message)
+              return false;
+          }else{
+              return data;
+          }
+    }catch(ex){
+        logger.debug(ex.message)
+        console.error(ex.message);
+        return false;
+    }
+
+        
+}
+

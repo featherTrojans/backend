@@ -55,6 +55,7 @@ const Transactions = db_con.define("transactions", {
     "from": {
         allowNull: false,
         type: Sequelize.STRING,
+        defaultValue: "funding",
         validate : {
            notEmpty: true
         }
@@ -63,6 +64,7 @@ const Transactions = db_con.define("transactions", {
     "to": {
         allowNull: false,
         type: Sequelize.STRING,
+        defaultValue: "primary wallet",
         validate : {
            notEmpty: true
         }
@@ -71,6 +73,7 @@ const Transactions = db_con.define("transactions", {
     "direction": {
         allowNull: true,
         type: Sequelize.STRING,
+        defaultValue: "in",
         validate: {
            notEmpty: true
         }

@@ -9,5 +9,7 @@ exports.controller = {
     "setUsername": Controller.AuthController.setUsername,
     "signIn": Controller.AuthController.signIn,
     "dashboard": Controller.DashboardController.dashboard,
-    "makePayment": Controller.FundsController.makePayment
+    "makePayment": Controller.FundsController.makePayment,
+    "verifyPayment": Controller.FundsController.verifyTransaction,
+    "webhook": Controller.WebhookController.webhook,
 }
