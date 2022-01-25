@@ -55,6 +55,15 @@ const Payments = db_con.define("payments", {
         }
 
     },
+    "expired": {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        validate : {
+           notEmpty: true
+        }
+
+    },
         
 })
 

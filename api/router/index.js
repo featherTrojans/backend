@@ -94,6 +94,14 @@ router.group('/api/v1/', (router) => {
     ], 
     controller.makePayment
     );
+
+    router.post('/pay/verify',
+        controller.verifyPayment
+    );
+
+    router.post('/pay/webhook',
+        controller.webhook
+    );
 })
 
 

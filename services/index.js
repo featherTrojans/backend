@@ -4,8 +4,10 @@ const codeGenerator = require('./generateCode')
 const Authenticate = require('./middlewares/auth')
 const TokenServices = require('./middlewares/tokenservices')
 const PaystackServices = require('./middlewares/paystackServices')
+const  creditService = require('./middlewares/creditService')
 
 exports.services = {
+    creditService,
     idGenService,
     confirmData,
     codeGenerator,
@@ -14,4 +16,5 @@ exports.services = {
     listBanks: PaystackServices.listBanks,
     initializeTransaction: PaystackServices.initializeTransaction,
     feeCharge: PaystackServices.feeCalculator,
+    verifyTransaction: PaystackServices.verifyTransaction
 }
