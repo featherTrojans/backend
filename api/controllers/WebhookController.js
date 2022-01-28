@@ -28,7 +28,7 @@ exports.webhook = (async (req, res) => {
                 } else {
 
                     //get user wallet balance
-                    services.creditService({userUid, reference, amount})
+                    await services.creditService({userUid, reference, amount})
                     return res.sendStatus(200);
                 }
 
