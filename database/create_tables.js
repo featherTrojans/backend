@@ -43,5 +43,5 @@ const create_payments_table = ()=>{
 
 // create_users_table();
 // create_user_levels_table();
-create_transactions_table();
+// create_transactions_table();
 // create_payments_table();
