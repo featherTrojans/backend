@@ -43,7 +43,7 @@ exports.transferFunds = ( async (req, res) => {
                     message: "Pin is Incorrect"
         
                 })
-            } else if (username == transferTo) {
+            }else if (username == transferTo ) {
                 return res.status(400).json({
 
                     status: false,
@@ -70,9 +70,21 @@ exports.transferFunds = ( async (req, res) => {
                     amount
                 }).then(() => {
 
-                    services.debitService({userUid: userId, reference, amount, description: `#${amount} transferred to ${transferTo}`, from: username, to: transferTo, id: transId})
+                    new Promise(function(resolve, reject) {
+                        const debitService = services.debitService({userUid: userId, reference, amount, description: `#${amount} transferred to ${transferTo}`, from: username, to: transferTo, id: transId})
+                        debitService ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject("error"));
+                    }).then(() => {
+                        services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `#${amount} transferred from ${username}`, id: transId})
+                    }).catch(error => {
+                        logger.debug(error)
+                        return res.status(400).json({
+                        status: false,
+                        data : error,
+                        message: "Cannot create transaction"
+            
+                    })
+                    })
 
-                    services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `#${amount} transferred from ${username}`, id: transId})
 
                     return res.status(200).json({
                         status: true,
