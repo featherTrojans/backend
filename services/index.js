@@ -5,9 +5,11 @@ const Authenticate = require('./middlewares/auth')
 const TokenServices = require('./middlewares/tokenservices')
 const PaystackServices = require('./middlewares/paystackServices')
 const  creditService = require('./middlewares/creditService')
+const  debitService = require('./middlewares/debitService')
 
 exports.services = {
     creditService,
+    debitService,
     idGenService,
     confirmData,
     codeGenerator,
