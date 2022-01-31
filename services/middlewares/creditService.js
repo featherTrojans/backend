@@ -19,7 +19,8 @@ const creditService = async (data) => {
         initialBal: walletBal,
         amount,
         finalBal,
-        description: `${amount} Funding`
+        description: data?.description ?? `${amount} Funding`,
+        reference: data.id ? data.id : reference
     }) : 
     await Transactions.create({
         userUid,
@@ -27,9 +28,10 @@ const creditService = async (data) => {
         initialBal: walletBal,
         amount,
         finalBal,
-        description: `${amount} Funding`,
+        description: data?.description ??  `${amount} Funding`,
         from: data.from,
-        to: data.to
+        to: data.to,
+        reference: data.id ? data.id : reference
     })
     const message = `@${username}, #${amount}, just entered your account. Your new bal: ${finalBal}`;
     eventEmitter.emit('send', {phoneNumber, message})

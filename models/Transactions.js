@@ -20,6 +20,13 @@ const Transactions = db_con.define("transactions", {
         }
 
     },
+    "reference": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
     "initialBal": {
         allowNull: false,
         type: Sequelize.STRING,

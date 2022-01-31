@@ -390,7 +390,7 @@ exports.signIn = async (req, res) => {
                     message: "Invalid Username"
                 })
             } else {
-                const verifyPassword = bcrypt.compare(password, checkUsername.password)
+                const verifyPassword = await bcrypt.compare(password, checkUsername.password)
                 const userId = checkUsername.userUid;
                 const username = checkUsername.username
                 const email = checkUsername.email;

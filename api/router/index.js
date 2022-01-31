@@ -102,6 +102,10 @@ router.group('/api/v1/', (router) => {
     router.post('/pay/webhook',
         controller.webhook
     );
+    router.post('/transfer', [
+        Authenticate,
+        body('transferTo').toUpperCase(),
+    ], controller.transferFunds);
 })
 
 

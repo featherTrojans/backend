@@ -1,9 +1,5 @@
 const { config } = require('../config')
-const models = require('../models/')
-const User = models.Users
-const UserLevels = models.UserLevels
-const Transactions = models.Transactions
-const Payments = models.Payments
+const { Transactions, DoubleSpent, User, UserLevels, Payments } = require('../models/')
 
 const create_users_table = ()=>{
     User.sync({force: true}).then(()=>{
@@ -41,7 +37,17 @@ const create_payments_table = ()=>{
     })
 }
 
+const create_double_spent_table = ()=>{
+    DoubleSpent.sync({force: true}).then(()=>{
+    
+    config.logger.info('double_spents table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
+
 // create_users_table();
 // create_user_levels_table();
-// create_transactions_table();
+create_transactions_table();
+create_double_spent_table();
 // create_payments_table();
