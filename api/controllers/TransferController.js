@@ -43,7 +43,15 @@ exports.transferFunds = ( async (req, res) => {
                     message: "Pin is Incorrect"
         
                 })
-            }else if ( amount > walletBal ) {
+            } else if (username == transferTo) {
+                return res.status(400).json({
+
+                    status: false,
+                    data : {},
+                    message: "Cannot transfer to self"
+        
+                })
+            } else if ( amount > walletBal ) {
                 return res.status(400).json({
 
                     status: false,
