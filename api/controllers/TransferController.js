@@ -70,21 +70,29 @@ exports.transferFunds = ( async (req, res) => {
                     amount
                 }).then(() => {
 
+                    //use promise so that the process will be asynchronous
+
                     new Promise(function(resolve, reject) {
-                        const debitService = services.debitService({userUid: userId, reference, amount, description: `#${amount} transferred to ${transferTo}`, from: username, to: transferTo, id: transId})
-                        debitService ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject("error"));
+
+                        const debitService = services.debitService({userUid: userId, reference, amount, description: `#${amount} transferred to ${transferTo}`, from: username, to: transferTo, id: transId});
+
+                        debitService ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
+                        // set timer to 7 secs to give room for db updates
+
                     }).then(() => {
+
+                        // credit after successful debit
                         services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `#${amount} transferred from ${username}`, id: transId})
+
                     }).catch(error => {
                         logger.debug(error)
                         return res.status(400).json({
-                        status: false,
-                        data : error,
-                        message: "Cannot create transaction"
+                            status: false,
+                            data : error,
+                            message: "Cannot create transaction"
             
-                    })
-                    })
-
+                        })
+                    });
 
                     return res.status(200).json({
                         status: true,
@@ -96,6 +104,7 @@ exports.transferFunds = ( async (req, res) => {
                         message: `#${amount} transferred to ${transferTo} successfully`
             
                     })
+
                 }).catch((error) => {
                     logger.debug(error)
                     return res.status(400).json({
