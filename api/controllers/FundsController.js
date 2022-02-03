@@ -1,5 +1,5 @@
 const { config } = require("../../config");
-const { Users, Payments } = require("../../models");
+const {Payments } = require("../../models");
 const logger = config.logger
 const services = require("../../services").services
 
