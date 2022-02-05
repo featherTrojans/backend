@@ -12,5 +12,7 @@ exports.controller = {
     "makePayment": Controller.FundsController.makePayment,
     "verifyPayment": Controller.FundsController.verifyTransaction,
     "webhook": Controller.WebhookController.webhook,
-    "transferFunds": Controller.TransferController.transferFunds
+    "transferFunds": Controller.TransferController.transferFunds,
+    'pendingRequests': Controller.RequestController.getPendingRequests,
+    'acceptedRequests': Controller.RequestController.getAcceptedRequests
 }

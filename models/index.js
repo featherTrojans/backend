@@ -1,15 +1,21 @@
-const Users = require('../models/Users')
-const UserLevels = require('../models/UserLevels')
-const Transactions = require('../models/Transactions')
-const Payments = require('../models/Payments')
+const Users = require('./User')
+const UserLevels = require('./UserLevel')
+const Transactions = require('./Transaction')
+const Payments = require('./Payment')
 const DoubleSpent = require('../models/DoubleSpent')
+const Location = require('../models/Location')
+const LocationHistory = require('../models/LocationHistory')
+const Request = require('../models/Request')
 
 const models = {
     Users,
     UserLevels,
     Transactions,
     Payments,
-    DoubleSpent
+    DoubleSpent,
+    Location,
+    LocationHistory,
+    Request
 }
 
 module.exports = models

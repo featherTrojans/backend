@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const { config } = require("../../config")
 const logger = config.logger
 const services = require("../../services").services
-const Users = require("../../models/Users")
+const Users = require("../../models/User")
 const TokenServices = services.TokenServices
 require('../../subscribers')
 const eventEmitter = config.eventEmitter

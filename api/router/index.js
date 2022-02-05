@@ -108,6 +108,22 @@ router.group('/api/v1/', (router) => {
         body('userPin').isNumeric(),
         body('userPin').isLength({ min: 4, max: 4}),
     ], controller.transferFunds);
+
+    router.get('/request/pending',
+    [   
+        Authenticate
+        
+    ], 
+    controller.pendingRequests
+    );
+
+    router.get('/request/accepted',
+    [   
+        Authenticate
+        
+    ], 
+    controller.acceptedRequests
+    );
 })
 
 
