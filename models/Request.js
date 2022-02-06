@@ -76,6 +76,14 @@ const Request = db_con.define("requests", {
            notEmpty: true
         }
     },
+
+    "reasonForCancel": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate: {
+           notEmpty: true
+        }
+    },
     
 })
 
