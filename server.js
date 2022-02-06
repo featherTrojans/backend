@@ -2,6 +2,7 @@ const http = require('http'); // import http
 const app = require('./app'); //import app
 const config = require('./config').config
 
+
 const normalizePort = val => { //normalize port check forr real number 
   const port = parseInt(val, 10);
 
@@ -38,6 +39,7 @@ const errorHandler = error => {
 
 const server = http.createServer(app);
 
+
 server.on('error', errorHandler);
 server.on('listening', () => {
   const address = server.address();
@@ -47,3 +49,5 @@ server.on('listening', () => {
 });
 
 server.listen(port);
+
+

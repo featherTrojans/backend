@@ -3,9 +3,7 @@ require('express-group-routes');
 const router = express.Router();
 const controller = require('../index').controller
 const { body, validationResult } = require('express-validator');
-const services = require("../../services").services
-const Authenticate = services.Authenticate
-
+const {Authenticate} = require("../../services").services
 
 
 router.group('/api/v1/', (router) => {
@@ -108,6 +106,49 @@ router.group('/api/v1/', (router) => {
         body('userPin').isNumeric(),
         body('userPin').isLength({ min: 4, max: 4}),
     ], controller.transferFunds);
+
+    router.get('/request/pending',
+    [   
+        Authenticate
+        
+    ], 
+    controller.pendingRequests
+    );
+
+    router.get('/request/accepted',
+    [   
+        Authenticate
+        
+    ], 
+    controller.acceptedRequests
+    );
+
+    router.delete('/request/cancel',
+    [   
+        Authenticate,
+        body('reasonForCancel').isLength({ min: 10 }),
+        body('reasonForCancel').toUpperCase()
+        
+    ], 
+    controller.cancelRequest
+    );
+
+    router.post('/request/create',
+    [   
+        Authenticate,
+        body('agent').toUpperCase(),
+        body('agentUsername').toUpperCase(),
+        
+    ], 
+    controller.createRequest
+    );
+
+    router.put('/request/mark/:reference',
+    [   
+        Authenticate,
+    ], 
+    controller.markRequest
+    );
 })
 
 

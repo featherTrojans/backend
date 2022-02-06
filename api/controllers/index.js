@@ -4,6 +4,7 @@ const DashboardController = require('./DashboardController')
 const FundsController = require('./FundsController')
 const WebhookController = require('./WebhookController')
 const TransferController = require('./TransferController')
+const RequestController = require('./RequestControllers')
 
 module.exports = {
     
@@ -12,5 +13,6 @@ module.exports = {
     DashboardController,
     FundsController,
     WebhookController,
-    TransferController
+    TransferController,
+    RequestController
 }
