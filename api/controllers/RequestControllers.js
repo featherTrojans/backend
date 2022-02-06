@@ -216,7 +216,7 @@ exports.markRequests = ( (req, res) => {
         } else {
 
             Request.update({status: 'SUCCESS'},{
-                where: {userUid: userId, reference, status: "ACCEPTED"}
+                where: {userUid: userId, reference, status: ["ACCEPTED", "PENDING"]}
             }).then ((data) => {
                 if (data[0] > 0 ) {
                     return res.status(202).json({
