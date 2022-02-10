@@ -1,5 +1,5 @@
 const { config } = require("../../config");
-const { Request } = require("../../models");
+const { Request, Users } = require("../../models");
 const logger = config.logger
 const services = require("../../services").services
 const { validationResult } = require('express-validator')
@@ -130,9 +130,9 @@ exports.cancelRequests = ( (req, res) => {
 });
 
 
-exports.createRequest = ( (req, res) => {
+exports.createRequest = ( async (req, res) => {
     
-    const { userId } = req.user
+    const { userId, username } = req.user
     const { amount, charges, agent, agentUsername } = req.body
     const transId = services.idGenService(10);
     const errors = validationResult(req);
@@ -153,36 +153,59 @@ exports.createRequest = ( (req, res) => {
             })
         } else {
 
-            Request.create({
+            //check user balance before creating request
 
-                userUid: userId,
-                amount,
-                charges,
-                agent,
-                agentUsername,
-                transId,
-                reference: transId,
-                total: parseFloat(amount) + parseFloat(charges)
+            const {walletBal} = await Users.findOne({where: {userUid: userId}});
+            const total = parseFloat(amount) + parseFloat(charges)
+            if (total <= walletBal) {
+                //debit user
+                const ref = userId + config.time + walletBal;
+                await new Promise(function(resolve, reject) {
 
-            }).then (() => {
+                    const debitService = services.debitService({userUid: userId, reference: transId, amount: total, description: `#${amount} transferred to Escrow`, from: username, to: 'Escrow', id: ref});
 
-                return res.status(201).json({
-                    status: true,
-                    data: {
-                        amount,
-                        agent,
-                        "message": "request created successfully"
-                    },
-                    message: "success"
-                }) 
-                    
-            }).catch((error) => {
-                return res.status(404).json({
-                    status: false,
-                    data : error,
-                    message: "Cannot create data"
+                    debitService ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
+                    // set timer to 7 secs to give room for db updates
+
                 })
-            })
+                Request.create({
+
+                    userUid: userId,
+                    amount,
+                    charges,
+                    agent,
+                    agentUsername,
+                    transId,
+                    reference: transId,
+                    total
+    
+                }).then (() => {
+    
+                    return res.status(201).json({
+                        status: true,
+                        data: {
+                            amount,
+                            agent,
+                            "message": "request created successfully"
+                        },
+                        message: "success"
+                    }) 
+                        
+                }).catch((error) => {
+                    return res.status(404).json({
+                        status: false,
+                        data : error,
+                        message: "Cannot create data"
+                    })
+                })
+            } else {
+                return res.status(403).json({
+                    status: false,
+                    data: {},
+                    message: "Insufficient balance"
+                })
+            }
+            
         }
         
     } catch (error) {

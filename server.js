@@ -79,9 +79,8 @@ wsServer.on('request', function(request) {
 
   connection.on('message', function(message) {
       if (message.type === 'utf8') {
-          cconfig.logger.info('Received Message: ' + message.utf8Data);
+          config.logger.info('Received Message: ' + message.utf8Data);
           connection.sendUTF(message.utf8Data);
-          connection.send(message.utf8Data);
       }
       else if (message.type === 'binary') {
           config.logger.info('Received Binary Message of ' + message.binaryData.length + ' bytes');

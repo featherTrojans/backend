@@ -3,6 +3,8 @@ const pino = require('pino')
 const expressPino = require('express-pino-logger')
 const events = require('events')
 const eventEmitter = new events.EventEmitter();
+const d = new Date();
+let time = d.getTime();
 
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
@@ -26,6 +28,7 @@ exports.config = {
     expressLogger,
     logger,
     eventEmitter,
+    time,
     "twilio_sid": process.env.TWILIO_ACCOUNT_SID,
     "twilio_auth_token": process.env.TWILIO_AUTH_TOKEN,
     "twilio_sender_number": process.env.TWILIO_SENDER_NUMBER,
