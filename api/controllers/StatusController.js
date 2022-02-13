@@ -1,8 +1,9 @@
 const { config } = require("../../config");
-const { Status } = require("../../models");
+const { Status, Users } = require("../../models");
 const logger = config.logger
 const services = require("../../services").services
 const { validationResult } = require('express-validator')
+const {returnLocation} = services
 
 exports.createStatus = ( (req, res) => {
     
@@ -29,15 +30,7 @@ exports.createStatus = ( (req, res) => {
 
 
             // if (total <= walletBal) {
-                //debit user
-                // await new Promise(function(resolve, reject) {
-
-                //     const debitService = services.debitService({userUid: userId, reference: transId, amount: total, description: `#${amount} transferred to Escrow`, from: username, to: 'Escrow', id: ref});
-
-                //     debitService ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
-                //     // set timer to 7 secs to give room for db updates
-
-                // })
+                
                 Status.create({
 
                     username,
@@ -66,13 +59,7 @@ exports.createStatus = ( (req, res) => {
                         message: "Cannot create data"
                     })
                 })
-            // } else {
-            //     return res.status(403).json({
-            //         status: false,
-            //         data: {},
-            //         message: "Insufficient balance"
-            //     })
-            // }
+            
             
         }
         
@@ -85,3 +72,63 @@ exports.createStatus = ( (req, res) => {
         })
     }
 });
+
+exports.findStatus = async (req, res) => {
+    const {amount, location} = req.body
+    const { userId, username } = req.user
+    const errors = validationResult(req);
+    try
+    {
+        const charges = amount * 0.01 //1%
+        if (!errors.isEmpty()) {
+
+            return res.status(403).json({ errors: errors.array() });
+  
+        }else if (!(amount || location)) {
+            return res.status(400).json({
+                status : false,
+                data: {},
+                message: "All fields are required"
+            })
+        } else {
+
+            //check user balance before creating request
+
+            const {walletBal} = await Users.findOne({where: {userUid: userId}});
+            const amountToUse = parseFloat(amount) + parseFloat(charges)
+            if (amountToUse <= walletBal) {
+                const data = await returnLocation({amount, location, username})
+                if (data === false ) {
+
+                    return res.status(404).json({
+                        status: false,
+                        data: {},
+                        message: "No qualified status found"
+                    })
+                } else {
+                    return res.status(200).json({
+                        status: true,
+                        data,
+                        message: 'statuses found successfully'
+                    })
+                }
+                
+            } else {
+                return res.status(403).json({
+                    status: false,
+                    data: {},
+                    message: "Insufficient balance"
+                })
+            }
+            
+        }
+        
+    } catch (error) {
+        logger.info(error)
+        return res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        })
+    }
+}

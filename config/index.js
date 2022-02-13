@@ -10,6 +10,7 @@ let time = d.getTime();
 
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
+const {Op} = require('sequelize')
 
 exports.config = {
     "port": process.env.PORT,
@@ -37,7 +38,8 @@ exports.config = {
     "twilio_sender_number": process.env.TWILIO_SENDER_NUMBER,
     "paystack_test_key": process.env.PAYSTACK_PRY_KEY,
     "paystack_secret_key": process.env.PAYSTACK_SECRET_KEY,
-    "google_key": process.env.GOOGLE_MAPS_API_KEY
+    "google_key": process.env.GOOGLE_MAPS_API_KEY,
+    Op,
     
 
 }

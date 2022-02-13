@@ -1,27 +1,20 @@
-const { elevation } = require("@googlemaps/google-maps-services-js/dist/elevation");
 const { config } = require("../../config");
 const {client, google_key, logger} = config;
 
 
-exports.distanceService =  (data) => {
+exports.distanceService =  async (data) => {
     try {
-        client
+       const result =  await client
         .distancematrix({
           params: {
             origins: data.origin,
             destinations: data.destinations,
             key: google_key,
           },
-          timeout: 1000, // milliseconds
-        })
-        .then((r) => {
-            logger.info(r.data);
-            return (r.data.rows[0].elements);
-        })
-        .catch((e) => {
-          logger.info(e.response.data.error_message);
-          return false;
+          timeout: 100000, // seconds
         });
+        logger.info(result.data);
+        return (result.data.rows[0].elements);
     } catch (err) {
         logger.info(err);
         return false

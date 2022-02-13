@@ -124,39 +124,45 @@ router.group('/api/v1/', (router) => {
     );
 
     router.delete('/request/cancel',
-    [   
-        Authenticate,
-        body('reasonForCancel').isLength({ min: 10 }),
-        body('reasonForCancel').toUpperCase()
-        
-    ], 
-    controller.cancelRequest
+        [   
+            Authenticate,
+            body('reasonForCancel').isLength({ min: 10 }),
+            body('reasonForCancel').toUpperCase()
+            
+        ], 
+        controller.cancelRequest
     );
 
     router.post('/request/create',
-    [   
-        Authenticate,
-        body('agent').toUpperCase(),
-        body('agentUsername').toUpperCase(),
-        
-    ], 
-    controller.createRequest
+        [   
+            Authenticate,
+            body('agent').toUpperCase(),
+            body('agentUsername').toUpperCase(),
+            
+        ], 
+        controller.createRequest
     );
 
     router.put('/request/mark/:reference',
-    [   
-        Authenticate,
-    ], 
-    controller.markRequest
+        [   
+            Authenticate,
+        ], 
+        controller.markRequest
     );
 
     router.post('/status/create',
+        [   
+            Authenticate, 
+        ], 
+        controller.createStatus
+    );
+
+    router.post('/status/find',
     [   
         Authenticate,
-        
     ], 
-    controller.createStatus
-    );
+    controller.findStatus
+);
 })
 
 
