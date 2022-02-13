@@ -62,6 +62,13 @@ const Status = db_con.define("statuses", {
            notEmpty: true
         }
     },
+    "duration": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
     
     
 })

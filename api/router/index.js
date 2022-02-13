@@ -156,6 +156,13 @@ router.group('/api/v1/', (router) => {
         ], 
         controller.createStatus
     );
+
+    router.post('/status/find',
+    [   
+        Authenticate,
+    ], 
+    controller.findStatus
+);
 })
 
 

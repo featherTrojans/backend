@@ -22,5 +22,6 @@ exports.services = {
     feeCharge: PaystackServices.feeCalculator,
     verifyTransaction: PaystackServices.verifyTransaction,
     distanceService: GoogleServices.distanceService,
-    createLocation: LocationServices.createLocation
+    createLocation: LocationServices.createLocation,
+    returnLocation: LocationServices.returnLocation
 }

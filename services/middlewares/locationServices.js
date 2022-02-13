@@ -50,28 +50,37 @@ exports.createLocation = async (data) => {
 exports.returnLocation = async (data) => {
     try {
         const destinations = []
-        const allStatuses = await Status.findAll({
+        let allStatuses = await Status.findAll({
             attributes: ['username', 'fullName', 'longitude', 'latitude', 'locationText', 'amount', 'reference'],
             where: {
             status: 'ACTIVE', 
             amount: {
                 [Op.gte]: data.amount
+            },
+            username: {
+                [Op.not]: data.username
             }
         }})
         if ( allStatuses.length > 0 ) {
             logger.info(allStatuses)
             for (const [key, value] of Object.entries(allStatuses)){
-                logger.info(value.locationText)
+
+                logger.info(value.locationText)   
                 destinations.push(value.locationText)
+
             }
             const distance = await distanceService({origin: [data.location], destinations})
-            if (distance == false) {
+            if (distance === false) {
                 logger.info('distance cannot be fetched')
                 return false;
             }else {
-                for (const [key, value] of distance) {
+
+                for (const [key, value] of Object.entries(distance)) {
+
                     allStatuses[key].duration = value.duration.text
+
                 }
+                logger.info(allStatuses)
                 return allStatuses
             }
 
