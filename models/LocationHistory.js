@@ -26,7 +26,13 @@ const LocationHistory = db_con.define("location_histories", {
            notEmpty: true
         }
     },
-    
+    "locationText": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
     
 })
 

@@ -3,6 +3,10 @@ const pino = require('pino')
 const expressPino = require('express-pino-logger')
 const events = require('events')
 const eventEmitter = new events.EventEmitter();
+const {Client} = require("@googlemaps/google-maps-services-js");
+const client = new Client({});
+const d = new Date();
+let time = d.getTime();
 
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
@@ -26,11 +30,14 @@ exports.config = {
     expressLogger,
     logger,
     eventEmitter,
+    time,
+    client,
     "twilio_sid": process.env.TWILIO_ACCOUNT_SID,
     "twilio_auth_token": process.env.TWILIO_AUTH_TOKEN,
     "twilio_sender_number": process.env.TWILIO_SENDER_NUMBER,
     "paystack_test_key": process.env.PAYSTACK_PRY_KEY,
     "paystack_secret_key": process.env.PAYSTACK_SECRET_KEY,
+    "google_key": process.env.GOOGLE_MAPS_API_KEY
     
 
 }

@@ -149,6 +149,14 @@ router.group('/api/v1/', (router) => {
     ], 
     controller.markRequest
     );
+
+    router.post('/status/create',
+    [   
+        Authenticate,
+        
+    ], 
+    controller.createStatus
+    );
 })
 
 

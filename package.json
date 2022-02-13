@@ -13,6 +13,7 @@
   "author": "Feather IT",
   "license": "ISC",
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.3.9",
     "bcryptjs": "^2.4.3",
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
@@ -25,6 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "mocha": "^9.1.3",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.2",
     "paystack-node": "^0.3.0",
     "pino": "^7.6.2",
     "sequelize": "^6.12.5",
