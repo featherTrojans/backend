@@ -1,4 +1,3 @@
-const { elevation } = require("@googlemaps/google-maps-services-js/dist/elevation");
 const { config } = require("../../config");
 const {client, google_key, logger} = config;
 
@@ -19,7 +18,7 @@ exports.distanceService =  (data) => {
             return (r.data.rows[0].elements);
         })
         .catch((e) => {
-          logger.info(e.response.data.error_message);
+          logger.info(e);
           return false;
         });
     } catch (err) {

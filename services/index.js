@@ -7,6 +7,7 @@ const PaystackServices = require('./middlewares/paystackServices')
 const  creditService = require('./middlewares/creditService')
 const  debitService = require('./middlewares/debitService')
 const GoogleServices = require('./middlewares/googleServices')
+const LocationServices = require('./middlewares/locationServices')
 
 exports.services = {
     creditService,
@@ -20,5 +21,6 @@ exports.services = {
     initializeTransaction: PaystackServices.initializeTransaction,
     feeCharge: PaystackServices.feeCalculator,
     verifyTransaction: PaystackServices.verifyTransaction,
-    distanceService: GoogleServices.distanceService
+    distanceService: GoogleServices.distanceService,
+    createLocation: LocationServices.createLocation
 }
