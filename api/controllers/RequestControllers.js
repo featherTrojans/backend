@@ -231,11 +231,13 @@ exports.markRequests = ( (req, res) => {
             return res.status(403).json({ errors: errors.array() });
   
         }else if (!(reference)) {
+            
             return res.status(400).json({
                 status : false,
                 data: {},
                 message: "All fields are required"
             })
+
         } else {
 
             Request.update({status: 'SUCCESS'},{

@@ -6,6 +6,7 @@ const DoubleSpent = require('../models/DoubleSpent')
 const Location = require('../models/Location')
 const LocationHistory = require('../models/LocationHistory')
 const Request = require('../models/Request')
+const Status = require('../models/Status')
 
 const models = {
     Users,
@@ -15,7 +16,8 @@ const models = {
     DoubleSpent,
     Location,
     LocationHistory,
-    Request
+    Request,
+    Status
 }
 
 module.exports = models

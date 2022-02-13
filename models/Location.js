@@ -10,7 +10,6 @@ const Location = db_con.define("locations", {
         validate : {
            notEmpty: true
         }
-
     },
     "longitude": {
         allowNull: false,
@@ -28,6 +27,13 @@ const Location = db_con.define("locations", {
         }
     },
     
+    "locationText": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
     
 })
 

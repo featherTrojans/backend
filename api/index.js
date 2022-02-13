@@ -17,5 +17,6 @@ exports.controller = {
     "acceptedRequests": Controller.RequestController.getAcceptedRequests,
     "cancelRequest": Controller.RequestController.cancelRequests,
     "createRequest": Controller.RequestController.createRequest,
-    "markRequest": Controller.RequestController.markRequests
+    "markRequest": Controller.RequestController.markRequests,
+    createStatus: Controller.StatusController.createStatus
 }
