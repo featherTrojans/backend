@@ -7,10 +7,9 @@ const {Client} = require("@googlemaps/google-maps-services-js");
 const client = new Client({});
 const d = new Date();
 let time = d.getTime();
-
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
-const {Op} = require('sequelize')
+const {Op} = require('sequelize');
 
 exports.config = {
     "port": process.env.PORT,
@@ -40,6 +39,8 @@ exports.config = {
     "paystack_secret_key": process.env.PAYSTACK_SECRET_KEY,
     "google_key": process.env.GOOGLE_MAPS_API_KEY,
     Op,
+    gmail_address: process.env.GMAIL_ADDRESS,
+    gmail_password: process.env.GMAIL_PASSWORD,
     
 
 }

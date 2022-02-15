@@ -7,7 +7,7 @@ const eventEmitter = config.eventEmitter
 const debitService = async (data) => {
     
     const { userUid, reference, amount, description } = data
-    const { walletBal, username, phoneNumber } = await Users.findOne({attributes: ['walletBal', 'phoneNumber', 'username'], where: {userUid}})
+    const { walletBal, username, phoneNumber, email } = await Users.findOne({attributes: ['walletBal', 'phoneNumber', 'username', 'email'], where: {userUid}})
     if (parseFloat(walletBal) >= parseFloat(amount)) {
         const finalBal = parseFloat(walletBal) - parseFloat(amount)
         //update
@@ -37,6 +37,7 @@ const debitService = async (data) => {
             direction: "out"
         })
         const message = `@${username}, #${amount}, has left your account. Your new bal: ${finalBal}`;
+        eventEmitter.emit('walletCredit', {email, message})
         eventEmitter.emit('send', {phoneNumber, message})
         return true;
     } else {

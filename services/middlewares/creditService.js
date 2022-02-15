@@ -6,8 +6,8 @@ const eventEmitter = config.eventEmitter
 
 const creditService = async (data) => {
     
-    const {userUid, reference, amount } = data
-    const {walletBal, username, phoneNumber} = await Users.findOne({attributes: ['walletBal', 'phoneNumber', 'username'], where: {userUid}})
+    const { userUid, reference, amount } = data
+    const { walletBal, username, phoneNumber, email } = await Users.findOne({attributes: ['walletBal', 'phoneNumber', 'username', 'email'], where: {userUid}})
     const finalBal = parseFloat(amount) + parseFloat(walletBal)
     //update
     //user wallet
@@ -34,7 +34,10 @@ const creditService = async (data) => {
         reference: data.id ? data.id : reference
     })
     const message = `@${username}, #${amount}, just entered your account. Your new bal: ${finalBal}`;
+
+    eventEmitter.emit('walletCredit', {email, message})
     eventEmitter.emit('send', {phoneNumber, message})
+
 }
 
 module.exports = creditService
