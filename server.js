@@ -52,7 +52,8 @@ server.listen(port);
 
 wsServer = new WebSocketServer({
   httpServer: server,
-  autoAcceptConnections: false
+  autoAcceptConnections: false,
+  path: 'messaging'
 });
 
 
@@ -75,7 +76,7 @@ wsServer.on('request', function(request) {
   connection.on('open', function(reasonCode, description) {
     config.logger.info((new Date()) + ' Peer ' + connection.remoteAddress + ' connected.');
     connection.send("connection accepted by server")
-});
+  });
 
   connection.on('message', function(message) {
       if (message.type === 'utf8') {
