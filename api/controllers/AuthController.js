@@ -125,8 +125,11 @@ exports.confirmCode = ( async (req, res) => {
             .then((data) => {
 
                 if ( data.code != null && data.code == code ) {
+                    
+                    const message = `Dear ${fullName}, It is my pleasure to welcome you into this amazing community... 
+                    Get cash easily without stress. Your username/tag is @${username}, you can change it to your desired one on the app. Welcome once again`
 
-                    eventEmitter.emit('signupSuccess')
+                    eventEmitter.emit('signupSuccess', {fullName, email, message})
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(200).json({
                         status: true,

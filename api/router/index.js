@@ -60,7 +60,7 @@ router.group('/api/v1/', (router) => {
         router.put('/username/set',
         [   
             Authenticate,
-            body('newUsername').isLength({ min: 4 }),
+            body('newUsername').isLength({ min: 3 }),
             body('newUsername').toUpperCase()
             
         ], 
