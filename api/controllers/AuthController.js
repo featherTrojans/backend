@@ -38,7 +38,26 @@ exports.signup = ( async (req, res) => {
                     message: "All input are required"
                 })
 
-            }else if ( checkUsername == null && checkEmail == null && checkPhoneNumber == null ) {
+            } else if ( checkUsername != null ){
+                return res.status(404).json({
+                    status : false,
+                    data: {},
+                    message: "Username already exist"
+                }) 
+            } else if (checkPhoneNumber != null ) {
+                return res.status(404).json({
+                    status : false,
+                    data: {},
+                    message: "Phone Number already exist"
+                }) 
+            }else if ( checkEmail != null ) {
+                return res.status(404).json({
+                    status : false,
+                    data: {},
+                    message: "Email already exist"
+                }) 
+            }
+            else if ( checkUsername == null && checkEmail == null && checkPhoneNumber == null ) {
 
                 code = services.codeGenerator(6)
                 const phoneNumber = data.phoneNumber
