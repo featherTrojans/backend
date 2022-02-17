@@ -2,11 +2,11 @@ const Users = require('./User')
 const UserLevels = require('./UserLevel')
 const Transactions = require('./Transaction')
 const Payments = require('./Payment')
-const DoubleSpent = require('../models/DoubleSpent')
-const Location = require('../models/Location')
-const LocationHistory = require('../models/LocationHistory')
-const Request = require('../models/Request')
-const Status = require('../models/Status')
+const DoubleSpent = require('./DoubleSpent')
+const Location = require('./Location')
+const LocationHistory = require('./LocationHistory')
+const Request = require('./Request')
+const Status = require('./Status')
 
 const models = {
     Users,
