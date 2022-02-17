@@ -1,11 +1,11 @@
 const { config } = require('../config')
 const { 
-    Transactions, DoubleSpent, User, 
+    Transactions, DoubleSpent, Users, 
     UserLevels, Payments, Location, 
     LocationHistory, Request, Status } = require('../models/')
 
 const create_users_table = ()=>{
-    User.sync({force: true}).then(()=>{
+    Users.sync({force: true}).then(()=>{
     
     config.logger.info('users table created')
     }).catch(err=>{
