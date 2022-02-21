@@ -30,7 +30,7 @@ exports.signup = ( async (req, res) => {
             const checkEmail = await services.confirmData({data: data.email, type: 'email'});
             const checkPhoneNumber = await services.confirmData({data: data.phoneNumber, type: 'phoneNumber'});
 
-            if (!(username && data.firstName && data.phoneNumber && data.email && data.lastName)){
+            if (!(data.firstName && data.phoneNumber && data.email && data.lastName)){
 
                 return res.status(400).json({
                     status : false,
@@ -39,21 +39,30 @@ exports.signup = ( async (req, res) => {
                 })
 
             } else if ( checkUsername != null ){
-                return res.status(404).json({
+                const isVerified = checkUsername.isVerified
+                return res.status(400).json({
                     status : false,
-                    data: {},
+                    data: {
+                        isVerified
+                    },
                     message: "Username already exist"
                 }) 
             } else if (checkPhoneNumber != null ) {
-                return res.status(404).json({
+                const isVerified = checkPhoneNumber.isVerified
+                return res.status(400).json({
                     status : false,
-                    data: {},
+                    data: {
+                        isVerified
+                    },
                     message: "Phone Number already exist"
                 }) 
             }else if ( checkEmail != null ) {
-                return res.status(404).json({
+                const isVerified = checkEmail.isVerified
+                return res.status(400).json({
                     status : false,
-                    data: {},
+                    data: {
+                        isVerified
+                    },
                     message: "Email already exist"
                 }) 
             }
@@ -77,7 +86,7 @@ exports.signup = ( async (req, res) => {
 
                     const message = `Dear ${fullName}, your verification code is: ${code}. DO NOT DISCLOSE TO ANYONE`;
                     eventEmitter.emit('signup', {code, phoneNumber, email, message})
-                    const token = TokenServices({userId, username, email, fullName}, '2h')
+                    const token = TokenServices({userId, username, email, fullName}, '6h')
                     return res.status(201).json({
                         status : true,
                         data: {
@@ -124,6 +133,71 @@ exports.signup = ( async (req, res) => {
         })
     }
 
+})
+
+exports.resendCode = ( async (req, res) => {
+    try {
+        const { email } = req.body
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+
+            return res.status(403).json({ errors: errors.array() });
+  
+        } else if (empty(email) ){
+            return res.status(400).json({
+                status : false,
+                data: {
+                    isVerified
+                },
+                message: "Email is required"
+            }) 
+        }else {
+            code = await services.codeGenerator(6)
+            const {fullName, phoneNumber, userUid, username} = await Users.findOne({where: {email}})
+            const userId = userUid
+            Users.update({
+                code
+            }, {where: {email}}).then( (data) => {
+
+                logger.info(data);
+
+                const message = `Dear ${fullName}, your verification code is: ${code}. DO NOT DISCLOSE TO ANYONE`;
+                eventEmitter.emit('signup', {code, phoneNumber, email, message})
+                const token = TokenServices({userId, username, email, fullName}, '2h')
+                return res.status(201).json({
+                    status : true,
+                    data: {
+                        userId,
+                        fullName,
+                        username,
+                        email,
+                        phoneNumber,
+                        token
+                    },
+                    message: "Code resent Successfully"
+                })
+
+            }).catch((error) => {
+
+                logger.info(error)
+                return res.status(400).json({
+                    status : false,
+                    data: error,
+                    message: "Cannot resend code"
+                })
+
+            })
+
+        }
+    } catch(error) {
+
+        logger.info(error)
+        return res.status(409).json({
+            status: false,
+            data : error,
+            message: "Something went wrong could not resend code"
+        })
+    }
 })
 
 

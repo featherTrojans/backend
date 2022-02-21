@@ -85,12 +85,12 @@ const create_statuses_table = ()=>{
     })
 }
 
-create_users_table();
-create_user_levels_table();
-create_transactions_table();
-create_double_spent_table();
-create_payments_table();
-create_location_table()
-create_location_histories_table()
-create_requests_table()
-create_statuses_table()
+// create_users_table();
+// create_user_levels_table();
+// create_transactions_table();
+// create_double_spent_table();
+// create_payments_table();
+// create_location_table()
+// create_location_histories_table()
+// create_requests_table()
+// create_statuses_table()
