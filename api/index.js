@@ -19,5 +19,6 @@ exports.controller = {
     createRequest: Controller.RequestController.createRequest,
     markRequest: Controller.RequestController.markRequests,
     createStatus: Controller.StatusController.createStatus,
-    findStatus: Controller.StatusController.findStatus
+    findStatus: Controller.StatusController.findStatus,
+    resendCode: Controller.AuthController.resendCode
 }

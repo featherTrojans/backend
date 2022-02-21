@@ -26,6 +26,9 @@ router.group('/api/v1/', (router) => {
         controller.signup
         );
 
+        router.post('/resend/code',
+            controller.resendCode
+        );
         
         router.post('/verify/code',
         [   
