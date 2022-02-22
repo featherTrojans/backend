@@ -143,7 +143,7 @@ exports.resendCode = ( async (req, res) => {
 
             return res.status(403).json({ errors: errors.array() });
   
-        } else if (empty(email) ){
+        } else if (!(email) ){
             return res.status(400).json({
                 status : false,
                 data: {

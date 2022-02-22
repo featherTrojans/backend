@@ -10,7 +10,11 @@ exports.dashboard = ( async (req, res) => {
         const {walletBal} = await Users.findOne({attributes: ['walletBal'], where: {userUid: userId}})
         const transactions = await Transactions.findAll({
             attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'createdAt'],
-            where: {userUid: userId}})
+            where: {userUid: userId},
+            order: [['createdAt', 'DESC']],
+            limit: 10
+
+        })
         return res.status(200).json({
             status: true,
             data : {
