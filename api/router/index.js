@@ -88,6 +88,14 @@ router.group('/api/v1/', (router) => {
     controller.dashboard
     );
 
+    router.get('/transactions',
+    [   
+        Authenticate
+        
+    ], 
+    controller.getTransactions
+    );
+
     router.post('/pay',
     [   
         Authenticate

@@ -1,28 +1,21 @@
 const { config } = require("../../config");
-const { Users, Transactions } = require("../../models");
+const { Transactions } = require("../../models");
 const logger = config.logger
 
-exports.dashboard = ( async (req, res) => {
+exports.transactions = ( async (req, res) => {
 
-    const { userId, username, email, fullName } = req.user
+    const { userId } = req.user
     try
     {
-        const {walletBal} = await Users.findOne({attributes: ['walletBal'], where: {userUid: userId}})
         const transactions = await Transactions.findAll({
             attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'createdAt'],
             where: {userUid: userId},
             order: [['createdAt', 'DESC']],
-            limit: 10
-
         })
         return res.status(200).json({
             status: true,
             data : {
-                userId,
-                username,
-                email,
-                fullName,
-                walletBal,
+
                 transactions
 
             },

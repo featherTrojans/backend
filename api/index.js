@@ -20,5 +20,6 @@ exports.controller = {
     markRequest: Controller.RequestController.markRequests,
     createStatus: Controller.StatusController.createStatus,
     findStatus: Controller.StatusController.findStatus,
-    resendCode: Controller.AuthController.resendCode
+    resendCode: Controller.AuthController.resendCode,
+    getTransactions: Controller.TransactionsController.transactions
 }
