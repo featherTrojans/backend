@@ -38,8 +38,8 @@ const errorHandler = error => {
   }
 };
 const options = config.environment == 'development' ? {
-  key: fs.readFileSync('/etc/letsencrypt/live/feather.com.ng/fullchain.pem'),
-  cert: fs.readFileSync(' /etc/letsencrypt/live/feather.com.ng/privkey.pem')
+  key: fs.readFileSync('../../../etc/letsencrypt/live/feather.com.ng/fullchain.pem'),
+  cert: fs.readFileSync(' ../../../etc/letsencrypt/live/feather.com.ng/privkey.pem')
 }: {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem')
