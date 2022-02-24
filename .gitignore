@@ -3,5 +3,7 @@ node_modules/
 .env.development
 t.env.development
 output.log
+cert.pem
+key.pem
 /test/*
   !test/index.js
