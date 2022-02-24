@@ -1,8 +1,12 @@
 exports.home = ( async (req, res) => {
-    // let banks = await services.listBanks()
+
     return res.status(200).json({
         status : true,
         data: {},
         message: "Working Successfully"
     })
+})
+
+exports.docs = ( async (req, res) => {
+    return res.redirect("https://documenter.getpostman.com/view/9190659/UVXgMHU7");
 })

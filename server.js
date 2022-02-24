@@ -1,4 +1,5 @@
-const http = require('http'); // import http
+const http = require('https'); // import https
+const fs = require('fs');
 const app = require('./app'); //import app
 const config = require('./config').config
 const WebSocketServer = require('websocket').server
@@ -36,8 +37,15 @@ const errorHandler = error => {
       throw error;
   }
 };
+const options = config.environment == 'development' ? {
+  key: fs.readFileSync('/etc/letsencrypt/live/feather.com.ng/fullchain.pem'),
+  cert: fs.readFileSync(' /etc/letsencrypt/live/feather.com.ng/privkey.pem')
+}: {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
+} ;
 
-const server = http.createServer(app);
+const server = http.createServer(options, app);
 
 
 server.on('error', errorHandler);

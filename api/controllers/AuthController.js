@@ -224,6 +224,7 @@ exports.confirmCode = ( async (req, res) => {
 
                     eventEmitter.emit('signupSuccess', {fullName, email, message})
                     const token = TokenServices({userId, username, email, fullName}, '2h')
+                    
                     return res.status(200).json({
                         status: true,
                         data : {
@@ -293,7 +294,7 @@ exports.setPassword = (async (req, res) => {
             } else {
                 //set password in database
                 Users.update(
-                    {password: pwd},
+                    {password: pwd, isVerified: true},
                     {where: {userUid: userId}}
                 ).then(()=>{
                     const token = TokenServices({userId, username, email, fullName}, '2h')
