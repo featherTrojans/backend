@@ -8,6 +8,8 @@ const logger = config.logger
 exports.webhook = (async (req, res) => {
     //validate event
     try{
+        logger.info('payment webhook called');
+        logger.info(req.body);
         var hash = crypto.createHmac('sha512', secret).update(JSON.stringify(req.body)).digest('hex');
         if (hash == req.headers['x-paystack-signature']) {
             // Retrieve the request's body
