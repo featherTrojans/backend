@@ -22,5 +22,6 @@ exports.controller = {
     findStatus: Controller.StatusController.findStatus,
     resendCode: Controller.AuthController.resendCode,
     getTransactions: Controller.TransactionsController.transactions,
-    docs: Controller.HomeController.docs
+    docs: Controller.HomeController.docs,
+    users: Controller.UserController.getUser
 }
