@@ -22,7 +22,8 @@ const debitService = async (data) => {
             finalBal,
             description,
             reference: data.id ? data.id : reference,
-            direction: "out"
+            direction: "out",
+            title: data?.title ?? 'funding'
         }) : 
         await Transactions.create({
             userUid,
@@ -34,7 +35,8 @@ const debitService = async (data) => {
             from: data.from,
             to: data.to,
             reference: data.id ? data.id : reference,
-            direction: "out"
+            direction: "out",
+            title: data?.title ?? 'funding'
         })
         const message = `@${username}, #${amount}, has left your account. Your new bal: ${finalBal}`;
         eventEmitter.emit('walletCredit', {email, message})
