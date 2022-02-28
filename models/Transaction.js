@@ -85,6 +85,15 @@ const Transactions = db_con.define("transactions", {
            notEmpty: true
         }
     },
+
+    "title": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        defaultValue: "funding",
+        validate: {
+           notEmpty: true
+        }
+    },
     
 })
 

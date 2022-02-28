@@ -7,6 +7,7 @@ const TransferController = require('./TransferController')
 const RequestController = require('./RequestControllers')
 const StatusController = require('./StatusController')
 const TransactionsController = require('./TransactionsController')
+const UserController = require('./UserController')
 
 module.exports = {
     
@@ -18,5 +19,6 @@ module.exports = {
     TransferController,
     RequestController,
     StatusController,
-    TransactionsController
+    TransactionsController,
+    UserController
 }

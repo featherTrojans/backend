@@ -178,6 +178,14 @@ router.group('/', (router) => {
         ], 
         controller.findStatus
     );
+    router.group('/user', (router) => {
+        router.get('/:username',
+            [   
+                Authenticate,
+            ], 
+            controller.users
+        )
+    })
     })
 })
 

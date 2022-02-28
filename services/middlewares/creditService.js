@@ -20,7 +20,8 @@ const creditService = async (data) => {
         amount,
         finalBal,
         description: data?.description ?? `${amount} Funding`,
-        reference: data.id ? data.id : reference
+        reference: data.id ? data.id : reference,
+        title: data?.title ?? 'funding'
     }) : 
     await Transactions.create({
         userUid,
@@ -31,7 +32,8 @@ const creditService = async (data) => {
         description: data?.description ??  `${amount} Funding`,
         from: data.from,
         to: data.to,
-        reference: data.id ? data.id : reference
+        reference: data.id ? data.id : reference,
+        title: data?.title ?? 'funding'
     })
     const message = `@${username}, #${amount}, just entered your account. Your new bal: ${finalBal}`;
 
