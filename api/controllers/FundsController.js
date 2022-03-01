@@ -6,14 +6,16 @@ const services = require("../../services").services
 exports.makePayment = ( async (req, res) => {
     let {amount} = req.body
     const { userId, email } = req.user
-    amount *= 100 //convert to kobo
 
+    amount *= 100  //convert to kobo
+    const charges = (amount * 0.015)
+    const amountToCharge = amount + charges
 
     try
     {
         const reference = services.idGenService(14)
         
-        const payload = {email, reference, amount}
+        const payload = {email, reference, amountToCharge}
         let data = await services.initializeTransaction(payload)
         if (data != false ) {
             await Payments.create({
