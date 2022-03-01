@@ -15,7 +15,7 @@ exports.makePayment = ( async (req, res) => {
     {
         const reference = services.idGenService(14)
         
-        const payload = {email, reference, amountToCharge}
+        const payload = {email, reference, amount: amountToCharge}
         let data = await services.initializeTransaction(payload)
         if (data != false ) {
             await Payments.create({
