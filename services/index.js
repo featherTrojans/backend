@@ -9,8 +9,10 @@ const  debitService = require('./middlewares/debitService')
 const GoogleServices = require('./middlewares/googleServices')
 const LocationServices = require('./middlewares/locationServices')
 const sendEmail = require('./middlewares/emailService')
+const confirmAccount = require('./confirmAccount')
 
 exports.services = {
+    confirmAccount,
     creditService,
     debitService,
     idGenService,
@@ -26,4 +28,6 @@ exports.services = {
     createLocation: LocationServices.createLocation,
     returnLocation: LocationServices.returnLocation,
     sendEmail,
+    withdrawFund: PaystackServices.withdrawFund,
+    addAccount: PaystackServices.addAccount
 }

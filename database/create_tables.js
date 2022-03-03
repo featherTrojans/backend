@@ -2,7 +2,8 @@ const { config } = require('../config')
 const { 
     Transactions, DoubleSpent, Users, 
     UserLevels, Payments, Location, 
-    LocationHistory, Request, Status } = require('../models/')
+    LocationHistory, Request, Status, BankAccount, Withdrawal 
+} = require('../models/')
 
 const create_users_table = ()=>{
     Users.sync({force: true}).then(()=>{
@@ -85,6 +86,24 @@ const create_statuses_table = ()=>{
     })
 }
 
+const create_bank_accounts_table = ()=>{
+    BankAccount.sync({force: true}).then(()=>{
+    
+    config.logger.info('bank_accounts table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
+
+const create_withdrawals_table = ()=>{
+    Withdrawal.sync({force: true}).then(()=>{
+    
+    config.logger.info('withdrawals table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
+
 // create_users_table();
 // create_user_levels_table();
 // create_transactions_table();
@@ -94,3 +113,5 @@ const create_statuses_table = ()=>{
 // create_location_histories_table()
 // create_requests_table()
 // create_statuses_table()
+create_bank_accounts_table()
+create_withdrawals_table()

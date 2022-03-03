@@ -7,6 +7,8 @@ const Location = require('./Location')
 const LocationHistory = require('./LocationHistory')
 const Request = require('./Request')
 const Status = require('./Status')
+const BankAccount = require('./BankAccount')
+const Withdrawal = require('./Withdrawal')
 
 const models = {
     Users,
@@ -17,7 +19,9 @@ const models = {
     Location,
     LocationHistory,
     Request,
-    Status
+    Status,
+    BankAccount,
+    Withdrawal
 }
 
 module.exports = models
