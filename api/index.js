@@ -23,5 +23,7 @@ exports.controller = {
     resendCode: Controller.AuthController.resendCode,
     getTransactions: Controller.TransactionsController.transactions,
     docs: Controller.HomeController.docs,
-    users: Controller.UserController.getUser
+    users: Controller.UserController.getUser,
+    getAccount: Controller.AccountController.getAccount,
+    withdraw: Controller.WithdrawalController.withdrawFund
 }

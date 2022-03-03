@@ -21,9 +21,10 @@ router.group('/', (router) => {
                 body('firstName').toUpperCase(),
                 body('email').isEmail(),
                 body('firstName').isLength({ min: 2 }),
+                body('lastName').isLength({ min: 2 }),
                 body('lastName').toUpperCase(),
                 body('phoneNumber').isNumeric(),
-                body('phoneNumber').isLength({ max: 11 }),
+                body('phoneNumber').isLength({ max: 11, min: 11 }),
                 body('email').toUpperCase(),
 
             ], 
@@ -177,15 +178,44 @@ router.group('/', (router) => {
             Authenticate,
         ], 
         controller.findStatus
-    );
-    router.group('/user', (router) => {
-        router.get('/:username',
-            [   
-                Authenticate,
-            ], 
-            controller.users
-        )
-    })
+        );
+        router.group('/user', (router) => {
+            router.get('/:username',
+                [   
+                    Authenticate,
+                ], 
+                controller.users
+            )
+        });
+
+        router.group('/account', (router) => {
+            router.get('/get', 
+                [
+                    Authenticate,
+                    body('bank_name').toUpperCase(),
+                    body('account_number').isLength({ min: 10, max: 10 }),
+                    body('account_number').isNumeric(),
+                    body('bank_name').isLength({ max: 11, min: 3 }),
+
+
+                ], 
+                    controller.getAccount
+                );
+        });
+
+        router.group('/withdraw', (router) => {
+            router.post('/', 
+                [
+                    Authenticate,
+                    body('amount').isLength({ min: 3, max: 8 }),
+                    body('amount').isNumeric(),
+
+
+                ], 
+                    controller.withdraw
+                );
+        });
+    
     })
 })
 
