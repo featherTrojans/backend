@@ -113,5 +113,5 @@ const create_withdrawals_table = ()=>{
 // create_location_histories_table()
 // create_requests_table()
 // create_statuses_table()
-create_bank_accounts_table()
+// create_bank_accounts_table()
 create_withdrawals_table()

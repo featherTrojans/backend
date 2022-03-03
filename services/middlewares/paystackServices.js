@@ -195,7 +195,8 @@ exports.withdrawFund = async (payload) => {
                   reference: payload.reference,
                   bank_name: payload.bank_name,
                   charges: 50,
-                  transfer_code: data.transfer_code
+                  transfer_code: data.transfer_code,
+                  reference: payload.reference
               })
               return data;
           }

@@ -12,7 +12,7 @@ const Withdrawal = db_con.define("withdrawals", {
         }
 
     },
-    "account_code": {
+    "reference": {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING,
@@ -20,9 +20,15 @@ const Withdrawal = db_con.define("withdrawals", {
            notEmpty: true
         }
     },
+    "account_code": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
     "account_number": {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
