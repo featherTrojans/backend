@@ -25,5 +25,7 @@ exports.controller = {
     docs: Controller.HomeController.docs,
     users: Controller.UserController.getUser,
     getAccount: Controller.AccountController.getAccount,
-    withdraw: Controller.WithdrawalController.withdrawFund
+    withdraw: Controller.WithdrawalController.withdrawFund,
+    getBalance: Controller.BalanceController.getBalance,
+    getRequestStatus: Controller.RequestController.getRequestStatus
 }

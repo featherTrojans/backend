@@ -155,19 +155,22 @@ exports.createRequest = ( async (req, res) => {
 
             //check user balance before creating request
 
-            const {walletBal} = await Users.findOne({where: {userUid: userId}});
+            const {walletBal, escrowBal} = await Users.findOne({where: {userUid: userId}});
             const total = parseFloat(amount) + parseFloat(charges)
             if (total <= walletBal) {
                 //debit user
+                const newEscrowBal = parseFloat(escrowBal) + parseFloat(total);
                 const ref = userId + config.time + walletBal;
                 await new Promise(function(resolve, reject) {
 
-                    const debitService = services.debitService({userUid: userId, reference: transId, amount: total, description: `#${amount} transferred to Escrow`, from: username, to: 'Escrow', id: ref});
+                    const debitService = services.debitService({userUid: userId, reference: transId, amount: total, description: `#${total} transferred to Escrow`, from: username, to: 'Escrow', id: ref});
 
                     debitService ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                     // set timer to 7 secs to give room for db updates
 
                 })
+                // credit user escrow balance
+                Users.update({escrowBal: newEscrowBal}, {where: {userUid: userId}});
                 Request.create({
 
                     userUid: userId,
@@ -269,6 +272,48 @@ exports.markRequests = ( (req, res) => {
             })
         }
         
+    } catch (error) {
+        logger.info(error)
+        return res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        })
+    }
+});
+
+
+exports.getRequestStatus = (  (req, res) => {
+
+    const { reference } = req.params
+
+    try
+    {
+        Request.findOne({
+            attributes: [ 'status' ],
+            where: {reference}
+        }).then ((data) => {
+            if (data != null ) {
+                return res.status(200).json({
+                    status: true,
+                    data,
+                    message: "success"
+                })
+            } else {
+                return res.status(404).json({
+                    status: false,
+                    data : {},
+                    message: `Cannot get status for ${reference}`
+                })
+            }
+            
+        }).catch((error) => {
+            return res.status(404).json({
+                status: false,
+                data : error,
+                message: "Cannot get status"
+            })
+        })
     } catch (error) {
         logger.info(error)
         return res.status(409).json({
