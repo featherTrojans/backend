@@ -166,6 +166,13 @@ router.group('/', (router) => {
             controller.markRequest
         );
 
+        router.get('/request/status/:reference',
+            [   
+                Authenticate,
+            ], 
+            controller.getRequestStatus
+        );
+
         router.post('/status/create',
             [   
                 Authenticate, 
@@ -189,7 +196,7 @@ router.group('/', (router) => {
         });
 
         router.group('/account', (router) => {
-            router.get('/get', 
+            router.post('/get', 
                 [
                     Authenticate,
                     body('bank_name').toUpperCase(),
@@ -213,6 +220,16 @@ router.group('/', (router) => {
 
                 ], 
                     controller.withdraw
+                );
+        });
+
+        router.group('/balance', (router) => {
+            router.get('/get', 
+                [
+                    Authenticate
+
+                ], 
+                    controller.getBalance
                 );
         });
     

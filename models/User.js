@@ -62,6 +62,15 @@ const Users = db_con.define("users", {
         }
 
     },
+    "escrowBal": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: 0,
+        validate : {
+           notEmpty: true
+        }
+
+    },
     "userLevel": {
         allowNull: false,
         type: Sequelize.INTEGER,
