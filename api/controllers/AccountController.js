@@ -22,7 +22,7 @@ exports.getAccount = ( async (req, res) => {
                 message: "account number and bank name is required"
             })
         } else {
-            const account = await  confirmAccount({ account_number });
+            const account = await confirmAccount({ account_number });
 
             if (account == null) {
                 const data = await addAccount({account_number, bank_name, user_uid: userId});
