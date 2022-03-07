@@ -96,6 +96,15 @@ const Users = db_con.define("users", {
            notEmpty: true
         }
     },
+    "pin_attempts": {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+        validate : {
+           notEmpty: true
+        }
+
+    },
     "password": {
         allowNull: true,
         type: Sequelize.STRING,
