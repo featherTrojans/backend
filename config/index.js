@@ -41,6 +41,7 @@ exports.config = {
     Op,
     gmail_address: process.env.GMAIL_ADDRESS,
     gmail_password: process.env.GMAIL_PASSWORD,
+    client_id: process.env.GOOGLE_MAPS_CLIENT_ID
     
 
 }
