@@ -89,8 +89,10 @@ exports.returnLocation = async (data) => {
                     }
 
                 }
-                logger.info(results)
-                return results.length() > 0 ? results : false
+
+                // logger.info(results.length)
+                // logger.info(results)
+                return results.length ? results : false
             }
 
 
