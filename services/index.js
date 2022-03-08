@@ -10,6 +10,7 @@ const GoogleServices = require('./middlewares/googleServices')
 const LocationServices = require('./middlewares/locationServices')
 const sendEmail = require('./middlewares/emailService')
 const confirmAccount = require('./confirmAccount')
+const balanceService = require('./middlewares/balanceServices')
 
 exports.services = {
     confirmAccount,
@@ -29,5 +30,6 @@ exports.services = {
     returnLocation: LocationServices.returnLocation,
     sendEmail,
     withdrawFund: PaystackServices.withdrawFund,
-    addAccount: PaystackServices.addAccount
+    addAccount: PaystackServices.addAccount,
+    getBalance: balanceService.getBalance
 }
