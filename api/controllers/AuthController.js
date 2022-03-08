@@ -489,7 +489,7 @@ exports.signIn = async (req, res) => {
             } else {
                 const verifyPassword = await bcrypt.compare(password, checkUsername.password)
                 const userId = checkUsername.userUid;
-                const username = checkUsername.username
+                const username = (checkUsername.username).toLowerCase()
                 const email = checkUsername.email;
                 const fullName = checkUsername.fullName
 

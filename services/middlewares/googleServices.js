@@ -1,5 +1,5 @@
 const { config } = require("../../config");
-const {client, google_key, logger, client_id} = config;
+const {client, google_key, logger} = config;
 
 
 exports.distanceService =  async (data) => {
@@ -9,12 +9,11 @@ exports.distanceService =  async (data) => {
           params: {
             origins: data.origin,
             destinations: data.destinations,
-            client_secret: google_key,
-            client_id
+            key: google_key,
           },
-          timeout: 300000, // seconds
+          timeout: 3000, // seconds
         });
-        logger.info(result.data);
+        // logger.info(result.data);
         return (result.data.rows[0].elements);
     } catch (err) {
         logger.info(err);

@@ -5,6 +5,7 @@ const events = require('events')
 const eventEmitter = new events.EventEmitter();
 const {Client} = require("@googlemaps/google-maps-services-js");
 const client = new Client({});
+const googleMapsClient = require('@google/maps')
 const d = new Date();
 let time = d.getTime();
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
@@ -41,7 +42,8 @@ exports.config = {
     Op,
     gmail_address: process.env.GMAIL_ADDRESS,
     gmail_password: process.env.GMAIL_PASSWORD,
-    client_id: process.env.GOOGLE_MAPS_CLIENT_ID
+    client_id: process.env.GOOGLE_MAPS_CLIENT_ID,
+    googleMapsClient
     
 
 }
