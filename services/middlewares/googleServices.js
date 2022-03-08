@@ -11,9 +11,9 @@ exports.distanceService =  async (data) => {
             destinations: data.destinations,
             key: google_key,
           },
-          timeout: 100000, // seconds
+          timeout: 3000, // seconds
         });
-        logger.info(result.data);
+        // logger.info(result.data);
         return (result.data.rows[0].elements);
     } catch (err) {
         logger.info(err);

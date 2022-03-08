@@ -325,7 +325,7 @@ exports.getRequestStatus = (  (req, res) => {
     }
 });
 
-exports.approveRequest = ( (req, res) => {
+exports.approveRequest = ( async (req, res) => {
     
     let {reference, pin} = req.body
     const errors = validationResult(req);
@@ -434,7 +434,7 @@ exports.approveRequest = ( (req, res) => {
                             data : error,
                             message: "Cannot modify data"
                         })
-                        
+
                     })
                 } else {
                     //update number of times used

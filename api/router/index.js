@@ -77,7 +77,7 @@ router.group('/', (router) => {
 
             router.post('/signin',
             [   
-                body('username').toUpperCase(),
+                body('username').toLowerCase(),
                 body('password').isLength({ min: 4 }),
                 
             ], 
@@ -178,6 +178,11 @@ router.group('/', (router) => {
                 Authenticate, 
             ], 
             controller.createStatus
+        );
+
+        router.post('request/approve', 
+            [Authenticate],
+            controller.approveRequest
         );
 
         router.post('/status/find',
