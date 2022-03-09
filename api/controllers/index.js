@@ -11,6 +11,7 @@ const UserController = require('./UserController')
 const AccountController = require('./AccountController')
 const WithdrawalController = require('./WithdrawalController')
 const BalanceController = require('./BalanceController')
+const ApproveRequestController = require('./ApproveRequestController')
 
 module.exports = {
     
@@ -26,5 +27,6 @@ module.exports = {
     UserController,
     AccountController,
     WithdrawalController,
-    BalanceController
+    BalanceController,
+    ApproveRequestController
 }

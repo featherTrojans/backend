@@ -55,5 +55,5 @@ eventEmitter.addListener('walletCredit', async (data) => {
   subject = 'Feather';
 
   await sendEmail({email, subject, message})
-  logger.info(`Wallet debited`);
+  logger.info(`Wallet credited`);
 })

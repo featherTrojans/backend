@@ -180,7 +180,7 @@ router.group('/', (router) => {
             controller.createStatus
         );
 
-        router.post('request/approve', 
+        router.post('/request/approve', 
             [Authenticate],
             controller.approveRequest
         );

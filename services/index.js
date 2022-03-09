@@ -11,6 +11,7 @@ const LocationServices = require('./middlewares/locationServices')
 const sendEmail = require('./middlewares/emailService')
 const confirmAccount = require('./confirmAccount')
 const balanceService = require('./middlewares/balanceServices')
+const requestServices = require('./middlewares/requestService')
 
 exports.services = {
     confirmAccount,
@@ -31,5 +32,6 @@ exports.services = {
     sendEmail,
     withdrawFund: PaystackServices.withdrawFund,
     addAccount: PaystackServices.addAccount,
-    getBalance: balanceService.getBalance
+    getBalance: balanceService.getBalance,
+    getRequest: requestServices.getRequest
 }

@@ -28,5 +28,5 @@ exports.controller = {
     withdraw: Controller.WithdrawalController.withdrawFund,
     getBalance: Controller.BalanceController.getBalance,
     getRequestStatus: Controller.RequestController.getRequestStatus,
-    approveRequest: Controller.RequestController.approveRequest
+    approveRequest: Controller.ApproveRequestController.approveRequest
 }
