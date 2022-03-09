@@ -3,7 +3,7 @@ const fs = require('fs');
 const app = require('./app'); //import app
 const config = require('./config').config
 const WebSocketServer = require('websocket').server;
-const { getBalance } = require('./services').services;
+const { getBalance, getRequest } = require('./services').services;
 
 const normalizePort = val => { //normalize port check forr real number 
   const port = parseInt(val, 10);
@@ -71,14 +71,7 @@ function originIsAllowed(origin) {
   return origin === 'realtime' ? true : false;
 }
 
-const getBal = async (userUid) => {
-
-  var balance = await getBalance(userUid)
-  return balance
-  
-}
-
-wsServer.on('request', function (request) {
+wsServer.on('request', async function (request) {
 
   var path = (((request.resourceURL.path).replaceAll('/', ' ')).trim()).split(" ")
 
@@ -94,11 +87,40 @@ wsServer.on('request', function (request) {
 
     config.logger.info((new Date()) + ' Connection accepted.');
 
-    if (path[0] == 'balance'){
-      var bal = getBal(path[1]);
+    var getBal = async () => {
+      var bal = await getBalance(path[1]);
       if (bal !== false) {
         connection.sendUTF(bal)
+      } else {
+        connection.close('404', 'Balance not found')
+        clearInterval(balanceInterval);
       }
+    }
+
+    var getStatus = async () => {
+      var statusToSend = await getRequest(path[1]);
+      if (statusToSend !== false) {
+        if ((statusToSend).toLowerCase() == 'success' || statusToSend.toLowerCase() == 'cancelled') {
+          connection.sendUTF(statusToSend)
+          connection.close('400', 'request ended')
+          clearInterval(requestInterval);
+        } else {
+
+          connection.sendUTF(statusToSend)
+
+        }
+
+      } else {
+        connection.close('404', 'request not found')
+        clearInterval(requestInterval);
+      }
+    }
+
+    //to decide what method to use
+    if (path[0] == 'balance'){
+      var balanceInterval = setInterval(getBal, 60000);
+    } else if ( path[0] == 'request' ) {
+      var requestInterval = setInterval(getStatus, 30000)
     }
   
     connection.on('message', function(message) {
@@ -111,7 +133,7 @@ wsServer.on('request', function (request) {
             connection.sendBytes(message.binaryData);
         }
     });
-    
+
     connection.on('close', function(reasonCode, description) {
         config.logger.info((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
         connection.send((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.')
