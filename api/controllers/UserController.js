@@ -24,7 +24,8 @@ exports.getUser = ( async (req, res) => {
                     phoneNumber: users.phoneNumber,
                     email: users.email,
                     isVerified: users.isVerified,
-                    userLevel: users.userLevel
+                    userLevel: users.userLevel,
+                    messageToken: users.messageToken
 
                 },
                 message: "success"

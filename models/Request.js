@@ -20,6 +20,15 @@ const Request = db_con.define("requests", {
         }
 
     },
+    "statusId": {
+        allowNull: false,
+        unique: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+
+    },
     "reference": {
         allowNull: false,
         type: Sequelize.STRING,
@@ -67,7 +76,14 @@ const Request = db_con.define("requests", {
         }
 
     },
-    
+    "negotiatedFee": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: "0",
+        validate: {
+           notEmpty: true
+        }
+    }, 
     "status": {
         allowNull: false,
         type: Sequelize.STRING,

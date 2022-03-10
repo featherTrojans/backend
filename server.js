@@ -137,6 +137,8 @@ wsServer.on('request', async function (request) {
     connection.on('close', function(reasonCode, description) {
         config.logger.info((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
         connection.send((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.')
+        clearInterval(requestInterval);
+        clearInterval(requestInterval);
     });
     
     

@@ -2,21 +2,22 @@ const { config } = require("../../config");
 const {Payments } = require("../../models");
 const logger = config.logger
 const services = require("../../services").services
+const {initializeTransaction, idGenService, verifyTransaction} = services
 
 exports.makePayment = ( async (req, res) => {
     let {amount} = req.body
     const { userId, email } = req.user
 
     amount *= 100  //convert to kobo
-    const charges = (amount * 0.015)
+    const charges = 0
     const amountToCharge = amount + charges
 
     try
     {
-        const reference = services.idGenService(14)
+        const reference = idGenService(14)
         
         const payload = {email, reference, amount: amountToCharge}
-        let data = await services.initializeTransaction(payload)
+        let data = await initializeTransaction(payload)
         if (data != false ) {
             await Payments.create({
                 userUid: userId,
@@ -72,7 +73,7 @@ exports.verifyTransaction = ( async (req, res) => {
             })
         } else {
 
-            let data = await services.verifyTransaction(payload)
+            let data = await verifyTransaction(payload)
 
             if (data == false ) {
                 return res.status(404).json({

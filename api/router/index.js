@@ -65,6 +65,23 @@ router.group('/', (router) => {
             controller.setPin
             );
 
+            router.post('/pin/verify',
+            [   
+                Authenticate,
+                body('pin').isNumeric(),
+                body('pin').isLength({ min: 4, max: 4 }),
+                
+            ], 
+            controller.verifyPin
+            );
+
+            router.post('/token/create',
+            [   
+                Authenticate
+            ], 
+            controller.createToken
+            );
+
             router.put('/username/set',
             [   
                 Authenticate,
@@ -139,6 +156,22 @@ router.group('/', (router) => {
         controller.acceptedRequests
         );
 
+        router.get('/request/depositor/pending',
+        [   
+            Authenticate
+            
+        ], 
+        controller.getDepPendingRequests
+        );
+
+        router.get('/request/depositor/accepted',
+        [   
+            Authenticate
+            
+        ], 
+        controller.getDepAcceptedRequests
+        );
+
         router.delete('/request/cancel',
             [   
                 Authenticate,
@@ -184,7 +217,10 @@ router.group('/', (router) => {
             [Authenticate],
             controller.approveRequest
         );
-
+        router.put('/request/negotiate', 
+            [Authenticate],
+            controller.createNegotiation
+        );
         router.post('/status/find',
         [   
             Authenticate,

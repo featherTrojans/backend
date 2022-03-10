@@ -3,14 +3,12 @@ const { Request, Users } = require("../../models");
 const logger = config.logger
 const services = require("../../services").services
 const { validationResult } = require('express-validator')
-const bcrypt = require('bcryptjs')
-const {idGenService, creditService, confirmData} = services
+const {idGenService, debitService} = services
 
 
 exports.getPendingRequests = (  (req, res) => {
 
     const { userId } = req.user
-
 
     try
     {
@@ -135,8 +133,8 @@ exports.cancelRequests = ( (req, res) => {
 exports.createRequest = ( async (req, res) => {
     
     const { userId, username } = req.user
-    const { amount, charges, agent, agentUsername } = req.body
-    const transId = services.idGenService(10);
+    const { amount, charges, agent, agentUsername, statusId } = req.body
+    const transId = idGenService(10);
     const errors = validationResult(req);
 
     logger.info(req.body)
@@ -147,7 +145,7 @@ exports.createRequest = ( async (req, res) => {
 
             return res.status(403).json({ errors: errors.array() });
   
-        }else if (!(amount || charges || agent || agentUsername)) {
+        }else if (!(amount || charges || agent || agentUsername || statusId)) {
             return res.status(400).json({
                 status : false,
                 data: {},
@@ -165,9 +163,9 @@ exports.createRequest = ( async (req, res) => {
                 const ref = userId + config.time + walletBal;
                 await new Promise(function(resolve, reject) {
 
-                    const debitService = services.debitService({userUid: userId, reference: transId, amount: total, description: `#${total} transferred to Escrow`, from: username, to: 'Escrow', id: ref});
+                    const debitUser = debitService({userUid: userId, reference: transId, amount: total, description: `#${total} transferred to Escrow`, from: username, to: 'Escrow', id: ref});
 
-                    debitService ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
+                    debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                     // set timer to 7 secs to give room for db updates
 
                 })
@@ -182,7 +180,8 @@ exports.createRequest = ( async (req, res) => {
                     agentUsername,
                     transId,
                     reference: transId,
-                    total
+                    total,
+                    statusId
     
                 }).then (() => {
     

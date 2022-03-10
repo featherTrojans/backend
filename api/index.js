@@ -28,5 +28,10 @@ exports.controller = {
     withdraw: Controller.WithdrawalController.withdrawFund,
     getBalance: Controller.BalanceController.getBalance,
     getRequestStatus: Controller.RequestController.getRequestStatus,
-    approveRequest: Controller.ApproveRequestController.approveRequest
+    approveRequest: Controller.ApproveRequestController.approveRequest,
+    createNegotiation: Controller.NegotiationController.createNegotiation,
+    createToken: Controller.MessageController.createToken,
+    verifyPin: Controller.PinVerificationController.verifyPin,
+    getDepPendingRequests: Controller.DepositorController.getDepPendingRequests,
+    getDepAcceptedRequests: Controller.DepositorController.getDepAcceptedRequests
 }

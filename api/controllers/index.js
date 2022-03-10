@@ -12,6 +12,10 @@ const AccountController = require('./AccountController')
 const WithdrawalController = require('./WithdrawalController')
 const BalanceController = require('./BalanceController')
 const ApproveRequestController = require('./ApproveRequestController')
+const NegotiationController = require('./NegotiationCOntroller')
+const MessageController = require('./MessageTokenController')
+const PinVerificationController = require('./PinVerificationController')
+const DepositorController = require('./DepositorController')
 
 module.exports = {
     
@@ -28,5 +32,9 @@ module.exports = {
     AccountController,
     WithdrawalController,
     BalanceController,
-    ApproveRequestController
+    ApproveRequestController,
+    NegotiationController,
+    MessageController,
+    PinVerificationController,
+    DepositorController
 }

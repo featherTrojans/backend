@@ -1,5 +1,5 @@
 const { config } = require("../../config");
-const { Request, Users } = require("../../models");
+const { Request, Users, Status } = require("../../models");
 const logger = config.logger
 const services = require("../../services").services
 const { validationResult } = require('express-validator')
@@ -29,9 +29,9 @@ exports.approveRequest = ( async (req, res) => {
         } else {
 
             //get userId 
-            const { userUid, total, agentUsername} = await Request.findOne({
+            const { userUid, total, agentUsername, statusId, charges} = await Request.findOne({
                 where: {reference},
-                attributes: ['userUid', 'total', 'agentUsername']
+                attributes: ['userUid', 'total', 'agentUsername', 'statusId', 'charges']
             });
 
 
@@ -91,12 +91,19 @@ exports.approveRequest = ( async (req, res) => {
                         const feather_commission = 0.5/100;
                         const amountToCredit = (total) - (total * feather_commission);
 
+                        //get status data
+                        const {amount} = await Status.findOne({where: {reference: statusId}, attributes: ['amount']});
+                        const newStatusAmount = parseFloat(amount) - (parseFloat(total) - parseFloat(charges))
+
+                        //update status amount
+                        Status.update({amount: newStatusAmount}, {where: {reference: statusId}});
+
                         Request.update({status: 'SUCCESS'},{
                             where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
                         }).then ((data) => {
 
                             if (data[0] > 0 ) {
-
+                                
                                 Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
                                 //credit reciever and debit escrow
                                 creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `N${amountToCredit} transferred from Escrow`, from: 'escrow', to: 'primary wallet'});

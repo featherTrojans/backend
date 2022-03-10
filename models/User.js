@@ -120,6 +120,14 @@ const Users = db_con.define("users", {
         validate : {
            notEmpty: true
         }
+    },
+    "messageToken": {
+        allowNull: true,
+        unique: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
     }
 })
 
