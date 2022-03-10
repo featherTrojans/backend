@@ -29,5 +29,7 @@ exports.controller = {
     getBalance: Controller.BalanceController.getBalance,
     getRequestStatus: Controller.RequestController.getRequestStatus,
     approveRequest: Controller.ApproveRequestController.approveRequest,
-    createNegotiation: Controller.NegotiationController.createNegotiation
+    createNegotiation: Controller.NegotiationController.createNegotiation,
+    createToken: Controller.MessageController.createToken,
+    verifyPin: Controller.PinVerificationController.verifyPin
 }

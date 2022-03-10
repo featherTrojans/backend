@@ -65,6 +65,23 @@ router.group('/', (router) => {
             controller.setPin
             );
 
+            router.post('/pin/verify',
+            [   
+                Authenticate,
+                body('pin').isNumeric(),
+                body('pin').isLength({ min: 4, max: 4 }),
+                
+            ], 
+            controller.verifyPin
+            );
+
+            router.post('/token/create',
+            [   
+                Authenticate
+            ], 
+            controller.createToken
+            );
+
             router.put('/username/set',
             [   
                 Authenticate,
