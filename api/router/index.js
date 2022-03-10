@@ -156,6 +156,22 @@ router.group('/', (router) => {
         controller.acceptedRequests
         );
 
+        router.get('/request/depositor/pending',
+        [   
+            Authenticate
+            
+        ], 
+        controller.getDepPendingRequests
+        );
+
+        router.get('/request/depositor/accepted',
+        [   
+            Authenticate
+            
+        ], 
+        controller.getDepAcceptedRequests
+        );
+
         router.delete('/request/cancel',
             [   
                 Authenticate,

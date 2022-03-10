@@ -15,6 +15,7 @@ const ApproveRequestController = require('./ApproveRequestController')
 const NegotiationController = require('./NegotiationCOntroller')
 const MessageController = require('./MessageTokenController')
 const PinVerificationController = require('./PinVerificationController')
+const DepositorController = require('./DepositorController')
 
 module.exports = {
     
@@ -34,5 +35,6 @@ module.exports = {
     ApproveRequestController,
     NegotiationController,
     MessageController,
-    PinVerificationController
+    PinVerificationController,
+    DepositorController
 }

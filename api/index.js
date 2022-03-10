@@ -31,5 +31,7 @@ exports.controller = {
     approveRequest: Controller.ApproveRequestController.approveRequest,
     createNegotiation: Controller.NegotiationController.createNegotiation,
     createToken: Controller.MessageController.createToken,
-    verifyPin: Controller.PinVerificationController.verifyPin
+    verifyPin: Controller.PinVerificationController.verifyPin,
+    getDepPendingRequests: Controller.DepositorController.getDepPendingRequests,
+    getDepAcceptedRequests: Controller.DepositorController.getDepAcceptedRequests
 }
