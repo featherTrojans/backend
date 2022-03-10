@@ -184,7 +184,10 @@ router.group('/', (router) => {
             [Authenticate],
             controller.approveRequest
         );
-
+        router.put('/request/negotiate', 
+            [Authenticate],
+            controller.createNegotiation
+        );
         router.post('/status/find',
         [   
             Authenticate,
