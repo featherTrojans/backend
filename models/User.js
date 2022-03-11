@@ -128,7 +128,54 @@ const Users = db_con.define("users", {
         validate : {
            notEmpty: true
         }
-    }
+    },
+
+    "gender": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+
+    "address": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+
+    "lga": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+
+    "dateOfBirth": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+
+    "referredBy": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "imageUrl": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
 })
 
 module.exports = Users

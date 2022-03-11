@@ -33,5 +33,7 @@ exports.controller = {
     createToken: Controller.MessageController.createToken,
     verifyPin: Controller.PinVerificationController.verifyPin,
     getDepPendingRequests: Controller.DepositorController.getDepPendingRequests,
-    getDepAcceptedRequests: Controller.DepositorController.getDepAcceptedRequests
+    getDepAcceptedRequests: Controller.DepositorController.getDepAcceptedRequests,
+    updatePersonalData: Controller.UserController.updatePersonalData,
+    updateBasicData: Controller.UserController.updateBasicData
 }
