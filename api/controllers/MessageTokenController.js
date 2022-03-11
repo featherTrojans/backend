@@ -1,6 +1,6 @@
 const { config } = require("../../config");
 const { validationResult } = require('express-validator');
-const { Request, Users } = require("../../models");
+const { Users } = require("../../models");
 const logger = config.logger
 
 

@@ -273,6 +273,21 @@ router.group('/', (router) => {
                     controller.getBalance
                 );
         });
+
+        router.group('/profile/update', (router) => {
+            router.put('/basic',
+                [   
+                    Authenticate,
+                ], 
+                controller.updateBasicData
+            );
+            router.put('/personal',
+                [   
+                    Authenticate,
+                ], 
+                controller.updatePersonalData
+            );
+        });
     
     })
 })
