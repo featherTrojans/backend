@@ -18,7 +18,8 @@ exports.signup = ( async (req, res) => {
         const userId = services.idGenService(10)
         const refId = services.idGenService(7)
         const errors = validationResult(req);
-        const username = "feather" + services.codeGenerator(5)
+        const username = "feather" + services.codeGenerator(5),
+        const referredBy = data.referredBy ?? 'SETH';
 
         if (!errors.isEmpty()) {
 
@@ -81,7 +82,8 @@ exports.signup = ( async (req, res) => {
                     phoneNumber,
                     email,
                     refId,
-                    code
+                    code,
+                    referredBy
                 }).then( () => {
 
                     const message = `Dear ${fullName}, your verification code is: ${code}. DO NOT DISCLOSE TO ANYONE`;
@@ -219,10 +221,6 @@ exports.confirmCode = ( async (req, res) => {
 
                 if ( data.code != null && data.code == code ) {
                     
-                    const message = `Dear ${fullName}, It is my pleasure to welcome you into this amazing community... 
-                    Get cash easily without stress. Your username/tag is @${username}, you can change it to your desired one on the app. Welcome once again`
-
-                    eventEmitter.emit('signupSuccess', {fullName, email, message})
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     
                     return res.status(200).json({
@@ -297,6 +295,10 @@ exports.setPassword = (async (req, res) => {
                     {password: pwd, isVerified: true},
                     {where: {userUid: userId}}
                 ).then(()=>{
+                    const message = `Dear ${fullName}, It is my pleasure to welcome you into this amazing community... 
+                    Get cash easily without stress. Your username/tag is @${username}, you can change it to your desired one on the app. Welcome once again`
+
+                    eventEmitter.emit('signupSuccess', {fullName, email, message});
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(202).json({
                         status: true,
