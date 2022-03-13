@@ -2,7 +2,8 @@ const { config } = require('../config')
 const { 
     Transactions, DoubleSpent, Users, 
     UserLevels, Payments, Location, 
-    LocationHistory, Request, Status, BankAccount, Withdrawal 
+    LocationHistory, Request, Status, BankAccount, Withdrawal,
+    Bills 
 } = require('../models/')
 
 const create_users_table = ()=>{
@@ -104,7 +105,16 @@ const create_withdrawals_table = ()=>{
     })
 }
 
-create_users_table();
+const create_bills_table = ()=>{
+    Bills.sync({force: true}).then(()=>{
+    
+    config.logger.info('bills table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
+
+// create_users_table();
 // create_user_levels_table();
 // create_transactions_table();
 // create_double_spent_table();
@@ -115,3 +125,4 @@ create_users_table();
 // create_statuses_table()
 // create_bank_accounts_table()
 // create_withdrawals_table()
+create_bills_table()

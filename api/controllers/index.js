@@ -16,6 +16,8 @@ const NegotiationController = require('./NegotiationCOntroller')
 const MessageController = require('./MessageTokenController')
 const PinVerificationController = require('./PinVerificationController')
 const DepositorController = require('./DepositorController')
+const AirtimeController = require('./AirtimeController')
+const ElectricityController = require('./ElectricityController')
 
 module.exports = {
     
@@ -36,5 +38,7 @@ module.exports = {
     NegotiationController,
     MessageController,
     PinVerificationController,
-    DepositorController
+    DepositorController,
+    AirtimeController,
+    ElectricityController
 }

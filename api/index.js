@@ -35,5 +35,7 @@ exports.controller = {
     getDepPendingRequests: Controller.DepositorController.getDepPendingRequests,
     getDepAcceptedRequests: Controller.DepositorController.getDepAcceptedRequests,
     updatePersonalData: Controller.UserController.updatePersonalData,
-    updateBasicData: Controller.UserController.updateBasicData
+    updateBasicData: Controller.UserController.updateBasicData,
+    buyAirtime: Controller.AirtimeController.buyAirtime,
+    buyElect: Controller.ElectricityController.buyElect
 }
