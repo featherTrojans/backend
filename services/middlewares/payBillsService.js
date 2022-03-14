@@ -77,7 +77,7 @@ exports.buyAirtimeData = async ({phone, network, amount, type}) =>{
     }
 }
 
-exports.buyLight = ({service, amount, meter_number, variation, phone}) => {
+exports.buyLight = async({service, amount, meter_number, variation, phone}) => {
 
     var url = `${paygold_url}electricity?username=${paygold_username}&password=${paygold_pass}&meter_number=${meter_number}&phone=${phone}&variation_id=${variation}&service_id=${service}&amount=${amount}`
 

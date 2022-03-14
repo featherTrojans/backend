@@ -27,6 +27,7 @@ exports.buyAirtime = ( async (req, res) => {
             })
         } else{
             const reference = 'FTHR' + await idGenService(7);
+            const creditReference = 'FTHR' + await idGenService(7)
             new Promise(function(resolve, reject) {
 
                 const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: "primary wallet", to: "pay bills", title: network});
@@ -45,38 +46,39 @@ exports.buyAirtime = ( async (req, res) => {
                     network,
                     description: `NGN${amount} ${network} airtime purchased on ${phone}`
                 })
-                const buyAirtime = await buyAirtimeData({phone,network, amount, type: 'airtime'})
+                buyAirtimeData({phone,network, amount, type: 'airtime'}).then((buyAirtime) => {
+                    if ( buyAirtime == false) {
 
-                if ( buyAirtime == false) {
+                        //return charged amount
+                        creditService({userUid: userId, reference: creditReference, amount, from: 'pay bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
+                        //update bills status 
+                        Bills.update({status: "FAILED"}, {where: {reference}})
+                        return res.status(400).json({
+                            status: false,
+                            data : {
+                                network,
+                                phone,
+                                amount
+                            },
+                            message: "Cannot purchase airtime at the moment please try again later"
+            
+                        })
+                    } else {
+                        //update bills table
+                        Bills.update({status: "SUCCESS", transId: buyAirtime.request_id}, {where: {reference}})
+                        return res.status(200).json({
+                            status: true,
+                            data: {
+                                network,
+                                amount,
+                                phone
+                            },
+                            message: "Successfully purchased"
+                        })
+                    }
+                })
 
-                    //return charged amount
-                    creditReference = 'FTHR' + await idGenService(7)
-                    creditService({userUid: userId, reference: creditReference, amount, from: 'pay bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
-                    //update bills status 
-                    Bills.update({status: "FAILED"}, {where: {reference}})
-                    return res.status(400).json({
-                        status: false,
-                        data : {
-                            network,
-                            phone,
-                            amount
-                        },
-                        message: "Cannot purchase airtime at the moment please try again later"
-        
-                    })
-                } else {
-                    //update bills table
-                    Bills.update({status: "SUCCESS", transId: buyAirtime.request_id}, {where: {reference}})
-                    return res.status(200).json({
-                        status: true,
-                        data: {
-                            network,
-                            amount,
-                            phone
-                        },
-                        message: "Successfully purchased"
-                    })
-                }
+                
                 
             }).catch(error => {
                 logger.debug(error)

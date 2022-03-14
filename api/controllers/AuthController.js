@@ -18,7 +18,7 @@ exports.signup = ( async (req, res) => {
         const userId = services.idGenService(10)
         const refId = services.idGenService(7)
         const errors = validationResult(req);
-        const username = "feather" + services.codeGenerator(5),
+        const username = "feather" + services.codeGenerator(5);
         const referredBy = data.referredBy ?? 'SETH';
 
         if (!errors.isEmpty()) {
