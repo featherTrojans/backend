@@ -290,13 +290,13 @@ router.group('/', (router) => {
         });
 
         router.group('/bills', (router) => {
-            router.put('/airtime',
+            router.post('/airtime',
                 [   
                     Authenticate,
                 ], 
                 controller.buyAirtime
             );
-            router.put('/electricity',
+            router.post('/electricity',
                 [   
                     Authenticate,
                 ], 

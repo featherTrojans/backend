@@ -5,6 +5,7 @@ const {
     idGenService
 } = require('../../services').services
 const {Users, Bills} = require('../../models')
+const {logger} = require('../../config/').config
 
 exports.buyAirtime = ( async (req, res) => {
 
