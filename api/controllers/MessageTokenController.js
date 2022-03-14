@@ -23,7 +23,7 @@ exports.createToken = ( async (req, res) => {
             })
         } else {
 
-            Users.update({messageToken}, {where: {userUid: userId, reference}}).then((data) => {
+            Users.update({messageToken}, {where: {userUid: userId}}).then((data) => {
                 if (data[0] > 0 ) {
                     return res.status(200).json({
                         status: true,
