@@ -79,7 +79,7 @@ exports.returnLocation = async (data) => {
                 return false;
 
             }else {
-
+                logger.info(`distance: ${distance}`)
                 for (const [key, value] of Object.entries(distance)) {
                     // logger.info(value)
                     allStatuses[key].duration = value.duration.text
