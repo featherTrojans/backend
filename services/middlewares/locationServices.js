@@ -97,10 +97,12 @@ exports.returnLocation = async (data) => {
 
 
         } else{
+        logger.info(allStatuses)
             return false;
         }
 
     } catch(error) {
+        logger.info(allStatuses)
         logger.debug(error);
         return false
     }
