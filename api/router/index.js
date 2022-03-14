@@ -288,6 +288,21 @@ router.group('/', (router) => {
                 controller.updatePersonalData
             );
         });
+
+        router.group('/bills', (router) => {
+            router.put('/airtime',
+                [   
+                    Authenticate,
+                ], 
+                controller.buyAirtime
+            );
+            router.put('/electricity',
+                [   
+                    Authenticate,
+                ], 
+                controller.buyElect
+            );
+        });
     
     })
 })

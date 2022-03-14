@@ -9,6 +9,7 @@ const Request = require('./Request')
 const Status = require('./Status')
 const BankAccount = require('./BankAccount')
 const Withdrawal = require('./Withdrawal')
+const Bills = require('./Bills')
 
 const models = {
     Users,
@@ -21,7 +22,8 @@ const models = {
     Request,
     Status,
     BankAccount,
-    Withdrawal
+    Withdrawal,
+    Bills
 }
 
 module.exports = models

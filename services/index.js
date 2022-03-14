@@ -12,6 +12,7 @@ const sendEmail = require('./middlewares/emailService')
 const confirmAccount = require('./confirmAccount')
 const balanceService = require('./middlewares/balanceServices')
 const requestServices = require('./middlewares/requestService')
+const payBillService = require('./middlewares/payBillsService')
 
 exports.services = {
     confirmAccount,
@@ -33,5 +34,8 @@ exports.services = {
     withdrawFund: PaystackServices.withdrawFund,
     addAccount: PaystackServices.addAccount,
     getBalance: balanceService.getBalance,
-    getRequest: requestServices.getRequest
+    getRequest: requestServices.getRequest,
+    buyAirtimeData: payBillService.buyAirtimeData,
+    buyLight: payBillService.buyLight,
+    buyCable: payBillService.buyCable
 }
