@@ -29,8 +29,14 @@ exports.createStatus = ( (req, res) => {
         } else {
 
 
-            // if (total <= walletBal) {
-                
+            if (locationText.includes('undefined')) {
+                return res.status(400).json({
+                    status: false,
+                    data : {},
+                    message: "Invalid location"
+                })
+            } else {
+
                 Status.create({
 
                     username,
@@ -60,6 +66,8 @@ exports.createStatus = ( (req, res) => {
                     })
                 })
             
+            }  
+                
             
         }
         
