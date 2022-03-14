@@ -302,6 +302,12 @@ router.group('/', (router) => {
                 ], 
                 controller.buyElect
             );
+            router.get('/all',
+            [   
+                Authenticate,
+            ], 
+            controller.getAllBills
+        );
         });
     
     })

@@ -18,6 +18,7 @@ const PinVerificationController = require('./PinVerificationController')
 const DepositorController = require('./DepositorController')
 const AirtimeController = require('./AirtimeController')
 const ElectricityController = require('./ElectricityController')
+const BillsController = require('./BillsController')
 
 module.exports = {
     
@@ -40,5 +41,6 @@ module.exports = {
     PinVerificationController,
     DepositorController,
     AirtimeController,
-    ElectricityController
+    ElectricityController,
+    BillsController 
 }
