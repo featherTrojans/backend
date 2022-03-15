@@ -10,7 +10,7 @@ exports.getDepPendingRequests = (  async (req, res) => {
     {
         const {username} = await Users.findOne({where: {userUid: userId}})
         Request.findAll({
-            attributes: ['userUid','reference', 'amount', 'charges', 'total','negotiatedFee', 'status', 'createdAt' ],
+            attributes: ['userUid','reference', 'amount', 'charges', 'total','negotiatedFee', 'status', 'meetupPoint', 'createdAt' ],
             where: {agentUsername: username, status: 'PENDING'}
         }).then ((data) => {
             return res.status(200).json({
@@ -43,7 +43,7 @@ exports.getDepAcceptedRequests = (  async (req, res) => {
     {
         const {username} = await Users.findOne({where: {userUid: userId}})
         Request.findAll({
-            attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'createdAt' ],
+            attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
             where: {agentUsername: username, status: 'ACCEPTED'}
         }).then ((data) => {
             return res.status(200).json({
