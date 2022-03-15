@@ -192,7 +192,7 @@ router.group('/', (router) => {
             controller.createRequest
         );
 
-        router.put('/request/mark/:reference',
+        router.put('/request/accept/:reference',
             [   
                 Authenticate,
             ], 
@@ -211,6 +211,13 @@ router.group('/', (router) => {
                 Authenticate, 
             ], 
             controller.createStatus
+        );
+
+        router.get('/status/get',
+            [   
+                Authenticate, 
+            ], 
+            controller.getAllStatuses
         );
 
         router.post('/request/approve', 
