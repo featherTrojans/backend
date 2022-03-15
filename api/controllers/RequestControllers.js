@@ -45,7 +45,7 @@ exports.getAcceptedRequests = (  (req, res) => {
     try
     {
         Request.findAll({
-            attributes: ['reference', 'amount', 'charges', 'total', 'agent', 'agentUsername', 'status', 'createdAt' ],
+            attributes: ['reference', 'amount', 'charges', 'total', 'agent', 'agentUsername', 'status', 'meetupPoint', 'createdAt' ],
             where: {userUid: userId, status: 'ACCEPTED'}
         }).then ((data) => {
             return res.status(200).json({
@@ -133,7 +133,7 @@ exports.cancelRequests = ( (req, res) => {
 exports.createRequest = ( async (req, res) => {
     
     const { userId, username } = req.user
-    const { amount, charges, agent, agentUsername, statusId } = req.body
+    const { amount, charges, agent, agentUsername, statusId, meetupPoint } = req.body
     const transId = idGenService(10);
     const errors = validationResult(req);
 
@@ -145,7 +145,7 @@ exports.createRequest = ( async (req, res) => {
 
             return res.status(403).json({ errors: errors.array() });
   
-        }else if (!(amount || charges || agent || agentUsername || statusId)) {
+        }else if (!(amount || charges || agent || agentUsername || statusId || meetupPoint)) {
             return res.status(400).json({
                 status : false,
                 data: {},
@@ -181,7 +181,8 @@ exports.createRequest = ( async (req, res) => {
                     transId,
                     reference: transId,
                     total,
-                    statusId
+                    statusId,
+                    meetupPoint
     
                 }).then (() => {
     

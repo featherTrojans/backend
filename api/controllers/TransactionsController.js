@@ -8,7 +8,7 @@ exports.transactions = ( async (req, res) => {
     try
     {
         const transactions = await Transactions.findAll({
-            attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'createdAt'],
+            attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'title', 'createdAt'],
             where: {userUid: userId},
             order: [['createdAt', 'DESC']],
         })

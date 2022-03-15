@@ -100,6 +100,13 @@ const Request = db_con.define("requests", {
            notEmpty: true
         }
     },
+    "meetupPoint": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate: {
+           notEmpty: true
+        }
+    },
     
 })
 
