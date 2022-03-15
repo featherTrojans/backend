@@ -1,7 +1,6 @@
 const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
-
 const Transactions = db_con.define("transactions", {
     "userUid": {
         allowNull: false,
@@ -96,5 +95,4 @@ const Transactions = db_con.define("transactions", {
     },
     
 })
-
 module.exports = Transactions

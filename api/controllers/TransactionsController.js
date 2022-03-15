@@ -1,5 +1,5 @@
 const { config } = require("../../config");
-const { Transactions } = require("../../models");
+const { Transactions, Users } = require("../../models");
 const logger = config.logger
 
 exports.transactions = ( async (req, res) => {
@@ -8,9 +8,15 @@ exports.transactions = ( async (req, res) => {
     try
     {
         const transactions = await Transactions.findAll({
+
             attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'title', 'createdAt'],
             where: {userUid: userId},
             order: [['createdAt', 'DESC']],
+            include: [{
+                model: Users,
+                attributes: ['fullName', 'imageUrl'],
+                
+               }]
         })
         return res.status(200).json({
             status: true,
