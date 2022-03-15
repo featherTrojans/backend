@@ -88,7 +88,7 @@ const Transactions = db_con.define("transactions", {
     "title": {
         allowNull: true,
         type: Sequelize.STRING,
-        defaultValue: "funding",
+        defaultValue: "Wallet Funding",
         validate: {
            notEmpty: true
         }

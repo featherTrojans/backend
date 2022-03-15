@@ -87,7 +87,7 @@ exports.findStatus = async (req, res) => {
     const errors = validationResult(req);
     try
     {
-        const charges = amount * 0.01 //1%
+        const charges = Math.ceil(amount / 5000) * 100 //100 per 5000
         if (!errors.isEmpty()) {
 
             return res.status(403).json({ errors: errors.array() });
@@ -117,6 +117,7 @@ exports.findStatus = async (req, res) => {
                     return res.status(200).json({
                         status: true,
                         data,
+                        charges,
                         message: 'statuses found successfully'
                     })
                 }

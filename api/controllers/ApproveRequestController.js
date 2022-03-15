@@ -51,7 +51,7 @@ exports.approveRequest = ( async (req, res) => {
                         Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
 
                         //refund & debit escrow
-                        creditService({userUid, reference: transId, amount: total, description: `N${total} transferred from Escrow`, from: 'escrow', to: 'primary wallet'});
+                        creditService({userUid, reference: transId, amount: total, description: `N${total} transferred from Escrow`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
                         return res.status(400).json({
                             status: false,
                             data: {
@@ -88,7 +88,7 @@ exports.approveRequest = ( async (req, res) => {
                     if (agentData != null ) {
                         var agentId = agentData.userUid;
 
-                        const feather_commission = 0.5/100;
+                        const feather_commission = 1/100;
                         const amountToCredit = (total) - (total * feather_commission);
 
                         //get status data
@@ -106,7 +106,7 @@ exports.approveRequest = ( async (req, res) => {
                                 
                                 Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
                                 //credit reciever and debit escrow
-                                creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `N${amountToCredit} transferred from Escrow`, from: 'escrow', to: 'primary wallet'});
+                                creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `N${amountToCredit} transferred from Escrow`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
 
                                 return res.status(202).json({
                                     status: true,
