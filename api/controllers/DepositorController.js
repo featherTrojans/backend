@@ -1,6 +1,5 @@
 const { Request, Users } = require("../../models");
-const services = require("../../services/").services;
-const {confirmData} = services
+const {logger} = require("../../config/").config
 
 exports.getDepPendingRequests = (  async (req, res) => {
 
@@ -8,10 +7,15 @@ exports.getDepPendingRequests = (  async (req, res) => {
 
     try
     {
-        const {username} = await Users.findOne({where: {userUid: userId}})
+        let {username} = await Users.findOne({where: {userUid: userId}})
         Request.findAll({
-            attributes: ['userUid','reference', 'amount', 'charges', 'total','negotiatedFee', 'status', 'meetupPoint', 'createdAt' ],
-            where: {agentUsername: username, status: 'PENDING'}
+            attributes: ['reference', 'amount', 'charges', 'total','negotiatedFee', 'status', 'meetupPoint', 'createdAt' ],
+            where: {agentUsername: username, status: 'PENDING'},
+            include: {
+                model: Users,
+                attributes: ['fullName', 'username', 'phoneNumber'],
+            }
+        
         }).then ((data) => {
             return res.status(200).json({
                 status: true,
@@ -41,7 +45,7 @@ exports.getDepAcceptedRequests = (  async (req, res) => {
 
     try
     {
-        const {username} = await Users.findOne({where: {userUid: userId}})
+        let {username} = await Users.findOne({where: {userUid: userId}})
         Request.findAll({
             attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
             where: {agentUsername: username, status: 'ACCEPTED'}

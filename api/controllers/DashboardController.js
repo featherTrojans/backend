@@ -14,7 +14,12 @@ exports.dashboard = ( async (req, res) => {
             attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'title', 'createdAt'],
             where: {userUid: userId},
             order: [['createdAt', 'DESC']],
-            limit: 10
+            limit: 10,
+            include: [{
+                model: Users,
+                attributes: ['fullName', 'imageUrl'],
+                
+               }]
 
         })
         return res.status(200).json({
