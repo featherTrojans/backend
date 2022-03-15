@@ -245,15 +245,15 @@ exports.markRequests = ( (req, res) => {
 
         } else {
 
-            Request.update({status: 'SUCCESS'},{
-                where: {userUid: userId, reference, status: ["ACCEPTED", "PENDING"]}
+            Request.update({status: 'ACCEPTED'},{
+                where: {userUid: userId, reference, status: ["PENDING"]}
             }).then ((data) => {
                 if (data[0] > 0 ) {
                     return res.status(202).json({
                         status: true,
                         data: {
                             reference,
-                            "message": "Received successfully"
+                            "message": "Request accepted"
                         },
                         message: "success"
                     })

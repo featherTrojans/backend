@@ -141,3 +141,35 @@ exports.findStatus = async (req, res) => {
         })
     }
 }
+
+exports.allStatus = ( async (req, res) => {
+
+    const { userId } = req.user
+    try
+    {
+        const {username} = await Users.findOne({where: {userUid: userId}})
+        const transactions = await Status.findAll({
+            attributes: ['username', 'fullName', 'longitude', 'latitude', 'locationText', 'amount', 'status', 'reference', 'createdAt'],
+            where: {username, status: "ACTIVE"},
+            order: [['createdAt', 'DESC']],
+        })
+        return res.status(200).json({
+            status: true,
+            data : {
+
+                transactions
+
+            },
+            message: "success"
+        })
+
+
+    } catch (error) {
+        logger.info(error)
+        return res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        })
+    }
+});
