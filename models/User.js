@@ -177,5 +177,4 @@ const Users = db_con.define("users", {
         }
     },
 })
-
 module.exports = Users
