@@ -163,7 +163,7 @@ exports.createRequest = ( async (req, res) => {
                 const ref = userId + config.time + walletBal;
                 await new Promise(function(resolve, reject) {
 
-                    const debitUser = debitService({userUid: userId, reference: transId, amount: total, description: `#${total} transferred to Escrow`, from: username, to: 'Escrow', id: ref});
+                    const debitUser = debitService({userUid: userId, reference: transId, amount: total, description: `#${total} transferred to Escrow`, from: username, to: 'Escrow', id: ref, title: "Wallet Debit"});
 
                     debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                     // set timer to 7 secs to give room for db updates

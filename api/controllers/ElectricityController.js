@@ -33,7 +33,7 @@ exports.buyElect = ( async (req, res) => {
             const creditReference = 'FTHR' + await idGenService(7)
             new Promise(function(resolve, reject) {
 
-                const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${variation} ${service} token purchased on ${meter_number}`, from: "primary wallet", to: "pay bills", title: "Electricity Bills"});
+                const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${variation} ${service} token purchased on ${meter_number}`, from: "primary wallet", to: "pay bills", title: "Utility Payment"});
 
                 debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                 // set timer to 7 secs to give room for db updates

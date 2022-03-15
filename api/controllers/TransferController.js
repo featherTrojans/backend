@@ -83,7 +83,7 @@ exports.transferFunds = ( async (req, res) => {
 
                     new Promise(function(resolve, reject) {
 
-                        const debitService = services.debitService({userUid: userId, reference, amount, description: `NGN${amount} transferred to ${transferTo}`, from: username, to: transferTo, id: transId, title: 'transfer'});
+                        const debitService = services.debitService({userUid: userId, reference, amount, description: `NGN${amount} transferred to ${transferTo}`, from: username, to: transferTo, id: transId, title: 'Wallet Debit'});
 
                         debitService ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                         // set timer to 7 secs to give room for db updates
@@ -91,7 +91,7 @@ exports.transferFunds = ( async (req, res) => {
                     }).then(() => {
 
                         // credit after successful debit
-                        services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, id: transId, title: 'transfer'})
+                        services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, id: transId, title: 'Wallet Credit'})
 
                     }).catch(error => {
                         logger.debug(error)

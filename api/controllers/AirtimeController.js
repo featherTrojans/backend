@@ -27,11 +27,11 @@ exports.buyAirtime = ( async (req, res) => {
 
             })
         } else{
-            const reference = 'FTHR' + await idGenService(7);
-            const creditReference = 'FTHR' + await idGenService(7)
+            const reference = 'FTH' + await idGenService(10);
+            const creditReference = 'FTH' + await idGenService(10)
             new Promise(function(resolve, reject) {
 
-                const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: "primary wallet", to: "pay bills", title: network});
+                const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: "primary wallet", to: "pay bills", title: "Airtime Purchase"});
 
                 debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                 // set timer to 7 secs to give room for db updates
