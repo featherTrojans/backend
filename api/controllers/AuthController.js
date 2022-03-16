@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const { config } = require("../../config")
-const logger = config.logger
+const {logger, Op} = config
 const services = require("../../services").services
 const Users = require("../../models/User")
 const TokenServices = services.TokenServices
@@ -481,12 +481,17 @@ exports.signIn = async (req, res) => {
             })
 
         } else{
-            const checkUsername = await services.confirmData({data: username, type: 'username'})
+            const checkUsername = await Users.findOne({where: {
+                [Op.or]: {
+                    username,
+                    phoneNumber: username
+                }
+            }})
             if ( checkUsername == null) {
                 return res.status(404).json({
                     status : false,
                     data: {},
-                    message: "Invalid Username"
+                    message: "Invalid data used"
                 })
             } else {
                 const verifyPassword = await bcrypt.compare(password, checkUsername.password)
