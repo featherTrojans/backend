@@ -3,13 +3,19 @@ const {confirmData} = require('../../services/').services
 const { validationResult } = require('express-validator');
 const {Users} = require('../../models/')
 
-const logger = config.logger
+const {logger, Op} = config
 exports.getUser = ( async (req, res) => {
 
     const { username } = req.params
     try
     {
-        const users = await  confirmData({type: 'username', data: username});
+        const users = await  Users.findOne({where: {
+            [Op.or]: {
+                username,
+                phoneNumber: username
+            }
+        }});
+        
         if (users == null) {
             return res.status(404).json({
                 status: false,
