@@ -1,5 +1,4 @@
 const { config } = require("../../config");
-const {confirmData} = require('../../services/').services
 const { validationResult } = require('express-validator');
 const {Users} = require('../../models/')
 
@@ -15,7 +14,7 @@ exports.getUser = ( async (req, res) => {
                 phoneNumber: username
             }
         }});
-        
+
         if (users == null) {
             return res.status(404).json({
                 status: false,
