@@ -225,7 +225,7 @@ exports.createRequest = ( async (req, res) => {
 
 exports.markRequests = ( (req, res) => {
     
-    const { userId } = req.user
+    const { username } = req.user
     const {reference} = req.params
     const errors = validationResult(req);
 
@@ -246,7 +246,7 @@ exports.markRequests = ( (req, res) => {
         } else {
 
             Request.update({status: 'ACCEPTED'},{
-                where: {userUid: userId, reference, status: ["PENDING"]}
+                where: {agentUsername: username, reference, status: ["PENDING"]}
             }).then ((data) => {
                 if (data[0] > 0 ) {
                     return res.status(202).json({

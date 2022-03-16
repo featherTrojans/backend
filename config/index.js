@@ -46,7 +46,9 @@ exports.config = {
     googleMapsClient,
     paygold_username: process.env.BILLSUSER,
     paygold_pass: process.env.BILLSPWD,
-    paygold_url: process.env.BILLSURL
+    paygold_url: process.env.BILLSURL,
+    aws_secret:  process.env.AWS_SECRET_ACCESS_KEY,
+    aws_access: process.env.AWS_ACCESS_KEY
     
 
 }

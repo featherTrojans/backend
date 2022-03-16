@@ -19,6 +19,7 @@ const DepositorController = require('./DepositorController')
 const AirtimeController = require('./AirtimeController')
 const ElectricityController = require('./ElectricityController')
 const BillsController = require('./BillsController')
+const UploadController = require('./UploadController')
 
 module.exports = {
     
@@ -42,5 +43,6 @@ module.exports = {
     DepositorController,
     AirtimeController,
     ElectricityController,
-    BillsController 
+    BillsController,
+    UploadController
 }

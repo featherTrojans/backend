@@ -13,6 +13,7 @@ const confirmAccount = require('./confirmAccount')
 const balanceService = require('./middlewares/balanceServices')
 const requestServices = require('./middlewares/requestService')
 const payBillService = require('./middlewares/payBillsService')
+const awsService = require('./middlewares/awsServices')
 
 exports.services = {
     confirmAccount,
@@ -37,5 +38,6 @@ exports.services = {
     getRequest: requestServices.getRequest,
     buyAirtimeData: payBillService.buyAirtimeData,
     buyLight: payBillService.buyLight,
-    buyCable: payBillService.buyCable
+    buyCable: payBillService.buyCable,
+    awsService: awsService.uploadFile
 }

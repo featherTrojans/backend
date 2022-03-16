@@ -39,5 +39,6 @@ exports.controller = {
     buyAirtime: Controller.AirtimeController.buyAirtime,
     buyElect: Controller.ElectricityController.buyElect,
     getAllBills: Controller.BillsController.allBills,
-    getAllStatuses: Controller.StatusController.allStatus
+    getAllStatuses: Controller.StatusController.allStatus,
+    uploadFile: Controller.UploadController.uploadImages
 }

@@ -281,6 +281,17 @@ router.group('/', (router) => {
                 );
         });
 
+        router.group('/upload', (router) => {
+            router.post('/image', 
+                [
+                    Authenticate
+
+                ], 
+                    controller.uploadFile
+                );
+        });
+
+
         router.group('/profile/update', (router) => {
             router.put('/basic',
                 [   
