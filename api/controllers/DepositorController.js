@@ -48,7 +48,11 @@ exports.getDepAcceptedRequests = (  async (req, res) => {
         let {username} = await Users.findOne({where: {userUid: userId}})
         Request.findAll({
             attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
-            where: {agentUsername: username, status: 'ACCEPTED'}
+            where: {agentUsername: username, status: 'ACCEPTED'},
+            include: {
+                model: Users,
+                attributes: ['fullName', 'username', 'phoneNumber'],
+            }
         }).then ((data) => {
             return res.status(200).json({
                 status: true,
