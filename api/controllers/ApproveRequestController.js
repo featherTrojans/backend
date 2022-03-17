@@ -44,7 +44,7 @@ exports.approveRequest = ( async (req, res) => {
             if (pin_attempts > 3 ){
 
                 Request.update({status: 'CANCELLED', reasonForCancel: "Incorrect Pin"},{
-                    where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
+                    where: {reference, status: ["PENDING", "ACCEPTED"]}
                 }).then ((data) => {
                     if (data[0] > 0 ) {
 
