@@ -3,7 +3,7 @@ const { Request, Users } = require("../../models");
 const logger = config.logger
 const services = require("../../services").services
 const { validationResult } = require('express-validator')
-const {idGenService, debitService} = services
+const {idGenService, debitService, creditService} = services
 
 
 exports.getPendingRequests = (  (req, res) => {
@@ -98,7 +98,7 @@ exports.cancelRequests = ( async (req, res) => {
                     }
             })
             const newEscrowBal = escrowBal - amount;
-            
+
             Request.update({status: 'CANCELLED', reasonForCancel},{
                 where: {userUid: userId, reference, status: "PENDING"}
             }).then ((data) => {
