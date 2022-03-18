@@ -54,18 +54,21 @@ exports.returnLocation = async (data) => {
         let allStatuses = await Status.findAll({
             attributes: ['username', 'fullName', 'longitude', 'latitude', 'locationText', 'amount', 'reference'],
             where: {
+            locationText: {
+                [Op.substring]: `${data.location}`
+            },
             status: 'ACTIVE',
             amount: {
                 [Op.gte]: data.amount
             },
             username: {
                 [Op.not]: data.username
-            }
+            },
         },
         order: [['createdAt', 'DESC']],
         limit: 24
-    }) //get statuses
-
+        }) //get statuses
+        
         if ( allStatuses.length > 0 ) {
             // logger.info(allStatuses)
             for (const [key, value] of Object.entries(allStatuses)){
