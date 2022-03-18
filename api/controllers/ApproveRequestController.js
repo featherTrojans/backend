@@ -35,9 +35,9 @@ exports.approveRequest = ( async (req, res) => {
             });
 
 
-            let {pin, pin_attempts, escrowBal } = await Users.findOne({
+            let {pin, pin_attempts, escrowBal, username } = await Users.findOne({
                 where: {userUid},
-                attributes: ['pin', 'pin_attempts', 'escrowBal']
+                attributes: ['pin', 'pin_attempts', 'escrowBal', 'username']
             });
 
             const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
@@ -51,7 +51,7 @@ exports.approveRequest = ( async (req, res) => {
                         Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
 
                         //refund & debit escrow
-                        creditService({userUid, reference: transId, amount: total, description: `N${total} transferred from Escrow`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
+                        creditService({userUid, reference: transId, amount: total, description: `NGN${total} transferred from Escrow`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
                         return res.status(400).json({
                             status: false,
                             data: {
@@ -106,7 +106,7 @@ exports.approveRequest = ( async (req, res) => {
                                 
                                 Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
                                 //credit reciever and debit escrow
-                                creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `N${amountToCredit} transferred from Escrow`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
+                                creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `NGN${amountToCredit} cash withdrawal from ${username}`, from: username, to: 'primary wallet', title: 'Wallet Credit'});
 
                                 return res.status(202).json({
                                     status: true,
