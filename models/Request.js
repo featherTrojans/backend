@@ -22,7 +22,6 @@ const Request = db_con.define("requests", {
     },
     "statusId": {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
