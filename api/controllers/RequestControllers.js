@@ -70,7 +70,7 @@ exports.getAcceptedRequests = (  (req, res) => {
     }
 });
 
-exports.cancelRequests = ( (req, res) => {
+exports.cancelRequests = ( async (req, res) => {
     
     const { userId } = req.user
     const {reference, reasonForCancel} = req.body
@@ -90,10 +90,23 @@ exports.cancelRequests = ( (req, res) => {
             })
         } else {
 
+            const {amount} = await Request.findOne({attributes: ['amount'],
+            where: {reference}})
+            const {escrowBal} = await Users.findOne({attributes: ['escrowBal'],
+                    where: {
+                        userUid: userId
+                    }
+            })
+            const newEscrowBal = escrowBal - amount;
+            
             Request.update({status: 'CANCELLED', reasonForCancel},{
                 where: {userUid: userId, reference, status: "PENDING"}
             }).then ((data) => {
                 if (data[0] > 0 ) {
+
+                    Users.update({escrowBal: newEscrowBal }, {where: {userUid: userId}});
+                    //return and debit escrow
+                    creditService({userUid: userId, reference: transId, amount, description: `NGN${amount} cash withdrawal from ${username}`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
                     return res.status(202).json({
                         status: true,
                         data: {
