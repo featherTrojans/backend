@@ -239,43 +239,62 @@ exports.allStatus = ( async (req, res) => {
             where: {username, status: "ACTIVE"},
             order: [['createdAt', 'DESC']],
         })
-        const acceptedRequests = await Request.findAll({
-            attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
-            where: {agentUsername: username, status: 'ACCEPTED'},
-            include: {
-                model: Users,
-                attributes: ['fullName', 'username', 'phoneNumber'],
-            }
-        })
-        const pendingRequests = await Request.findAll({
-            attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
-            where: {agentUsername: username, status: 'PENDING'},
-            include: {
-                model: Users,
-                attributes: ['fullName', 'username', 'phoneNumber'],
-            }
-        })
 
+        if ( transactions != null ) {
+            let acceptedRequests = await Request.findAll({
+                attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
+                where: {agentUsername: username, status: 'ACCEPTED', statusId: transactions[0].reference},
+                include: {
+                    model: Users,
+                    attributes: ['fullName', 'username', 'phoneNumber'],
+                }
+            })
+            let pendingRequests = await Request.findAll({
+                attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
+                where: {agentUsername: username, status: 'PENDING', statusId: transactions[0].reference},
+                include: {
+                    model: Users,
+                    attributes: ['fullName', 'username', 'phoneNumber'],
+                }
+            })
     
-        const result = await Request.findAll({
-            where: {agentUsername: username, status: 'SUCCESS'},
-            attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalEarnings']]
-        })
-
-        const totalEarnings = result[0].dataValues.totalEarnings == null ? 0 : result[0].dataValues.totalEarnings
         
-        return res.status(200).json({
-            status: true,
-            data : {
+            const result = await Request.findAll({
+                where: {agentUsername: username, status: 'SUCCESS', reference: transactions[0].reference},
+                attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalEarnings']]
+            })
+    
+            let totalEarnings = result[0].dataValues.totalEarnings == null ? 0 : result[0].dataValues.totalEarnings
+            
+            return res.status(200).json({
+                status: true,
+                data : {
+    
+                    status: transactions,
+                    pendingRequests,
+                    acceptedRequests,
+                    totalEarnings
+    
+                },
+                message: "success"
+            })
+        } else {
 
-                status: transactions,
-                pendingRequests,
-                acceptedRequests,
-                totalEarnings
-
-            },
-            message: "success"
-        })
+            return res.status(200).json({
+                status: true,
+                data : {
+    
+                    status: transactions,
+                    pendingRequests: [],
+                    acceptedRequests: [],
+                    totalEarnings: 0
+    
+                },
+                message: "success"
+            })
+        }
+        
+        
 
 
     } catch (error) {
