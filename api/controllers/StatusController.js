@@ -258,7 +258,7 @@ exports.allStatus = ( async (req, res) => {
 
     
         const result = await Request.findAll({
-            where: {agentUsername: username, status: 'SUCCESS', reference: transactions[0].reference},
+            where: {agentUsername: username, status: 'SUCCESS'},
             attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalEarnings']]
         })
 
