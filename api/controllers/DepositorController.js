@@ -3,11 +3,10 @@ const {logger} = require("../../config/").config
 
 exports.getDepPendingRequests = (  async (req, res) => {
 
-    const { userId } = req.user
+    const { username } = req.user
 
     try
     {
-        let {username} = await Users.findOne({where: {userUid: userId}})
         Request.findAll({
             attributes: ['reference', 'amount', 'charges', 'total','negotiatedFee', 'status', 'meetupPoint', 'createdAt' ],
             where: {agentUsername: username, status: 'PENDING'},
@@ -41,11 +40,10 @@ exports.getDepPendingRequests = (  async (req, res) => {
 
 exports.getDepAcceptedRequests = (  async (req, res) => {
 
-    const { userId } = req.user
+    const { username } = req.user
 
     try
     {
-        let {username} = await Users.findOne({where: {userUid: userId}})
         Request.findAll({
             attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
             where: {agentUsername: username, status: 'ACCEPTED'},
