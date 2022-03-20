@@ -241,7 +241,7 @@ exports.allStatus = ( async (req, res) => {
         })
         const acceptedRequests = await Request.findAll({
             attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
-            where: {agentUsername: username, status: 'ACCEPTED'},
+            where: {agentUsername: username, status: 'ACCEPTED', statusId: transactions[0].reference},
             include: {
                 model: Users,
                 attributes: ['fullName', 'username', 'phoneNumber'],
@@ -249,19 +249,21 @@ exports.allStatus = ( async (req, res) => {
         })
         const pendingRequests = await Request.findAll({
             attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
-            where: {agentUsername: username, status: 'PENDING'},
+            where: {agentUsername: username, status: 'PENDING', statusId: transactions[0].reference},
             include: {
                 model: Users,
                 attributes: ['fullName', 'username', 'phoneNumber'],
             }
         })
 
+    
         const result = await Request.findAll({
-            where: {agentUsername: username, status: 'SUCCESS'},
+            where: {agentUsername: username, status: 'SUCCESS', reference: transactions[0].reference},
             attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalEarnings']]
         })
 
         const totalEarnings = result[0].dataValues.totalEarnings == null ? 0 : result[0].dataValues.totalEarnings
+        
         return res.status(200).json({
             status: true,
             data : {
