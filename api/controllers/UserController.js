@@ -12,8 +12,10 @@ exports.getUser = ( async (req, res) => {
             [Op.or]: {
                 username,
                 phoneNumber: username
-            }
-        }});
+            },
+            },
+            attributes: {exclude: ['id', 'pin', 'pin_attempts', 'password', 'updatedAt', 'referredBy', 'code']}
+        });
 
         if (users == null) {
             return res.status(404).json({
@@ -24,18 +26,7 @@ exports.getUser = ( async (req, res) => {
         }else {
             return res.status(200).json({
                 status: true,
-                data : {
-                    user_id: users.user_Uid,
-                    username: users.username,
-                    fullName: users.fullName,
-                    phoneNumber: users.phoneNumber,
-                    email: users.email,
-                    isVerified: users.isVerified,
-                    userLevel: users.userLevel,
-                    messageToken: users.messageToken,
-                    imageUrl: users.imageUrl
-
-                },
+                data : users,
                 message: "success"
             })
         }

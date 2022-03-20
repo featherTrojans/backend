@@ -213,6 +213,13 @@ router.group('/', (router) => {
             controller.createStatus
         );
 
+        router.put('/status/update',
+            [   
+                Authenticate, 
+            ], 
+            controller.updateStatus
+        );
+
         router.get('/status/get',
             [   
                 Authenticate, 

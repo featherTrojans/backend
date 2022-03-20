@@ -1,7 +1,7 @@
 const { config } = require("../../config");
 const {Payments } = require("../../models");
 const logger = config.logger
-const services = require("../../services").services
+const {services} = require("../../services")
 const {initializeTransaction, idGenService, verifyTransaction} = services
 
 exports.makePayment = ( async (req, res) => {
