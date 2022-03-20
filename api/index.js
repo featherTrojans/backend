@@ -40,5 +40,6 @@ exports.controller = {
     buyElect: Controller.ElectricityController.buyElect,
     getAllBills: Controller.BillsController.allBills,
     getAllStatuses: Controller.StatusController.allStatus,
-    uploadFile: Controller.UploadController.uploadImages
+    uploadFile: Controller.UploadController.uploadImages,
+    updateStatus: Controller.StatusController.UpdateStatus
 }
