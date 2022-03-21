@@ -35,7 +35,7 @@ exports.transferFunds = ( async (req, res) => {
                 where: { userUid: userId }
             })
             const verifyPin = await bcrypt.compare(userPin, pin);
-            logger.info((userPin))
+            
             if (verifyPin != true ) {
                 return res.status(403).json({
 

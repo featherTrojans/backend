@@ -15,7 +15,7 @@ const UserLevels = db_con.define("user_levels", {
     "privilege": {
         allowNull: false,
         unique: true,
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         validate : {
            notEmpty: true
         }
