@@ -1,7 +1,7 @@
 const { config } = require("../../config");
 const { validationResult } = require('express-validator');
 const { Request } = require("../../models");
-const logger = config.logger
+const {logger, Op} = config
 
 
 exports.createNegotiation = ( async (req, res) => {
@@ -23,7 +23,8 @@ exports.createNegotiation = ( async (req, res) => {
             })
         } else {
 
-            Request.update({negotiatedFee}, {where: {userUid: userId, reference}}).then((data) => {
+            Request.update({negotiatedFee}, {where: {
+                userUid: userId, reference}}).then((data) => {
                 if (data[0] > 0 ) {
                     return res.status(200).json({
                         status: true,

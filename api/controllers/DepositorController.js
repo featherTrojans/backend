@@ -8,7 +8,7 @@ exports.getDepPendingRequests = (  async (req, res) => {
     try
     {
         Request.findAll({
-            attributes: ['reference', 'amount', 'charges', 'total','negotiatedFee', 'status', 'meetupPoint', 'createdAt' ],
+            attributes: ['reference', 'amount', 'charges', 'total','negotiatedFee', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
             where: {agentUsername: username, status: 'PENDING'},
             include: {
                 model: Users,
@@ -45,7 +45,7 @@ exports.getDepAcceptedRequests = (  async (req, res) => {
     try
     {
         Request.findAll({
-            attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
+            attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
             where: {agentUsername: username, status: 'ACCEPTED'},
             include: {
                 model: Users,
