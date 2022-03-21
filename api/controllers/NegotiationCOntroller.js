@@ -7,7 +7,7 @@ const {logger, Op} = config
 exports.createNegotiation = ( async (req, res) => {
 
     const { negotiatedFee, reference } = req.body
-    const {userId} = req.user
+    const {userId, username} = req.user
     const errors = validationResult(req);
     try
     {
@@ -24,7 +24,10 @@ exports.createNegotiation = ( async (req, res) => {
         } else {
 
             Request.update({negotiatedFee}, {where: {
-                userUid: userId, reference}}).then((data) => {
+                [Op.or]:{
+                    userUid: userId,
+                    agentUsername: username
+                }, reference}}).then((data) => {
                 if (data[0] > 0 ) {
                     return res.status(200).json({
                         status: true,
