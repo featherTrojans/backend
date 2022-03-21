@@ -41,5 +41,7 @@ exports.controller = {
     getAllBills: Controller.BillsController.allBills,
     getAllStatuses: Controller.StatusController.allStatus,
     uploadFile: Controller.UploadController.uploadImages,
-    updateStatus: Controller.StatusController.UpdateStatus
+    updateStatus: Controller.StatusController.UpdateStatus,
+    sendForgotPswdCode: Controller.ForgotPasswordController.sendForgotPasswordCode,
+    setNewPassword: Controller.ForgotPasswordController.setNewPassword
 }
