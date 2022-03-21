@@ -110,6 +110,15 @@ router.group('/', (router) => {
         controller.dashboard
         );
 
+        router.post('/forgot/password', 
+            controller.sendForgotPswdCode
+        );
+        router.put('/new/password',
+            [Authenticate],
+            controller.setNewPassword
+        );
+
+
         router.get('/transactions',
         [   
             Authenticate
