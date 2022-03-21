@@ -6,15 +6,16 @@ const {
 } = require('../../services').services
 const {Users, Bills} = require('../../models')
 const {logger} = require('../../config/').config
+const bcrypt = require('bcryptjs');
 
 exports.buyElect = ( async (req, res) => {
 
     const {userId} = req.user
-    const { service, amount, meter_number, variation, phone } = req.body
+    const { service, amount, meter_number, variation, phone , userPin} = req.body
 
     try{
-        const {walletBal} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal']})
-
+        const {walletBal, pin} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin']})
+        const verifyPin = await bcrypt.compare(userPin, pin);
         if ( amount > walletBal) {
             return res.status(400).json({
                 status: false,
@@ -26,6 +27,14 @@ exports.buyElect = ( async (req, res) => {
                 },
                 message: "Cannot purchase electricity at the moment because your balance is not enough "
 
+            })
+        }else if (verifyPin != true ) {
+            return res.status(403).json({
+
+                status: false,
+                data : {},
+                message: "Pin is Incorrect"
+    
             })
         } else{
         

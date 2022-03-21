@@ -3,7 +3,7 @@ require('express-group-routes');
 const router = express.Router();
 const controller = require('../index').controller
 const { body, validationResult } = require('express-validator');
-const {Authenticate} = require("../../services").services
+const {Authenticate, LevelCheck} = require("../../services").services
 
 
 router.group('/', (router) => {
@@ -120,7 +120,8 @@ router.group('/', (router) => {
 
         router.post('/pay',
         [   
-            Authenticate
+            Authenticate,
+            LevelCheck
             
         ], 
         controller.makePayment
@@ -135,6 +136,7 @@ router.group('/', (router) => {
         );
         router.post('/transfer', [
             Authenticate,
+            LevelCheck,
             body('transferTo').toUpperCase(),
             body('userPin').isNumeric(),
             body('userPin').isLength({ min: 4, max: 4}),
@@ -208,14 +210,16 @@ router.group('/', (router) => {
 
         router.post('/status/create',
             [   
-                Authenticate, 
+                Authenticate,
+                LevelCheck
             ], 
             controller.createStatus
         );
 
         router.put('/status/update',
             [   
-                Authenticate, 
+                Authenticate,
+                LevelCheck
             ], 
             controller.updateStatus
         );
@@ -238,6 +242,7 @@ router.group('/', (router) => {
         router.post('/status/find',
         [   
             Authenticate,
+            LevelCheck
         ], 
         controller.findStatus
         );
