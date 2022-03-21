@@ -242,7 +242,7 @@ exports.allStatus = ( async (req, res) => {
 
         if ( transactions != null ) {
             let acceptedRequests = await Request.findAll({
-                attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
+                attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
                 where: {agentUsername: username, status: 'ACCEPTED', statusId: transactions[0].reference},
                 include: {
                     model: Users,
@@ -250,7 +250,7 @@ exports.allStatus = ( async (req, res) => {
                 }
             })
             let pendingRequests = await Request.findAll({
-                attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'createdAt' ],
+                attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
                 where: {agentUsername: username, status: 'PENDING', statusId: transactions[0].reference},
                 include: {
                     model: Users,
