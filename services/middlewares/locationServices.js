@@ -54,9 +54,9 @@ exports.returnLocation = async (data) => {
         let allStatuses = await Status.findAll({
             attributes: ['username', 'fullName', 'longitude', 'latitude', 'locationText', 'amount', 'reference'],
             where: {
-            locationText: {
-                [Op.substring]: `${data.location}`
-            },
+            // locationText: {
+            //     [Op.substring]: `${data.location}`
+            // },
             status: 'ACTIVE',
             amount: {
                 [Op.gte]: data.amount
