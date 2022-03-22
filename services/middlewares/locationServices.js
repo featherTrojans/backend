@@ -90,7 +90,7 @@ exports.returnLocation = async (data) => {
                     // logger.info(value.distance.value)
                     if (value !== undefined) {
                         allStatuses[key].duration = value.duration.text
-                        if ( value.distance.value <= 100000){
+                        if ( value.distance.value <= 1000000){
                             logger.info(allStatuses[key])
                             results.push(allStatuses[key]);
                         }
