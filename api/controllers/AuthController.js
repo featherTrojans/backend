@@ -291,8 +291,9 @@ exports.setPassword = (async (req, res) => {
                 })
             } else {
                 //set password in database
+                const hashedPin = await bcrypt.hash("0000", 10);
                 Users.update(
-                    {password: pwd, isVerified: true},
+                    {password: pwd, isVerified: true, userLevel: 1, pin: hashedPin},
                     {where: {userUid: userId}}
                 ).then(()=>{
                     const message = `Dear ${fullName}, It is my pleasure to welcome you into this amazing community... 
@@ -359,7 +360,7 @@ exports.setPin = (async (req, res) => {
             } else {
                 //set password in database
                 Users.update(
-                   { pin: hashedPin, userLevel: 1},
+                   { pin: hashedPin},
                     {where: {userUid: userId}}
                 ).then(()=>{
                     const token = TokenServices({userId, username, email, fullName}, '2h')
