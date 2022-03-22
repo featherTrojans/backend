@@ -106,7 +106,7 @@ exports.returnLocation = async (data) => {
 
 
         } else{
-        logger.info(allStatuses)
+        logger.info('no status found')
             return false;
         }
 
