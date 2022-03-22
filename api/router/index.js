@@ -68,8 +68,8 @@ router.group('/', (router) => {
             router.post('/pin/verify',
             [   
                 Authenticate,
-                body('pin').isNumeric(),
-                body('pin').isLength({ min: 4, max: 4 }),
+                body('user_pin').isNumeric(),
+                body('user_pin').isLength({ min: 4, max: 4 }),
                 
             ], 
             controller.verifyPin
