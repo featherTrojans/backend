@@ -89,10 +89,10 @@ exports.approveRequest = ( async (req, res) => {
                         var agentId = agentData.userUid;
 
                         const feather_commission = 1/100;
-                        const amountToCredit = (total) - (total * feather_commission);
+                        const amountToCredit = parseFloat(total) - (parseFloat(total - charges) * feather_commission);
 
                         //get status data
-                        const {amount} = await Status.findOne({where: {reference: statusId}, attributes: ['amount']});
+                        let {amount} = await Status.findOne({where: {reference: statusId}, attributes: ['amount']});
                         const newStatusAmount = parseFloat(amount) - (parseFloat(total) - parseFloat(charges))
 
                         //update status amount
