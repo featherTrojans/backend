@@ -5,15 +5,12 @@ const {services} = require('../../services')
 const {awsService} = services
 var formidable = require('formidable')
 
-exports.uploadImages = ((req, res) => {
-    let { file } = req.body
-    console.log(req.form)
+exports.uploadImages = (async (req, res) => {
     const errors = validationResult(req);
 
     try{
-        var form = new formidable.IncomingForm();
 
-        console.log(form)
+        var form = new formidable.IncomingForm();
         if (!errors.isEmpty()) {
 
             return res.status(403).json({ errors: errors.array() });
@@ -34,8 +31,37 @@ exports.uploadImages = ((req, res) => {
                   console.error(err.message);
                   return;
                 } else {
-                    console.log(files);
-                    return
+                    const {name} = fields
+                    const {size, path, type} = files.file
+
+                    if ( size > 2000000){
+                        return res.status(400).json({
+                            status: false,
+                            data: {},
+                            message: "File cannot be greater than 2MB"
+                        })
+                    }else if ((type.split("/"))[1] !== 'jpeg' && (type.split("/"))[1] !== 'jpg' && (type.split("/"))[1] !== 'png' ) {
+                        return res.status(400).json({
+                            status: false,
+                            data: {},
+                            message: "Unsupported format, Only images can be uploaded"
+                        })
+                    } else {
+                        const uploaded = awsService({file: path, name})
+                        if (uploaded) {
+                            return res.status(202).json({
+                                status: true,
+                                data: {},
+                                message: `${name} uploaded successfully`
+                            })
+                        } else {
+                            return res.status(500).json({
+                                status: false,
+                                data: {},
+                                message: `Could not upload ${name}`
+                            }) 
+                        }
+                    }
                 }
               });
             
