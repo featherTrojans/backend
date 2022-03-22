@@ -491,7 +491,7 @@ exports.signIn = async (req, res) => {
                 return res.status(404).json({
                     status : false,
                     data: {},
-                    message: "Invalid data used"
+                    message: "Incorrect username"
                 })
             } else {
                 const verifyPassword = await bcrypt.compare(password, checkUsername.password)
