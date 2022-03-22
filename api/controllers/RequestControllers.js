@@ -6,28 +6,48 @@ const { validationResult } = require('express-validator')
 const {idGenService, debitService, creditService} = services
 
 
-exports.getPendingRequests = (  (req, res) => {
+exports.getPendingRequests = (  async (req, res) => {
 
     const { userId } = req.user
 
     try
     {
-        Request.findAll({
-            attributes: ['reference', 'amount', 'charges', 'total', 'agent', 'agentUsername', 'status', 'createdAt' ],
+        let results = []
+        const data = await Request.findAll({
+            attributes: ['reference', 'amount', 'charges', 'total', 'agent', 'agentUsername', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
             where: {userUid: userId, status: 'PENDING'}
-        }).then ((data) => {
+        })
+
+        for (const [key, value] of Object.entries(data)){
+
+                //get agentDetails
+                let agent = await Users.findOne({
+                    where: {username: value.dataValues.agentUsername},
+                    attributes: ['phoneNumber']
+                })
+                results.push({
+                    reference: value.dataValues.reference,
+                    amount: value.dataValues.amount,
+                    charges: value.dataValues.charges,
+                    total: value.dataValues.total,
+                    negotiatedFee: value.dataValues.negotiatedFee,
+                    agent: value.dataValues.agent,
+                    agentUsername: value.dataValues.agentUsername,
+                    phoneNumber: agent.phoneNumber,
+                    status: value.dataValues.status,
+                    meetupPoint: value.dataValues.meetupPoint,
+                    createdAt: value.dataValues.createdAt
+
+                })
+
+
+            }
+            
             return res.status(200).json({
                 status: true,
-                data,
+                data: results,
                 message: "success"
             })
-        }).catch((error) => {
-            return res.status(404).json({
-                status: false,
-                data : error,
-                message: "Cannot get data"
-            })
-        })
     } catch (error) {
         logger.info(error)
         return res.status(409).json({
@@ -38,28 +58,48 @@ exports.getPendingRequests = (  (req, res) => {
     }
 });
 
-exports.getAcceptedRequests = (  (req, res) => {
+exports.getAcceptedRequests = (  async (req, res) => {
 
     const { userId } = req.user
 
     try
     {
-        Request.findAll({
-            attributes: ['reference', 'amount', 'charges', 'total', 'agent', 'agentUsername', 'status', 'meetupPoint', 'createdAt' ],
+        let results = []
+        const data = await Request.findAll({
+            attributes: ['reference', 'amount', 'charges', 'total', 'agent', 'agentUsername', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
             where: {userUid: userId, status: 'ACCEPTED'}
-        }).then ((data) => {
+        })
+
+        for (const [key, value] of Object.entries(data)){
+
+                //get agentDetails
+                let agent = await Users.findOne({
+                    where: {username: value.dataValues.agentUsername},
+                    attributes: ['phoneNumber']
+                })
+                results.push({
+                    reference: value.dataValues.reference,
+                    amount: value.dataValues.amount,
+                    charges: value.dataValues.charges,
+                    total: value.dataValues.total,
+                    negotiatedFee: value.dataValues.negotiatedFee,
+                    agent: value.dataValues.agent,
+                    agentUsername: value.dataValues.agentUsername,
+                    phoneNumber: agent.phoneNumber,
+                    status: value.dataValues.status,
+                    meetupPoint: value.dataValues.meetupPoint,
+                    createdAt: value.dataValues.createdAt
+
+                })
+
+
+            }
+
             return res.status(200).json({
                 status: true,
-                data,
+                data: results,
                 message: "success"
             })
-        }).catch((error) => {
-            return res.status(404).json({
-                status: false,
-                data : error,
-                message: "Cannot get data"
-            })
-        })
     } catch (error) {
         logger.info(error)
         return res.status(409).json({
