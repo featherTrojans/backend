@@ -491,7 +491,7 @@ exports.signIn = async (req, res) => {
                 return res.status(404).json({
                     status : false,
                     data: {},
-                    message: "Incorrect username"
+                    message: "Incorrect feather tag/ username"
                 })
             } else {
                 const verifyPassword = await bcrypt.compare(password, checkUsername.password)

@@ -1,6 +1,6 @@
 const { config } = require("../../config");
 const { validationResult } = require('express-validator');
-const {Users} = require('../../models/')
+const {Users, Status} = require('../../models/')
 
 const {logger, Op} = config
 exports.getUser = ( async (req, res) => {
@@ -45,8 +45,8 @@ exports.getUser = ( async (req, res) => {
 
 exports.updateBasicData = ( async (req, res) => {
 
-    const { username, firstName, lastName } = req.body
-    const {userId} = req.user
+    const { newUsername, firstName, lastName } = req.body
+    const {userId, username} = req.user
     const errors = validationResult(req);
     try
     {
@@ -54,7 +54,7 @@ exports.updateBasicData = ( async (req, res) => {
 
             return res.status(403).json({ errors: errors.array() });
   
-        }else if (!username || !firstName || !lastName) {
+        }else if (!newUsername || !firstName || !lastName) {
             return res.status(400).json({
                 status: false,
                 data: {},
@@ -62,8 +62,15 @@ exports.updateBasicData = ( async (req, res) => {
             })
         } else {
 
-            Users.update({username, fullName: `${lastName} ${firstName}`}, {where: {userUid: userId}}).then((data) => {
+            Users.update({username: newUsername, fullName: `${lastName} ${firstName}`}, {where: {userUid: userId}}).then((data) => {
                 if (data[0] > 0 ) {
+                    
+                    Status.update({username: newUsername}, {where: {username}}).then(() => {
+                        logger.info('status username updated');
+                    }).catch((err) => {
+                        logger.info(err)
+                    })
+
                     return res.status(200).json({
                         status: true,
                         data: {
