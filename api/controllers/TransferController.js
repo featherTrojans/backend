@@ -1,5 +1,5 @@
 const { config } = require("../../config");
-const logger = config.logger;
+const {logger, Op} = config;
 const services = require("../../services").services;
 const { validationResult } = require('express-validator');
 const {Users, DoubleSpent } = require("../../models");
@@ -27,7 +27,12 @@ exports.transferFunds = ( async (req, res) => {
             //check if the user getting payment is registered
             const {userUid} = await Users.findOne({
                 attributes: ['userUid'],
-                where: {'username': transferTo}
+                where: {
+                    [Op.or]: {
+                        username: transferTo,
+                        phoneNumber: transferTo
+                    },
+                }
             })
             
             const {walletBal, pin} = await Users.findOne({
@@ -35,7 +40,7 @@ exports.transferFunds = ( async (req, res) => {
                 where: { userUid: userId }
             })
             const verifyPin = await bcrypt.compare(userPin, pin);
-            
+
             if (verifyPin != true ) {
                 return res.status(403).json({
 

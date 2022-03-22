@@ -46,7 +46,7 @@ exports.verifyPin = ( async (req, res) => {
                 return res.status(403).json({
                     status: false,
                     data : {},
-                    message: "Unauthorized"
+                    message: "Unauthorized incorrect pin"
                 })
             }
 
