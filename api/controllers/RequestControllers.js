@@ -112,12 +112,13 @@ exports.getAcceptedRequests = (  async (req, res) => {
 
 exports.cancelRequests = ( async (req, res) => {
     
-    const { userId } = req.user
     const {reference, reasonForCancel} = req.body
     const errors = validationResult(req);
 
     try
     {
+        const {username} = req.user
+        const transId = 'FTHRVRSL' + idGenService(5)
         if (!errors.isEmpty()) {
 
             return res.status(403).json({ errors: errors.array() });
@@ -130,23 +131,26 @@ exports.cancelRequests = ( async (req, res) => {
             })
         } else {
 
-            const {amount} = await Request.findOne({attributes: ['amount'],
+            const {total, userUid, agentUsername} = await Request.findOne({attributes: ['total','userUid', 'agentUsername'],
             where: {reference}})
             const {escrowBal} = await Users.findOne({attributes: ['escrowBal'],
                     where: {
-                        userUid: userId
+                        userUid
                     }
             })
-            const newEscrowBal = escrowBal - amount;
+            const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
+            
+            if (username.toUpperCase() === agentUsername.toUpperCase()) {
 
-            Request.update({status: 'CANCELLED', reasonForCancel},{
-                where: {userUid: userId, reference, status: "PENDING"}
-            }).then ((data) => {
-                if (data[0] > 0 ) {
+                const updated = await Request.update({status: 'CANCELLED', reasonForCancel},{
+                    where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
+                })
 
-                    Users.update({escrowBal: newEscrowBal }, {where: {userUid: userId}});
+                if ( updated[0] > 0 ) {
+
+                    Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
                     //return and debit escrow
-                    creditService({userUid: userId, reference: transId, amount, description: `NGN${amount} cash withdrawal from ${username}`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
+                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -156,20 +160,46 @@ exports.cancelRequests = ( async (req, res) => {
                         message: "success"
                     })
                 } else {
+                    console.log(updated)
+                    return res.status(404).json({
+                        status: false,
+                        data: {},
+                        message: `Cannot cancel request ${reference} or it does not exist`
+                    }) 
+                }
+                        
+                
+            } else{
+
+                let data = await Request.update({status: 'CANCELLED', reasonForCancel},{
+                    where: {userUid, reference, status: "PENDING"}
+                })
+                
+                if (data[0] > 0 ) {
+
+                    Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
+                    //return and debit escrow
+                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
+                    return res.status(202).json({
+                        status: true,
+                        data: {
+                            reference,
+                            "message": "cancelled successfully"
+                        },
+                        message: "success"
+                    })
+                } else {
+                    console.log(data)
                     return res.status(404).json({
                         status: false,
                         data: {},
                         message: `request ${reference} does not exist`
                     }) 
                 }
-                    
-            }).catch((error) => {
-                return res.status(404).json({
-                    status: false,
-                    data : error,
-                    message: "Cannot modify data"
-                })
-            })
+                        
+                
+            }
+            
         }
         
     } catch (error) {
