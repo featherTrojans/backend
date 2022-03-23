@@ -150,7 +150,7 @@ exports.cancelRequests = ( async (req, res) => {
 
                     Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
                     //return and debit escrow
-                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
+                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -179,7 +179,7 @@ exports.cancelRequests = ( async (req, res) => {
 
                     Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
                     //return and debit escrow
-                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
+                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
                     return res.status(202).json({
                         status: true,
                         data: {
