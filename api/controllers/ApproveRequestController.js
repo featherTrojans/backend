@@ -9,6 +9,7 @@ const {idGenService, creditService, confirmData} = services
 exports.approveRequest = ( async (req, res) => {
     
     let {reference, user_pin} = req.body
+    const {userId} = req.user
     const errors = validationResult(req);
     const transId = idGenService(14)
 
@@ -51,7 +52,7 @@ exports.approveRequest = ( async (req, res) => {
                         Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
 
                         //refund & debit escrow
-                        creditService({userUid, reference: transId, amount: total, description: `NGN${total} transferred from Escrow`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
+                        creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal from reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
                         return res.status(400).json({
                             status: false,
                             data: {
@@ -113,7 +114,7 @@ exports.approveRequest = ( async (req, res) => {
                                     status: true,
                                     data: {
                                         reference,
-                                        "message": "Received successfully"
+                                        "message": "Approved successfully"
                                     },
                                     message: "success"
                                 })
