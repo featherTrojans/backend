@@ -95,14 +95,15 @@ exports.approveRequest = ( async (req, res) => {
                         let {amount} = await Status.findOne({where: {reference: statusId}, attributes: ['amount']});
                         const newStatusAmount = parseFloat(amount) - (parseFloat(total) - parseFloat(charges))
 
-                        //update status amount
-                        Status.update({amount: newStatusAmount}, {where: {reference: statusId}});
 
                         Request.update({status: 'SUCCESS'},{
                             where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
                         }).then ((data) => {
 
                             if (data[0] > 0 ) {
+
+                                //update status amount
+                                Status.update({amount: newStatusAmount}, {where: {reference: statusId}});
                                 
                                 Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
                                 //credit reciever and debit escrow
@@ -122,7 +123,7 @@ exports.approveRequest = ( async (req, res) => {
                                 return res.status(404).json({
                                     status: false,
                                     data: {},
-                                    message: `request ${reference} does not exist`
+                                    message: `Cannot approve request ${reference} or request does not exist`
                                 }) 
 
                             }
