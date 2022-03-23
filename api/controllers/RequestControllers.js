@@ -150,7 +150,7 @@ exports.cancelRequests = ( async (req, res) => {
 
                     Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
                     //return and debit escrow
-                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
+                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -179,7 +179,7 @@ exports.cancelRequests = ( async (req, res) => {
 
                     Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
                     //return and debit escrow
-                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: 'escrow', to: 'primary wallet', title: 'Wallet Credit'});
+                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -243,15 +243,15 @@ exports.createRequest = ( async (req, res) => {
             if (total <= walletBal) {
                 //debit user
                 const newEscrowBal = parseFloat(escrowBal) + parseFloat(total);
-                // const ref = userId + config.time + walletBal;
-                // await new Promise(function(resolve, reject) {
+                const ref = userId + config.time + walletBal;
+                await new Promise(function(resolve, reject) {
 
-                //     // const debitUser = debitService({userUid: userId, reference: transId, amount: total, description: `#${total} transferred to escrow`, from: username, to: 'escrow', id: ref, title: "Wallet Debit"});
+                    const debitUser = debitService({userUid: userId, reference: transId, amount: total, description: `#${total} cash withdrawal`, from: username, to: agentUsername, id: ref, title: "Wallet Debit"});
 
-                //     // debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
-                //     // set timer to 7 secs to give room for db updates
+                    debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
+                    // set timer to 7 secs to give room for db updates
 
-                // })
+                })
                 // credit user escrow balance
                 Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal - total)}, {where: {userUid: userId}});
                 Request.create({
