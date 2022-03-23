@@ -64,7 +64,7 @@ exports.updateBasicData = ( async (req, res) => {
 
             Users.update({username: newUsername, fullName: `${lastName} ${firstName}`}, {where: {userUid: userId}}).then((data) => {
                 if (data[0] > 0 ) {
-                    
+
                     Status.update({username: newUsername}, {where: {username}}).then(() => {
                         logger.info('status username updated');
                     }).catch((err) => {
@@ -74,7 +74,7 @@ exports.updateBasicData = ( async (req, res) => {
                     return res.status(200).json({
                         status: true,
                         data: {
-                        
+                            username: newUsername
                         },
                         message: "success"
                     })
@@ -111,7 +111,7 @@ exports.updateBasicData = ( async (req, res) => {
 exports.updatePersonalData = ( async (req, res) => {
 
     const { gender, dateOfBirth, address, lga } = req.body
-    const {userId} = req.user
+    const {userId, username} = req.user
     const errors = validationResult(req);
     try
     {
@@ -132,6 +132,7 @@ exports.updatePersonalData = ( async (req, res) => {
                     return res.status(200).json({
                         status: true,
                         data: {
+                            username
                         },
                         message: "success"
                     })
@@ -177,7 +178,7 @@ exports.changePassword = ( async (req, res) => {
 
             return res.status(403).json({ errors: errors.array() });
   
-        }else if (!newPassword || !newPassword) {
+        }else if (!newPassword || !oldPassword) {
             return res.status(400).json({
                 status: false,
                 data: {},
