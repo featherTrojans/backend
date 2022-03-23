@@ -1,5 +1,5 @@
 const { config } = require("../../config");
-const { Request, Users, Status } = require("../../models");
+const { Request, Users, Status, Transactions } = require("../../models");
 const logger = config.logger
 const services = require("../../services").services
 const { validationResult } = require('express-validator')
@@ -9,7 +9,6 @@ const {idGenService, creditService, confirmData} = services
 exports.approveRequest = ( async (req, res) => {
     
     let {reference, user_pin} = req.body
-    const {userId} = req.user
     const errors = validationResult(req);
     const transId = idGenService(14)
 
@@ -36,9 +35,9 @@ exports.approveRequest = ( async (req, res) => {
             });
 
 
-            let {pin, pin_attempts, escrowBal, username } = await Users.findOne({
+            let {pin, pin_attempts, escrowBal, username, walletBal } = await Users.findOne({
                 where: {userUid},
-                attributes: ['pin', 'pin_attempts', 'escrowBal', 'username']
+                attributes: ['pin', 'pin_attempts', 'escrowBal', 'username', 'walletBal']
             });
 
             const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
@@ -107,6 +106,21 @@ exports.approveRequest = ( async (req, res) => {
                                 Status.update({amount: newStatusAmount}, {where: {reference: statusId}});
                                 
                                 Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
+
+                                //log debit data
+                                Transactions.create({
+                                    userUid,
+                                    transId: reference,
+                                    initialBal: parseFloat(walletBal) + parseFloat(escrowBal),
+                                    amount: total,
+                                    finalBal: walletBal,
+                                    description: `NGN${total} cash withdrawal`,
+                                    from: 'primary wallet',
+                                    to: agentUsername,
+                                    reference,
+                                    direction: "out",
+                                    title: "Wallet Debit"
+                                })
                                 //credit reciever and debit escrow
                                 creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `NGN${amountToCredit} cash withdrawal from ${username}`, from: username, to: 'primary wallet', title: 'Wallet Credit'});
 
