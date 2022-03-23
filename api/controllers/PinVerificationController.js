@@ -26,7 +26,7 @@ exports.verifyPin = ( async (req, res) => {
 
         } else {
 
-            let { pin } = await Users.findOne({
+            const { pin } = await Users.findOne({
                 where: {userUid: userId},
                 attributes: ['pin']
             });
