@@ -1,7 +1,8 @@
 const { config } = require("../../config");
 const { validationResult } = require('express-validator');
-const { Request } = require("../../models");
-const {logger, Op} = config
+const { Request, Users } = require("../../models");
+const {logger, Op, eventEmitter} = config
+require('../../subscribers')
 
 
 exports.createNegotiation = ( async (req, res) => {
@@ -23,12 +24,31 @@ exports.createNegotiation = ( async (req, res) => {
             })
         } else {
 
+            const {userUid, agentUsername } = await Request.findOne({where: {reference}})
+            const user = await Users.findOne({
+                where: {userUid},
+                attributes: ['email', 'fullName', 'username', 'phoneNumber']
+            })
+
+            const agent = await Users.findOne({
+                where: {username: agentUsername},
+                attributes: ['email', 'fullName', 'username', 'phoneNumber']
+            })
+
             Request.update({negotiatedFee}, {where: {
-                [Op.or]:{
+                [Op.or]: {
                     userUid: userId,
                     agentUsername: username
                 }, reference}}).then((data) => {
                 if (data[0] > 0 ) {
+
+                    const message = `Dear @${user.username}, your cash withdrawal ${reference} fee has been negotiated to ${negotiatedFee}`;
+                    eventEmitter.emit('negotiateFee', {email: user.email, message})
+
+                    //send to agent 
+                    const agentMessage = `Dear @${agent.username}, your cash withdrawal ${reference} fee has been negotiated to ${negotiatedFee}`;
+                    eventEmitter.emit('negotiateFee', {email: agent.email, message: agentMessage})
+
                     return res.status(200).json({
                         status: true,
                         data: {
