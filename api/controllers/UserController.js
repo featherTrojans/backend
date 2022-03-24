@@ -1,6 +1,6 @@
 const { config } = require("../../config");
 const { validationResult } = require('express-validator');
-const {Users, Status} = require('../../models/')
+const {Users, Status, Request, Transactions} = require('../../models/')
 
 const {logger, Op} = config
 exports.getUser = ( async (req, res) => {
@@ -64,8 +64,15 @@ exports.updateBasicData = ( async (req, res) => {
 
             Users.update({username: newUsername, fullName: `${lastName} ${firstName}`}, {where: {userUid: userId}}).then((data) => {
                 if (data[0] > 0 ) {
+                    Request.update({
+                        agentUsername: newUsername,
+                        agent: `${lastName} ${firstName}`
+                    }, {where: {agentUsername: username}})
 
-                    Status.update({username: newUsername}, {where: {username}}).then(() => {
+                    Transactions.update({to: newUsername}, {where: {to: username}})
+                    Transactions.update({from: newUsername}, {where: {from: username}})
+
+                    Status.update({username: newUsername, fellName: `${lastName} ${firstName}`}, {where: {username}}).then(() => {
                         logger.info('status username updated');
                     }).catch((err) => {
                         logger.info(err)
