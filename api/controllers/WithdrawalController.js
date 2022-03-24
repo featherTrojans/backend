@@ -1,7 +1,7 @@
 const { config } = require("../../config");
-const {withdrawFund, codeGenerator, debitService } = require('../../services/').services
+const {withdrawFund, codeGenerator, debitService, creditService } = require('../../services/').services
 const { validationResult } = require('express-validator')
-const logger = config.logger
+const {logger} = config
 const { BankAccount, Users } = require('../../models/')
 
 
@@ -59,10 +59,13 @@ exports.withdrawFund = ( async (req, res) => {
                         message: "success"
                     })
                 }else {
+                    //refund
+                    creditService({userUid: userId, reference: "FTHRVRSL" + reference, amount: amount + 50, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from: 'primary wallet', to: bank_name })
+
                     return res.status(404).json({
                         status: false,
                         data: {},
-                        message: "withdrawal can not be made"
+                        message: "Oops!! An error occur! withdrawal can not be made. Kindly try again later"
                     })
                 }
 
