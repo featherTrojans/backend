@@ -1,12 +1,12 @@
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const { config } = require("../../config")
-const {logger, Op} = config
-const services = require("../../services").services
+const {logger, Op, eventEmitter} = config
+const {services} = require("../../services")
 const Users = require("../../models/User")
-const TokenServices = services.TokenServices
+const {TokenServices} = services
 require('../../subscribers')
-const eventEmitter = config.eventEmitter
+
 
 
 

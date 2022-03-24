@@ -67,3 +67,39 @@ eventEmitter.addListener('walletCredit', async (data) => {
   await sendEmail({email, subject, message})
   logger.info(`Wallet credited`);
 })
+
+eventEmitter.addListener('createRequest', async (data) => {
+
+  //send email
+  let email, subject, message;
+  email = data.email;
+  message = data.message;
+  subject = 'Feather Cash Withdrawal Request';
+
+  await sendEmail({email, subject, message})
+
+})
+
+eventEmitter.addListener('negotiateFee', async (data) => {
+
+  //send email
+  let email, subject, message;
+  email = data.email;
+  message = data.message;
+  subject = 'Feather Cash Withdrawal Request Negotiation';
+
+  await sendEmail({email, subject, message})
+  
+})
+
+eventEmitter.addListener('acceptRequest', async (data) => {
+
+  //send email
+  let email, subject, message;
+  email = data.email;
+  message = data.message;
+  subject = 'Feather Cash Withdrawal Request';
+
+  await sendEmail({email, subject, message})
+  
+})

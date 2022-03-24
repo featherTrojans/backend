@@ -1,9 +1,11 @@
 const { config } = require("../../config");
 const { Request, Users } = require("../../models");
-const logger = config.logger
-const services = require("../../services").services
+const {logger, eventEmitter} = config
+const {services} = require("../../services")
 const { validationResult } = require('express-validator')
 const {idGenService, debitService, creditService} = services
+require('../../subscribers')
+
 
 
 exports.getPendingRequests = (  async (req, res) => {
@@ -215,7 +217,7 @@ exports.cancelRequests = ( async (req, res) => {
 
 exports.createRequest = ( async (req, res) => {
     
-    const { userId, username } = req.user
+    const { userId, username, fullName } = req.user
     const { amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee } = req.body
     const transId = idGenService(10);
     const errors = validationResult(req);
@@ -254,6 +256,10 @@ exports.createRequest = ( async (req, res) => {
                 // })
                 // credit user escrow balance
                 Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal - total)}, {where: {userUid: userId}});
+                const agent = await Users.findOne({
+                    where: {username: agentUsername},
+                    attributes: ['email', 'fullName', 'username', 'phoneNumber']
+                })
                 Request.create({
 
                     userUid: userId,
@@ -269,6 +275,15 @@ exports.createRequest = ( async (req, res) => {
                     negotiatedFee: negotiatedFee ? negotiatedFee : 0
     
                 }).then (() => {
+
+                    const message = `Dear @${username}, you have a new cash withdrawal ${reference}`;
+                    eventEmitter.emit('createRequest', {email, message})
+
+                    //send to agent 
+                    const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal ${reference}, login to complete transaction`;
+
+                    eventEmitter.emit('createRequest', {email: agent.email, message: agentMessage})
+
     
                     return res.status(201).json({
                         status: true,
@@ -309,7 +324,7 @@ exports.createRequest = ( async (req, res) => {
 
 exports.markRequests = ( (req, res) => {
     
-    const { username } = req.user
+    const { username, email } = req.user
     const {reference} = req.params
     const errors = validationResult(req);
 
@@ -328,11 +343,24 @@ exports.markRequests = ( (req, res) => {
             })
 
         } else {
+            const {userUid} = await Request.findOne({where: {reference}})
+            const user = await Users.findOne({
+                where: {userUid},
+                attributes: ['email', 'fullName', 'username', 'phoneNumber']
+            })
 
             Request.update({status: 'ACCEPTED'},{
                 where: {agentUsername: username, reference, status: ["PENDING"]}
             }).then ((data) => {
                 if (data[0] > 0 ) {
+
+                    const message = `Dear @${user.username}, your cash withdrawal ${reference} has been accepted by ${username}. Login to view transaction and head to the meeting point to complete transaction`;
+                    eventEmitter.emit('acceptRequest', {email: user.email, message})
+
+                    //send to agent 
+                    const agentMessage = `Dear @${username}, your cash withdrawal ${reference} has been accepted successfully. Head to the meeting point to complete transaction`;
+
+                    eventEmitter.emit('createRequest', {email, message: agentMessage})
                     return res.status(202).json({
                         status: true,
                         data: {
