@@ -217,7 +217,7 @@ exports.cancelRequests = ( async (req, res) => {
 
 exports.createRequest = ( async (req, res) => {
     
-    const { userId, username, fullName } = req.user
+    const { userId, username, fullName, email } = req.user
     const { amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee } = req.body
     const transId = idGenService(10);
     const errors = validationResult(req);
