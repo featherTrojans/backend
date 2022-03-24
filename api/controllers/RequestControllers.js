@@ -256,7 +256,7 @@ exports.createRequest = ( async (req, res) => {
                 // })
                 // credit user escrow balance
                 Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal - total)}, {where: {userUid: userId}});
-                const agent = await Users.findOne({
+                const agentData = await Users.findOne({
                     where: {username: agentUsername},
                     attributes: ['email', 'fullName', 'username', 'phoneNumber']
                 })
@@ -282,7 +282,7 @@ exports.createRequest = ( async (req, res) => {
                     //send to agent 
                     const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal ${reference}, login to complete transaction`;
 
-                    eventEmitter.emit('createRequest', {email: agent.email, message: agentMessage})
+                    eventEmitter.emit('createRequest', {email: agentData.email, message: agentMessage})
 
     
                     return res.status(201).json({
