@@ -1,6 +1,8 @@
 const { config } = require("../../config");
 const { validationResult } = require('express-validator');
 const {Users, Status, Request, Transactions} = require('../../models/')
+const {services} = require("../../services")
+const {TokenServices} = services
 
 const {logger, Op} = config
 exports.getUser = ( async (req, res) => {
@@ -46,7 +48,7 @@ exports.getUser = ( async (req, res) => {
 exports.updateBasicData = ( async (req, res) => {
 
     const { newUsername, firstName, lastName } = req.body
-    const {userId, username} = req.user
+    const {userId, username, email} = req.user
     const errors = validationResult(req);
     try
     {
@@ -64,6 +66,7 @@ exports.updateBasicData = ( async (req, res) => {
 
             Users.update({username: newUsername, fullName: `${lastName} ${firstName}`}, {where: {userUid: userId}}).then((data) => {
                 if (data[0] > 0 ) {
+                    const token = TokenServices({userId, username: newUsername, email, fullName: `${lastName} ${firstName}`}, '6h')
                     Request.update({
                         agentUsername: newUsername,
                         agent: `${lastName} ${firstName}`
@@ -72,7 +75,7 @@ exports.updateBasicData = ( async (req, res) => {
                     Transactions.update({to: newUsername}, {where: {to: username}})
                     Transactions.update({from: newUsername}, {where: {from: username}})
 
-                    Status.update({username: newUsername, fellName: `${lastName} ${firstName}`}, {where: {username}}).then(() => {
+                    Status.update({username: newUsername, fullName: `${lastName} ${firstName}`}, {where: {username}}).then(() => {
                         logger.info('status username updated');
                     }).catch((err) => {
                         logger.info(err)
@@ -81,7 +84,9 @@ exports.updateBasicData = ( async (req, res) => {
                     return res.status(200).json({
                         status: true,
                         data: {
-                            username: newUsername
+                            username: newUsername,
+                            fullName: `${lastName} ${firstName}`,
+                            token
                         },
                         message: "success"
                     })
