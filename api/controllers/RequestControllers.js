@@ -296,6 +296,7 @@ exports.createRequest = ( async (req, res) => {
                     }) 
                         
                 }).catch((error) => {
+                    logger.info(error)
                     return res.status(404).json({
                         status: false,
                         data : error,
