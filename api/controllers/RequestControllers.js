@@ -322,7 +322,7 @@ exports.createRequest = ( async (req, res) => {
     }
 });
 
-exports.markRequests = ( (req, res) => {
+exports.markRequests = ( async (req, res) => {
     
     const { username, email } = req.user
     const {reference} = req.params
