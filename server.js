@@ -39,7 +39,7 @@ const errorHandler = error => {
       throw error;
   }
 };
-const options = config.environment == 'development' ? {
+const options = config.environment == 'development' || config.environment == 'live' ? {
   key: fs.readFileSync('../../../etc/letsencrypt/live/feather.com.ng/privkey.pem'),
   cert: fs.readFileSync('../../../etc/letsencrypt/live/feather.com.ng/fullchain.pem')
 }: {
