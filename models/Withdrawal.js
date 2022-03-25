@@ -2,107 +2,82 @@ const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
 
-const Users = db_con.define("users", {
-    "userUid": {
+const Withdrawal = db_con.define("withdrawals", {
+    
+    "user_uid": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+
+    },
+    "reference": {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
-
     },
-    "username": {
-        allowNull: false,
-        unique: true,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "fullName": {
+    "account_code": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
-
     },
-    "phoneNumber": {
+    "account_number": {
         allowNull: false,
-        unique: true,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "email": {
-        allowNull: false,
-        unique: true,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "isVerified": {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
-
-    },
-    "walletBal": {
-        allowNull: false,
-        type: Sequelize.DOUBLE,
-        defaultValue: 0.00,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "userLevel": {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "code": {
-        allowNull: true,
-        unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "pin": {
-        allowNull: true,
-        unique: true,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-    },
-    "password": {
-        allowNull: true,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "refId": {
+    "account_name": {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
-    }
+    },
+    "bank_name": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "amount": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "charges": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "status": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: 'PROCESSING',
+        validate : {
+           notEmpty: true
+        }
+    },
+    "transfer_code": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    
 })
 
-module.exports = Users
+module.exports = Withdrawal

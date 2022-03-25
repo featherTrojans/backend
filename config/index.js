@@ -3,9 +3,14 @@ const pino = require('pino')
 const expressPino = require('express-pino-logger')
 const events = require('events')
 const eventEmitter = new events.EventEmitter();
-
+const {Client} = require("@googlemaps/google-maps-services-js");
+const client = new Client({});
+const googleMapsClient = require('@google/maps')
+const d = new Date();
+let time = d.getTime();
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
+const {Op} = require('sequelize');
 
 exports.config = {
     "port": process.env.PORT,
@@ -25,7 +30,25 @@ exports.config = {
     "log_level" : process.env.LOG_LEVEL,
     expressLogger,
     logger,
-    eventEmitter
+    eventEmitter,
+    time,
+    client,
+    "twilio_sid": process.env.TWILIO_ACCOUNT_SID,
+    "twilio_auth_token": process.env.TWILIO_AUTH_TOKEN,
+    "twilio_sender_number": process.env.TWILIO_SENDER_NUMBER,
+    "paystack_test_key": process.env.PAYSTACK_PRY_KEY,
+    "paystack_secret_key": process.env.PAYSTACK_SECRET_KEY,
+    "google_key": process.env.GOOGLE_MAPS_API_KEY,
+    Op,
+    gmail_address: process.env.GMAIL_ADDRESS,
+    gmail_password: process.env.GMAIL_PASSWORD,
+    client_id: process.env.GOOGLE_MAPS_CLIENT_ID,
+    googleMapsClient,
+    paygold_username: process.env.BILLSUSER,
+    paygold_pass: process.env.BILLSPWD,
+    paygold_url: process.env.BILLSURL,
+    aws_secret:  process.env.AWS_SECRET_ACCESS_KEY,
+    aws_access: process.env.AWS_ACCESS_KEY
     
 
 }

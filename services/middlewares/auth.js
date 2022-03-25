@@ -5,8 +5,8 @@ const logger = config.logger
 
 
 const Authenticate = ((req, res, next) =>{
-    const token = req.headers['token'];
-    logger.info(token)
+    const token = req.headers['token']?? (req.headers['authorization']).substr(7, (req.headers['authorization']).length - 7);
+    // logger.info(token);
 
     if (!token){
 

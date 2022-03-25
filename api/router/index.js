@@ -3,80 +3,352 @@ require('express-group-routes');
 const router = express.Router();
 const controller = require('../index').controller
 const { body, validationResult } = require('express-validator');
-const services = require("../../services").services
-const Authenticate = services.Authenticate
+const {Authenticate, LevelCheck} = require("../../services").services
 
 
+router.group('/', (router) => {
 
-router.group('/api/v1/', (router) => {
-    router.get('/home', controller.home)
+    router.get('/', controller.docs);
+
+    router.group('/api/v1/', (router) => {
+        router.get('/home', controller.home)
 
 
-    router.group('/auth', (router) => {
+        router.group('/auth', (router) => {
 
-        router.post('/signup', 
-        [
-            body('firstName').toUpperCase(),
-            body('email').isEmail(),
-            body('firstName').isLength({ min: 2 }),
-            body('lastName').toUpperCase(),
-            body('phoneNumber').isNumeric(),
-            body('phoneNumber').isLength({ max: 11 }),
-            body('email').toUpperCase(),
+            router.post('/signup', 
+            [
+                body('firstName').toUpperCase(),
+                body('email').isEmail(),
+                body('firstName').isLength({ min: 2 }),
+                body('lastName').isLength({ min: 2 }),
+                body('lastName').toUpperCase(),
+                body('phoneNumber').isNumeric(),
+                body('phoneNumber').isLength({ max: 11, min: 11 }),
+                body('email').toUpperCase(),
 
+            ], 
+            controller.signup
+            );
+
+            router.post('/resend/code',
+                controller.resendCode
+            );
+            
+            router.post('/verify/code',
+            [   
+                Authenticate,
+                body('code').isNumeric(),
+                body('code').isLength({ min: 6, max: 6 }),
+                
+            ], 
+            controller.confirmCode
+            );
+
+            router.put('/password/set',
+            [   
+                Authenticate,
+                body('password').isAlphanumeric(),
+                body('password').isLength({ min: 8 }),
+                
+            ], 
+            controller.setPassword
+            );
+
+            router.put('/pin/set',
+            [   
+                Authenticate,
+                body('pin').isNumeric(),
+                body('pin').isLength({ min: 4, max: 4 }),
+                
+            ], 
+            controller.setPin
+            );
+
+            router.post('/pin/verify',
+            [   
+                Authenticate,
+                body('user_pin').isNumeric(),
+                body('user_pin').isLength({ min: 4, max: 4 }),
+                
+            ], 
+            controller.verifyPin
+            );
+
+            router.post('/token/create',
+            [   
+                Authenticate
+            ], 
+            controller.createToken
+            );
+
+            router.put('/username/set',
+            [   
+                Authenticate,
+                body('newUsername').isLength({ min: 3 }),
+                body('newUsername').toUpperCase()
+                
+            ], 
+            controller.setUsername
+            );
+
+            router.post('/signin',
+            [   
+                body('username').toLowerCase(),
+                body('password').isLength({ min: 4 }),
+                
+            ], 
+            controller.signIn
+            );
+        })
+
+        router.get('/dashboard',
+        [   
+            Authenticate
+            
         ], 
-        controller.signup
+        controller.dashboard
         );
 
-        
-        router.post('/verify/code',
+        router.post('/forgot/password', 
+            controller.sendForgotPswdCode
+        );
+        router.put('/new/password',
+            [Authenticate],
+            controller.setNewPassword
+        );
+
+
+        router.get('/transactions',
+        [   
+            Authenticate
+            
+        ], 
+        controller.getTransactions
+        );
+
+        router.post('/pay',
         [   
             Authenticate,
-            body('code').isNumeric(),
-            body('code').isLength({ min: 6, max: 6 }),
+            LevelCheck
             
         ], 
-        controller.confirmCode
+        controller.makePayment
         );
 
-        router.put('/password/set',
+        router.post('/pay/verify',
+            controller.verifyPayment
+        );
+
+        router.post('/pay/webhook',
+            controller.webhook
+        );
+        router.post('/transfer', [
+            Authenticate,
+            LevelCheck,
+            body('transferTo').toUpperCase(),
+            body('userPin').isNumeric(),
+            body('userPin').isLength({ min: 4, max: 4}),
+        ], controller.transferFunds);
+
+        router.get('/request/pending',
+        [   
+            Authenticate
+            
+        ], 
+        controller.pendingRequests
+        );
+
+        router.get('/request/accepted',
+        [   
+            Authenticate
+            
+        ], 
+        controller.acceptedRequests
+        );
+
+        router.get('/request/depositor/pending',
+        [   
+            Authenticate
+            
+        ], 
+        controller.getDepPendingRequests
+        );
+
+        router.get('/request/depositor/accepted',
+        [   
+            Authenticate
+            
+        ], 
+        controller.getDepAcceptedRequests
+        );
+
+        router.delete('/request/cancel',
+            [   
+                Authenticate,
+                body('reasonForCancel').isLength({ min: 10 }),
+                body('reasonForCancel').toUpperCase()
+                
+            ], 
+            controller.cancelRequest
+        );
+
+        router.post('/request/create',
+            [   
+                Authenticate,
+                body('agent').toUpperCase(),
+                body('agentUsername').toUpperCase(),
+                
+            ], 
+            controller.createRequest
+        );
+
+        router.put('/request/accept/:reference',
+            [   
+                Authenticate,
+            ], 
+            controller.markRequest
+        );
+
+        router.get('/request/status/:reference',
+            [   
+                Authenticate,
+            ], 
+            controller.getRequestStatus
+        );
+
+        router.post('/status/create',
+            [   
+                Authenticate,
+                LevelCheck
+            ], 
+            controller.createStatus
+        );
+
+        router.put('/status/update',
+            [   
+                Authenticate,
+                LevelCheck
+            ], 
+            controller.updateStatus
+        );
+
+        router.get('/status/get',
+            [   
+                Authenticate, 
+            ], 
+            controller.getAllStatuses
+        );
+
+        router.post('/request/approve', 
+            [Authenticate],
+            controller.approveRequest
+        );
+        router.put('/request/negotiate', 
+            [Authenticate],
+            controller.createNegotiation
+        );
+        router.post('/status/find',
         [   
             Authenticate,
-            body('password').isAlphanumeric(),
-            body('password').isLength({ min: 8 }),
-            
+            LevelCheck
         ], 
-        controller.setPassword
+        controller.findStatus
         );
+        router.group('/user', (router) => {
+            router.get('/:username',
+                [   
+                    Authenticate,
+                ], 
+                controller.users
+            )
+        });
 
-        router.put('/pin/set',
-        [   
-            Authenticate,
-            body('pin').isNumeric(),
-            body('pin').isLength({ min: 4, max: 4 }),
-            
-        ], 
-        controller.setPin
-        );
+        router.group('/account', (router) => {
+            router.post('/get', 
+                [
+                    Authenticate,
+                    body('bank_name').toUpperCase(),
+                    body('account_number').isLength({ min: 10, max: 10 }),
+                    body('account_number').isNumeric(),
+                    body('bank_name').isLength({ max: 11, min: 3 }),
 
-        router.put('/username/set',
-        [   
-            Authenticate,
-            body('newUsername').isEmpty(false),
-            body('newUsername').isLength({ min: 4 }),
-            
-        ], 
-        controller.setUsername
-        );
 
-        router.post('/signin',
-        [   
-            body('username').isEmpty(false),
-            body('password').isLength({ min: 4 }),
-            
-        ], 
-        controller.setUsername
+                ], 
+                    controller.getAccount
+                );
+        });
+
+        router.group('/withdraw', (router) => {
+            router.post('/', 
+                [
+                    Authenticate,
+                    body('amount').isLength({ min: 3, max: 8 }),
+                    body('amount').isNumeric(),
+
+
+                ], 
+                    controller.withdraw
+                );
+        });
+
+        router.group('/balance', (router) => {
+            router.get('/get', 
+                [
+                    Authenticate
+
+                ], 
+                    controller.getBalance
+                );
+        });
+
+        router.group('/upload', (router) => {
+            router.post('/image', 
+                [
+                    Authenticate
+
+                ], 
+                    controller.uploadFile
+                );
+        });
+
+
+        router.group('/profile/update', (router) => {
+            router.put('/basic',
+                [   
+                    Authenticate,
+                ], 
+                controller.updateBasicData
+            );
+            router.put('/personal',
+                [   
+                    Authenticate,
+                ], 
+                controller.updatePersonalData
+            );
+        });
+
+        router.group('/bills', (router) => {
+            router.post('/airtime',
+                [   
+                    Authenticate,
+                ], 
+                controller.buyAirtime
+            );
+            router.post('/electricity',
+                [   
+                    Authenticate,
+                ], 
+                controller.buyElect
+            );
+            router.get('/all',
+            [   
+                Authenticate,
+            ], 
+            controller.getAllBills
         );
+        });
+    
     })
 })
 
