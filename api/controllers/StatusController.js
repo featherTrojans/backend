@@ -235,7 +235,7 @@ exports.allStatus = ( async (req, res) => {
     try
     {
         const transactions = await Status.findAll({
-            attributes: ['username', 'fullName', 'longitude', 'latitude', 'locationText', 'amount', 'status', 'reference', 'createdAt'],
+            attributes: ['username', 'fullName', 'longitude', 'latitude', 'locationText', 'amount', 'status', 'reference', 'createdAt', 'updatedAt'],
             where: {username, status: "ACTIVE"},
             order: [['createdAt', 'DESC']],
         })
