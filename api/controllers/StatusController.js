@@ -239,8 +239,8 @@ exports.allStatus = ( async (req, res) => {
             where: {username, status: "ACTIVE"},
             order: [['createdAt', 'DESC']],
         })
-
-        if ( transactions != null ) {
+        console.log(transactions)
+        if ( transactions != null && transactions.length > 0 ) {
             let acceptedRequests = await Request.findAll({
                 attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
                 where: {agentUsername: username, status: 'ACCEPTED', statusId: transactions[0].reference},
