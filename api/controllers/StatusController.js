@@ -38,9 +38,9 @@ exports.createStatus = ( async (req, res) => {
                 })
             } else {
                 // check if there is an active previous status
-                const check = await Status.findOne({where: {username}})
+                const check = await Status.findOne({where: {username, status: 'ACTIVE'}})
 
-                if (check != null){
+                if (check != null && check.length > 0 ){
                     return res.status(400).json({
                         status: false,
                         data : {},
@@ -239,7 +239,6 @@ exports.allStatus = ( async (req, res) => {
             where: {username, status: "ACTIVE"},
             order: [['createdAt', 'DESC']],
         })
-        console.log(transactions)
         if ( transactions != null && transactions.length > 0 ) {
             let acceptedRequests = await Request.findAll({
                 attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
