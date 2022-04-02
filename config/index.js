@@ -7,7 +7,8 @@ const {Client} = require("@googlemaps/google-maps-services-js");
 const client = new Client({});
 const googleMapsClient = require('@google/maps')
 const d = new Date();
-let time = d.getTime();
+const time = d.getTime();
+const yesterday = time - ( 24 * 3600 * 1000)
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
 const {Op} = require('sequelize');
@@ -32,6 +33,7 @@ exports.config = {
     logger,
     eventEmitter,
     time,
+    yesterday,
     client,
     "twilio_sid": process.env.TWILIO_ACCOUNT_SID,
     "twilio_auth_token": process.env.TWILIO_AUTH_TOKEN,

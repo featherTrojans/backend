@@ -39,10 +39,12 @@ const errorHandler = error => {
       throw error;
   }
 };
-const options = config.environment == 'development' || config.environment == 'live' ? {
+const options = config.environment == 'development'  ? {
   key: fs.readFileSync('../../../etc/letsencrypt/live/feather.com.ng/privkey.pem'),
   cert: fs.readFileSync('../../../etc/letsencrypt/live/feather.com.ng/fullchain.pem')
-}: {
+}: config.environment == 'live' ? {
+  key: fs.readFileSync('../../../etc/letsencrypt/live/featherafrica.co-0002/privkey.pem'),
+  cert: fs.readFileSync('../../../etc/letsencrypt/live/featherafrica.co-0002/fullchain.pem')}: {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem')
 } ;
@@ -85,6 +87,7 @@ wsServer.on('request', async function (request) {
   } else {
 
     var connection = request.accept("realtime", request.origin);
+    console.log(connection.config.httpServer[0].sessionIdContext)
 
     config.logger.info((new Date()) + ' Connection accepted.');
 
