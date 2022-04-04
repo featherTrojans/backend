@@ -1,7 +1,10 @@
 const { config} = require("../config")
 const { Status } = require("../models")
-const {yesterday, Op, logger} = config
+const {Op, logger} = config
 const cron = require('node-cron');
+const d = new Date();
+let time = d.getTime();
+let yesterday = time - ( 24 * 3600 * 1000)
 const treatStatuses = async () => {
     try{
         logger.info('clearing statuses ....')
