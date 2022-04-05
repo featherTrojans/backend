@@ -232,6 +232,12 @@ router.group('/', (router) => {
             ], 
             controller.updateStatus
         );
+        router.put('/status/location/update',
+        [   
+            Authenticate
+        ], 
+        controller.updateStatusLocation
+    );
 
         router.get('/status/get',
             [   

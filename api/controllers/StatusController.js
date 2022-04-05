@@ -168,6 +168,87 @@ exports.UpdateStatus = ( (req, res) => {
     }
 });
 
+exports.UpdateStatusLocation = ( (req, res) => {
+    
+    const { username } = req.user
+    const { longitude, latitude, locationText, reference } = req.body
+    const errors = validationResult(req);
+
+    // logger.info(req.body)
+
+    try
+    {
+        if (!errors.isEmpty()) {
+
+            return res.status(403).json({ errors: errors.array() });
+  
+        }else if (!( longitude || latitude || locationText || reference)) {
+            return res.status(400).json({
+                status : false,
+                data: {},
+                message: "All fields are required"
+            })
+        } else {
+
+
+            if (locationText.includes('undefined')) {
+                return res.status(400).json({
+                    status: false,
+                    data : {},
+                    message: "Invalid location"
+                })
+            } else {
+
+                Status.update({
+
+                    longitude,
+                    latitude,
+                    locationText,
+    
+                }, {where: {reference, username, status: "ACTIVE"}}).then ((update) => {
+                    if (update[0] > 0){
+                        return res.status(202).json({
+                            status: true,
+                            data: {
+                                locationText,
+                                "message": "Status location updated successfully"
+                            },
+                            message: "success"
+                        })
+                    }else{
+                        return res.status(400).json({
+                            status: false,
+                            data : {},
+                            message: "Cannot update data"
+                        })
+                    }
+ 
+                        
+                }).catch((error) => {
+                    logger.info(error)
+                    return res.status(404).json({
+                        status: false,
+                        data : error,
+                        message: "Cannot update data"
+                    })
+                })
+            
+            }  
+                
+            
+        }
+        
+    } catch (error) {
+        logger.info(error)
+        return res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        })
+    }
+});
+
+
 exports.findStatus = async (req, res) => {
     const {amount, location} = req.body
     const { userId, username } = req.user
