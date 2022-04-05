@@ -43,5 +43,6 @@ exports.controller = {
     uploadFile: Controller.UploadController.uploadImages,
     updateStatus: Controller.StatusController.UpdateStatus,
     sendForgotPswdCode: Controller.ForgotPasswordController.sendForgotPasswordCode,
-    setNewPassword: Controller.ForgotPasswordController.setNewPassword
+    setNewPassword: Controller.ForgotPasswordController.setNewPassword,
+    updateStatusLocation: Controller.StatusController.UpdateStatusLocation
 }
