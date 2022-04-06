@@ -233,11 +233,11 @@ router.group('/', (router) => {
             controller.updateStatus
         );
         router.put('/status/location/update',
-        [   
-            Authenticate
-        ], 
-        controller.updateStatusLocation
-    );
+            [   
+                Authenticate
+            ], 
+            controller.updateStatusLocation
+        );
 
         router.get('/status/get',
             [   
@@ -253,6 +253,10 @@ router.group('/', (router) => {
         router.put('/request/negotiate', 
             [Authenticate],
             controller.createNegotiation
+        );
+        router.post('/rating', 
+            [Authenticate],
+            controller.rateUser
         );
         router.post('/status/find',
         [   

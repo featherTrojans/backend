@@ -44,5 +44,6 @@ exports.controller = {
     updateStatus: Controller.StatusController.UpdateStatus,
     sendForgotPswdCode: Controller.ForgotPasswordController.sendForgotPasswordCode,
     setNewPassword: Controller.ForgotPasswordController.setNewPassword,
-    updateStatusLocation: Controller.StatusController.UpdateStatusLocation
+    updateStatusLocation: Controller.StatusController.UpdateStatusLocation,
+    rateUser: Controller.RatingsController.rateUser
 }
