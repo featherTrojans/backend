@@ -95,6 +95,15 @@ exports.approveRequest = ( async (req, res) => {
                         let {amount} = await Status.findOne({where: {reference: statusId}, attributes: ['amount']});
                         const newStatusAmount = parseFloat(amount) - (parseFloat(total) - parseFloat(charges))
 
+                        const result = await Request.findAll({
+                            where: {agentUsername, status: 'SUCCESS'},
+                            attributes: [[sequelize.fn('COUNT', sequelize.col('amount')), 'totalCounts']]
+                        })
+
+                        const resultTwo = await Request.findAll({
+                            where: {userUid, status: 'SUCCESS'},
+                            attributes: [[sequelize.fn('COUNT', sequelize.col('amount')), 'totalCounts']]
+                        })
 
                         Request.update({status: 'SUCCESS'},{
                             where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
@@ -124,6 +133,14 @@ exports.approveRequest = ( async (req, res) => {
                                 //credit reciever and debit escrow
                                 creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `NGN${amountToCredit} cash withdrawal from ${username}`, from: username, to: 'primary wallet', title: 'Wallet Credit'});
 
+                                
+                                let totalCounts = result[0].dataValues.totalCounts == null ? 0 : result[0].dataValues.totalCounts + 1
+
+                                totalCounts >=1 && totalCounts <= 5 ?                                 creditService({userUid: agentId, reference: transId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
+
+                                let totalCount = resultTwo[0].dataValues.totalCounts == null ? 0 : resultTwo[0].dataValues.totalCounts + 1
+
+                                totalCounts >= 1 && totalCounts <= 5 ?                                 creditService({userUid, reference: transId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
                                 return res.status(202).json({
                                     status: true,
                                     data: {

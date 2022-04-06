@@ -21,6 +21,7 @@ const ElectricityController = require('./ElectricityController')
 const BillsController = require('./BillsController')
 const UploadController = require('./UploadController')
 const ForgotPasswordController = require('./ForgotPasswordController')
+const RatingsController = require('./RatingsController')
 
 module.exports = {
     
@@ -46,5 +47,6 @@ module.exports = {
     ElectricityController,
     BillsController,
     UploadController,
-    ForgotPasswordController
+    ForgotPasswordController,
+    RatingsController
 }

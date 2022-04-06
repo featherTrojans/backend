@@ -3,7 +3,7 @@ const {
     Transactions, DoubleSpent, Users, 
     UserLevels, Payments, Location, 
     LocationHistory, Request, Status, BankAccount, Withdrawal,
-    Bills 
+    Bills, Rating
 } = require('../models/')
 
 const create_users_table = ()=>{
@@ -114,8 +114,17 @@ const create_bills_table = ()=>{
     })
 }
 
+const create_ratings_table = ()=>{
+    Rating.sync({force: true}).then(()=>{
+    
+    config.logger.info('ratings table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
+
 // create_users_table();
-create_user_levels_table();
+// create_user_levels_table();
 // create_transactions_table();
 // create_double_spent_table();
 // create_payments_table();
@@ -126,3 +135,4 @@ create_user_levels_table();
 // create_bank_accounts_table()
 // create_withdrawals_table()
 // create_bills_table()
+create_ratings_table()
