@@ -27,34 +27,47 @@ exports.rateUser = ( async (req, res) => {
 
         } else {
 
-            const createRating = await Rating.create({
-                userUid: userId,
-                rating,
-                description: description ?? null,
-                userToRate,
-                reference
+            const check = await Rating.findAll({
+                where: {userUid: userId, reference}
             })
 
-            if ( createRating ) {
-                //credit the rater
-                const transId = 'FTHRTNG' + idGenService(7)
-                creditService({userUid: userId, reference: transId, amount: 10, description: `NGN10 Rating bonus from `, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'});
-                     
-                return res.status(200).json({
-                    status: true,
-                    data : {},
-                    message: "Rating done successfully verified"
-                })
-
-            } else {
-
+            if (check.length > 0 ) {
                 return res.status(403).json({
                     status: false,
                     data : {},
-                    message: "Unauthorized incorrect pin"
+                    message: "This user has been rated initially"
                 })
+            }else {
+                const createRating = await Rating.create({
+                    userUid: userId,
+                    rating,
+                    description: description ?? null,
+                    userToRate,
+                    reference
+                })
+    
+                if ( createRating ) {
+                    //credit the rater
+                    const transId = 'FTHRTNG' + idGenService(7)
+                    creditService({userUid: userId, reference: transId, amount: 10, description: `NGN10 Rating bonus from `, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'});
+                         
+                    return res.status(200).json({
+                        status: true,
+                        data : {},
+                        message: "Rating done successfully"
+                    })
+    
+                } else {
+    
+                    return res.status(403).json({
+                        status: false,
+                        data : {},
+                        message: "Cannot create rating"
+                    })
+                }
+    
             }
-
+            
         }
         
 
