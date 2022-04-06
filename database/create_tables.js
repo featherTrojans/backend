@@ -3,7 +3,7 @@ const {
     Transactions, DoubleSpent, Users, 
     UserLevels, Payments, Location, 
     LocationHistory, Request, Status, BankAccount, Withdrawal,
-    Bills, Rating
+    Bills, Rating, Notification
 } = require('../models/')
 
 const create_users_table = ()=>{
@@ -122,7 +122,14 @@ const create_ratings_table = ()=>{
         config.logger.debug(err)
     })
 }
-
+const create_notifications_table = ()=>{
+    Notification.sync({force: true}).then(()=>{
+    
+    config.logger.info('notifications table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
 // create_users_table();
 // create_user_levels_table();
 // create_transactions_table();
@@ -136,3 +143,4 @@ const create_ratings_table = ()=>{
 // create_withdrawals_table()
 // create_bills_table()
 create_ratings_table()
+create_notifications_table()

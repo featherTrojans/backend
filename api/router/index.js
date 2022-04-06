@@ -127,6 +127,14 @@ router.group('/', (router) => {
         controller.getTransactions
         );
 
+        router.get('/notifications',
+        [   
+            Authenticate
+            
+        ], 
+        controller.getAllNotifications
+        );
+
         router.post('/pay',
         [   
             Authenticate,
