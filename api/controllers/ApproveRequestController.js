@@ -5,6 +5,7 @@ const services = require("../../services").services
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const {idGenService, creditService, confirmData} = services
+const sequelize = require('sequelize')
 require('../../subscribers/')
 
 exports.approveRequest = ( async (req, res) => {
