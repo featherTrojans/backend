@@ -236,6 +236,12 @@ exports.createRequest = ( async (req, res) => {
                 data: {},
                 message: "All fields are required"
             })
+        } else if (amount < 200 ) {
+            return res.status(400).json({
+                status : false,
+                data: {},
+                message: "Invalid request amount. Make a request of NGN200 and above"
+            })
         } else {
 
             //check user balance before creating request
