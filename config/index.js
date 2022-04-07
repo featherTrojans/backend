@@ -12,6 +12,10 @@ const yesterday = time - ( 24 * 3600 * 1000)
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
 const {Op} = require('sequelize');
+const { initializeApp } = require("firebase-admin/app");
+const firebaseApp = initializeApp();
+const fcmNode = require('fcm-node');
+const fcm = new fcmNode(process.env.SERVER_KEY)
 
 exports.config = {
     "port": process.env.PORT,
@@ -50,7 +54,9 @@ exports.config = {
     paygold_pass: process.env.BILLSPWD,
     paygold_url: process.env.BILLSURL,
     aws_secret:  process.env.AWS_SECRET_ACCESS_KEY,
-    aws_access: process.env.AWS_ACCESS_KEY
+    aws_access: process.env.AWS_ACCESS_KEY,
+    firebaseApp,
+    fcm
     
 
 }
