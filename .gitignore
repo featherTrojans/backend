@@ -6,5 +6,7 @@ t.env.development
 output.log
 cert.pem
 key.pem
+subcribers/tester.js
+config.tester.js
 /test/*
   !test/index.js

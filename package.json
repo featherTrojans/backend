@@ -25,6 +25,8 @@
     "express-group-routes": "^1.1.0",
     "express-pino-logger": "^7.0.0",
     "express-validator": "^6.14.0",
+    "fcm-node": "^1.6.1",
+    "firebase-admin": "^10.0.2",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "mocha": "^9.1.3",

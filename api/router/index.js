@@ -127,6 +127,14 @@ router.group('/', (router) => {
         controller.getTransactions
         );
 
+        router.get('/notifications',
+        [   
+            Authenticate
+            
+        ], 
+        controller.getAllNotifications
+        );
+
         router.post('/pay',
         [   
             Authenticate,
@@ -232,6 +240,12 @@ router.group('/', (router) => {
             ], 
             controller.updateStatus
         );
+        router.put('/status/location/update',
+            [   
+                Authenticate
+            ], 
+            controller.updateStatusLocation
+        );
 
         router.get('/status/get',
             [   
@@ -247,6 +261,10 @@ router.group('/', (router) => {
         router.put('/request/negotiate', 
             [Authenticate],
             controller.createNegotiation
+        );
+        router.post('/rating', 
+            [Authenticate],
+            controller.rateUser
         );
         router.post('/status/find',
         [   
