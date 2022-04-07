@@ -1,10 +1,11 @@
 const { config } = require("../../config");
 const { Request, Users, Status, Transactions } = require("../../models");
-const logger = config.logger
+const {logger, eventEmitter} = config
 const services = require("../../services").services
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const {idGenService, creditService, confirmData} = services
+require('../../subscribers/')
 
 exports.approveRequest = ( async (req, res) => {
     
@@ -49,6 +50,11 @@ exports.approveRequest = ( async (req, res) => {
                     if (data[0] > 0 ) {
 
                         Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
+                        //notify withdrawal
+                        eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} has been cancelled and your funds reversed`})
+
+                        //notify depositor
+                        eventEmitter.emit('notification', {userUid: agentId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} has been cancelled`})
 
                         //refund & debit escrow
                         creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal from reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
@@ -140,7 +146,14 @@ exports.approveRequest = ( async (req, res) => {
 
                                 let totalCount = resultTwo[0].dataValues.totalCounts == null ? 0 : resultTwo[0].dataValues.totalCounts + 1
 
-                                totalCounts >= 1 && totalCounts <= 5 ?                                 creditService({userUid, reference: transId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
+                                totalCount >= 1 && totalCount <= 5 ?                                 creditService({userUid, reference: transId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
+
+                                eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} has been successfully completed`})
+
+                                eventEmitter.emit('notification', {userUid: agentId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} has been successfully completed`})
+                                
+
+
                                 return res.status(202).json({
                                     status: true,
                                     data: {
