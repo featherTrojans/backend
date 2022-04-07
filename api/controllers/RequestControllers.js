@@ -217,7 +217,7 @@ exports.cancelRequests = ( async (req, res) => {
 
 exports.createRequest = ( async (req, res) => {
     
-    const { userId, username, fullName, email } = req.user
+    const { userId, username, email } = req.user
     const { amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee } = req.body
     const transId = idGenService(10);
     const errors = validationResult(req);
@@ -258,7 +258,7 @@ exports.createRequest = ( async (req, res) => {
                 Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal - total)}, {where: {userUid: userId}});
                 const agentData = await Users.findOne({
                     where: {username: agentUsername},
-                    attributes: ['email', 'fullName', 'username', 'phoneNumber']
+                    attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid']
                 })
                 Request.create({
 
@@ -278,9 +278,10 @@ exports.createRequest = ( async (req, res) => {
 
                     const message = `Dear @${username}, you have a new cash withdrawal ${transId}`;
                     eventEmitter.emit('createRequest', {email, message})
-
+                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: message})
                     //send to agent 
                     const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal ${transId}, login to complete transaction`;
+                    eventEmitter.emit('notification', {userUid: agentData.userUid, title: 'Cash Withdrawal', description: `Hey, you have a new cash withdrawal request from  @${username}.`})
 
                     eventEmitter.emit('createRequest', {email: agentData.email, message: agentMessage})
 
@@ -325,7 +326,7 @@ exports.createRequest = ( async (req, res) => {
 
 exports.markRequests = ( async (req, res) => {
     
-    const { username, email } = req.user
+    const { username, email, userId } = req.user
     const {reference} = req.params
     const errors = validationResult(req);
 
@@ -357,11 +358,13 @@ exports.markRequests = ( async (req, res) => {
 
                     const message = `Dear @${user.username}, your cash withdrawal ${reference} has been accepted by ${username}. Login to view transaction and head to the meeting point to complete transaction`;
                     eventEmitter.emit('acceptRequest', {email: user.email, message})
+                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey, your cash withdrawal ${reference} has been accepted by @${username}. Head to the meeting point to complete transaction`})
 
                     //send to agent 
                     const agentMessage = `Dear @${username}, your cash withdrawal ${reference} has been accepted successfully. Head to the meeting point to complete transaction`;
 
                     eventEmitter.emit('createRequest', {email, message: agentMessage})
+                    eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: agentMessage})
                     return res.status(202).json({
                         status: true,
                         data: {

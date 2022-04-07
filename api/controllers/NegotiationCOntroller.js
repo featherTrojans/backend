@@ -32,7 +32,7 @@ exports.createNegotiation = ( async (req, res) => {
 
             const agent = await Users.findOne({
                 where: {username: agentUsername},
-                attributes: ['email', 'fullName', 'username', 'phoneNumber']
+                attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid']
             })
 
             Request.update({negotiatedFee}, {where: {
@@ -46,8 +46,13 @@ exports.createNegotiation = ( async (req, res) => {
                     eventEmitter.emit('negotiateFee', {email: user.email, message})
 
                     //send to agent 
-                    const agentMessage = `Dear @${agent.username}, your cash withdrawal ${reference} fee has been negotiated to ${negotiatedFee}`;
+                    const agentMessage = `Dear @${agent.username}, your cash withdrawal ${reference} fee has been negotiated to NGN${negotiatedFee}`;
                     eventEmitter.emit('negotiateFee', {email: agent.email, message: agentMessage})
+                    //notify withdrawal
+                    eventEmitter.emit('notification', {userUid: agent.userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} fee has been negotiated to NGN${negotiatedFee} by @${user.username}`})
+
+                    //notify depositor
+                    eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} fee has been negotiated to NGN${negotiatedFee}`})
 
                     return res.status(200).json({
                         status: true,

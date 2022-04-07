@@ -39,7 +39,7 @@ const creditService = async (data) => {
     
         eventEmitter.emit('walletCredit', {email, message})
         eventEmitter.emit('send', {phoneNumber, message})
-        eventEmitter.emit('notification', {userUid, title: data?.title ?? 'funding', description: data?.description ??  `${amount} Funding`})
+        eventEmitter.emit('notification', {userUid, title: data?.title ?? 'Wallet Credit', description: `Hey you just got credited NGN ${amount} in your primary wallet from @${data.from}`})
     } catch (error) {
         logger.info(error)
     }
