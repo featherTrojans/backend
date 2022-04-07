@@ -1,7 +1,7 @@
 const { config } = require('../../config');
 const { Users, Transactions } = require('../../models');
 require('../../subscribers')
-const eventEmitter = config.eventEmitter
+const {eventEmitter, logger} = config
 
 
 const creditService = async (data) => {
