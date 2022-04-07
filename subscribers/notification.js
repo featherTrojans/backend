@@ -2,6 +2,7 @@ const { config } = require('../config');
 const {Notification, Users } = require('../models/');
 const idGenerator = require('../services/generateId');
 const { logger, eventEmitter, fcm } = config;
+const fetch = require('node-fetch');
 
 
 
@@ -26,25 +27,26 @@ eventEmitter.addListener('notification', async (data) => {
     //send push notification
     const message = {
         to: messageToken,
-        collapse_key: 'FTHR',
-        notification: {
-            title: data.title,
-            body: data.description,
-            delivery_receipt_requested: true,
-        },
-        data: {
-            message: data.description
-        }
+        title: data.title,
+        body: data.description,
+        
     }
-    fcm.send(message, (err, result) => {
-        if ( err) {
-            logger.info(`error: ${err}`)
-        } else {
-            logger.info(`result ${result}`)
-        }
 
-
+    let fetchUrl =  await fetch("https://exp.host/--/api/v2/push/send", {
+        method: 'POST',
+        body: JSON.stringify(message)
     })
+    fetchUrl = await fetchUrl.json()
+    logger.info(` pushNotificationResult: ${fetchUrl}`)
+    // fcm.send(message, (err, result) => {
+    //     if ( err) {
+    //         logger.info(`error: ${err}`)
+    //     } else {
+    //         logger.info(`result ${result}`)
+    //     }
+
+
+    // })
 
     logger.info(`notification logged`);
  } catch( error ){
