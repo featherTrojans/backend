@@ -278,7 +278,7 @@ exports.createRequest = ( async (req, res) => {
 
                     const message = `Dear @${username}, you have a new cash withdrawal ${transId}`;
                     eventEmitter.emit('createRequest', {email, message})
-                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: message})
+                    eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: message})
                     //send to agent 
                     const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal ${transId}, login to complete transaction`;
                     eventEmitter.emit('notification', {userUid: agentData.userUid, title: 'Cash Withdrawal', description: `Hey, you have a new cash withdrawal request from  @${username}.`})
