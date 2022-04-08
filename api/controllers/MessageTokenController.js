@@ -22,7 +22,8 @@ exports.createToken = ( async (req, res) => {
                 message: "messageToken is required"
             })
         } else {
-
+            //update all usrs that have the same token to null before creating for this
+            await Users.update({messageToken: null}, {where: {messageToken}});
             Users.update({messageToken}, {where: {userUid: userId}}).then((data) => {
                 if (data[0] > 0 ) {
                     return res.status(200).json({
