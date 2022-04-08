@@ -43,7 +43,7 @@ exports.approveRequest = ( async (req, res) => {
                 attributes: ['pin', 'pin_attempts', 'escrowBal', 'username', 'walletBal']
             });
 
-            const newEscrowBal = parseFloat(escrowBal) - total;
+            const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
             if (pin_attempts > 3 ){
 
                 Request.update({status: 'CANCELLED', reasonForCancel: "Incorrect Pin"},{
@@ -103,7 +103,7 @@ exports.approveRequest = ( async (req, res) => {
                         //get status data
                         let statusData = await Status.findOne({where: {reference: statusId}, attributes: ['amount']});
                         const newStatusAmount = parseFloat(statusData.amount) - parseFloat(amount)
-                                             
+
                         const result = await Request.findAll({
                             where: {agentUsername, status: 'SUCCESS'},
                             attributes: [[sequelize.fn('COUNT', sequelize.col('amount')), 'totalCounts']]
