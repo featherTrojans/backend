@@ -177,7 +177,7 @@ exports.cancelRequests = ( async (req, res) => {
             } else{
 
                 let data = await Request.update({status: 'CANCELLED', reasonForCancel},{
-                    where: {userUid, reference, status: "PENDING"}
+                    where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
                 })
                 
                 if (data[0] > 0 ) {
