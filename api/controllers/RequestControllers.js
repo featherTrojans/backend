@@ -133,13 +133,16 @@ exports.cancelRequests = ( async (req, res) => {
             })
         } else {
 
-            const {total, userUid, agentUsername} = await Request.findOne({attributes: ['total','userUid', 'agentUsername'],
+            const {amount, charges, negotiatedFee, userUid, agentUsername} = await Request.findOne({attributes: ['total','userUid', 'agentUsername', 'amount', 'charges', 'negotiatedFee'],
             where: {reference}})
             const {escrowBal} = await Users.findOne({attributes: ['escrowBal'],
                     where: {
                         userUid
                     }
             })
+
+            const total = parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee)
+
             const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
             
             if (username.toUpperCase() === agentUsername.toUpperCase()) {
@@ -162,7 +165,7 @@ exports.cancelRequests = ( async (req, res) => {
                         message: "success"
                     })
                 } else {
-                    console.log(updated)
+                    logger.info(updated)
                     return res.status(404).json({
                         status: false,
                         data: {},
@@ -191,7 +194,7 @@ exports.cancelRequests = ( async (req, res) => {
                         message: "success"
                     })
                 } else {
-                    console.log(data)
+                    logger.info(data)
                     return res.status(404).json({
                         status: false,
                         data: {},
@@ -248,7 +251,7 @@ exports.createRequest = ( async (req, res) => {
 
             const {walletBal, escrowBal} = await Users.findOne({where: {userUid: userId}});
             const total = parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee)
-            
+
             if (total <= walletBal) {
                 //debit user
                 const newEscrowBal = parseFloat(escrowBal) + parseFloat(total);
