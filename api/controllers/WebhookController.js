@@ -1,6 +1,6 @@
 var crypto = require('crypto');
 const { config } = require('../../config');
-const { Payments, Withdrawal } = require('../../models');
+const { Payments, Withdrawal, DoubleSpent } = require('../../models');
 const { services } = require('../../services');
 const creditService = require('../../services/middlewares/creditService');
 var secret = config.paystack_secret_key;
@@ -20,23 +20,36 @@ exports.webhook = (async (req, res) => {
                 const {reference} = data.data
                 
                 // get payment data
-                const {amount, userUid, isUsed} = await Payments.findOne({attributes: ['amount', 'userUid'], where: {transId: reference}})
+                const {amount, userUid, isUsed} = await Payments.findOne({attributes: ['amount', 'userUid', 'isUsed'], where: {transId: reference}})
                 //update payment
                 await Payments.update({expired: true, isUsed: true}, {
                     where: {transId: reference}
                 })
-                if ( isUsed) {
+                const check = DoubleSpent.create({
+                    transId: reference,
+                    amount,
+                    username: userUid
+                })
 
-                    res.sendStatus(200);
-                    logger.info(`previously credited ${reference}`)
-                    return  res.sendStatus(200);
-                    
+                if ( !check ) {
+                    logger.info('Already used')
+                    return res.status(200)
                 } else {
+                    
+                    if ( isUsed ) {
 
-                    //get user wallet balance
-                    await services.creditService({userUid, reference, amount})
-                    return res.sendStatus(200);
+                        res.sendStatus(200);
+                        logger.info(`previously credited ${reference}`)
+                        return  res.sendStatus(200);
+                        
+                    } else {
+    
+                        //get user wallet balance
+                        await services.creditService({userUid, reference, amount})
+                        return res.sendStatus(200);
+                    }
                 }
+                
 
 
             }else if (data.event == 'transfer.success') {
