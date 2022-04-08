@@ -5,6 +5,7 @@ const services = require("../../services").services
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const {idGenService, creditService, confirmData} = services
+const sequelize = require('sequelize')
 require('../../subscribers/')
 
 exports.approveRequest = ( async (req, res) => {
@@ -30,18 +31,19 @@ exports.approveRequest = ( async (req, res) => {
         } else {
 
             //get userId 
-            const { userUid, total, agentUsername, statusId, charges} = await Request.findOne({
+            const { userUid, agentUsername, statusId, charges, negotiatedFee, amount} = await Request.findOne({
                 where: {reference},
-                attributes: ['userUid', 'total', 'agentUsername', 'statusId', 'charges']
+                attributes: ['userUid', 'agentUsername', 'statusId', 'charges', 'negotiatedFee', 'amount']
             });
 
+            const total = (parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee))
 
             let {pin, pin_attempts, escrowBal, username, walletBal } = await Users.findOne({
                 where: {userUid},
                 attributes: ['pin', 'pin_attempts', 'escrowBal', 'username', 'walletBal']
             });
 
-            const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
+            const newEscrowBal = parseFloat(escrowBal) - total;
             if (pin_attempts > 3 ){
 
                 Request.update({status: 'CANCELLED', reasonForCancel: "Incorrect Pin"},{
@@ -51,10 +53,10 @@ exports.approveRequest = ( async (req, res) => {
 
                         Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
                         //notify withdrawal
-                        eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} has been cancelled and your funds reversed`})
+                        eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been cancelled and your funds reversed`})
 
                         //notify depositor
-                        eventEmitter.emit('notification', {userUid: agentId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} has been cancelled`})
+                        eventEmitter.emit('notification', {userUid: agentId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been cancelled`})
 
                         //refund & debit escrow
                         creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal from reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
@@ -88,19 +90,20 @@ exports.approveRequest = ( async (req, res) => {
                 pin_verified = await bcrypt.compare(user_pin, pin);
                 //check pin 
                 await Users.update({pin_attempts}, {where: {userUid}});
-
+                let bonusTransId = 'FTHBS' + idGenService(8)
+                let bonusId = 'FTHBS' + idGenService(8)
                 if ( pin_verified ) {
                     const agentData = await confirmData({type: 'username', data: agentUsername}) 
                     if (agentData != null ) {
                         var agentId = agentData.userUid;
 
                         const feather_commission = 1/100;
-                        const amountToCredit = parseFloat(total) - (parseFloat(total - charges) * feather_commission);
+                        const amountToCredit = parseFloat(total) - (parseFloat(amount) * feather_commission);
 
                         //get status data
-                        let {amount} = await Status.findOne({where: {reference: statusId}, attributes: ['amount']});
-                        const newStatusAmount = parseFloat(amount) - (parseFloat(total) - parseFloat(charges))
-
+                        let statusData = await Status.findOne({where: {reference: statusId}, attributes: ['amount']});
+                        const newStatusAmount = parseFloat(statusData.amount) - parseFloat(amount)
+                                             
                         const result = await Request.findAll({
                             where: {agentUsername, status: 'SUCCESS'},
                             attributes: [[sequelize.fn('COUNT', sequelize.col('amount')), 'totalCounts']]
@@ -142,15 +145,15 @@ exports.approveRequest = ( async (req, res) => {
                                 
                                 let totalCounts = result[0].dataValues.totalCounts == null ? 0 : result[0].dataValues.totalCounts + 1
 
-                                totalCounts >=1 && totalCounts <= 5 ?                                 creditService({userUid: agentId, reference: transId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
+                                totalCounts >=1 && totalCounts <= 5 ?                                 creditService({userUid: agentId, reference: bonusId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
 
                                 let totalCount = resultTwo[0].dataValues.totalCounts == null ? 0 : resultTwo[0].dataValues.totalCounts + 1
 
-                                totalCount >= 1 && totalCount <= 5 ?                                 creditService({userUid, reference: transId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
+                                totalCount >= 1 && totalCount <= 5 ?                                 creditService({userUid, reference: bonusTransId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
 
-                                eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} has been successfully completed`})
+                                eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
 
-                                eventEmitter.emit('notification', {userUid: agentId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} has been successfully completed`})
+                                eventEmitter.emit('notification', {userUid: agentId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
                                 
 
 

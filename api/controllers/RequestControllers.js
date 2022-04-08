@@ -236,12 +236,19 @@ exports.createRequest = ( async (req, res) => {
                 data: {},
                 message: "All fields are required"
             })
+        } else if (amount < 200 ) {
+            return res.status(400).json({
+                status : false,
+                data: {},
+                message: "Invalid request amount. Make a request of NGN200 and above"
+            })
         } else {
 
             //check user balance before creating request
 
             const {walletBal, escrowBal} = await Users.findOne({where: {userUid: userId}});
-            const total = parseFloat(amount) + parseFloat(charges)
+            const total = parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee)
+            
             if (total <= walletBal) {
                 //debit user
                 const newEscrowBal = parseFloat(escrowBal) + parseFloat(total);
@@ -276,11 +283,11 @@ exports.createRequest = ( async (req, res) => {
     
                 }).then (() => {
 
-                    const message = `Dear @${username}, you have a new cash withdrawal ${transId}`;
+                    const message = `Dear @${username}, you have a new cash withdrawal`;
                     eventEmitter.emit('createRequest', {email, message})
                     eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: message})
                     //send to agent 
-                    const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal ${transId}, login to complete transaction`;
+                    const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal from @${username}, login to complete transaction`;
                     eventEmitter.emit('notification', {userUid: agentData.userUid, title: 'Cash Withdrawal', description: `Hey, you have a new cash withdrawal request from  @${username}.`})
 
                     eventEmitter.emit('createRequest', {email: agentData.email, message: agentMessage})
@@ -356,12 +363,12 @@ exports.markRequests = ( async (req, res) => {
             }).then ((data) => {
                 if (data[0] > 0 ) {
 
-                    const message = `Dear @${user.username}, your cash withdrawal ${reference} has been accepted by ${username}. Login to view transaction and head to the meeting point to complete transaction`;
+                    const message = `Dear @${user.username}, your cash withdrawal has been accepted by ${username}. Login to view transaction and head to the meeting point to complete transaction`;
                     eventEmitter.emit('acceptRequest', {email: user.email, message})
-                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey, your cash withdrawal ${reference} has been accepted by @${username}. Head to the meeting point to complete transaction`})
+                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey, your cash withdrawal  has been accepted by @${username}. Head to the meeting point to complete transaction`})
 
                     //send to agent 
-                    const agentMessage = `Dear @${username}, your cash withdrawal ${reference} has been accepted successfully. Head to the meeting point to complete transaction`;
+                    const agentMessage = `Dear @${username}, your cash withdrawal  has been accepted successfully. Head to the meeting point to complete transaction`;
 
                     eventEmitter.emit('createRequest', {email, message: agentMessage})
                     eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: agentMessage})
