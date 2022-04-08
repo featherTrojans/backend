@@ -28,7 +28,8 @@ exports.webhook = (async (req, res) => {
                 if ( isUsed) {
 
                     res.sendStatus(200);
-                    return logger.info(`previously credited ${reference}`)
+                    logger.info(`previously credited ${reference}`)
+                    return  res.sendStatus(200);
                     
                 } else {
 
