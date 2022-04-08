@@ -25,7 +25,7 @@ exports.webhook = (async (req, res) => {
                 await Payments.update({expired: true, isUsed: true}, {
                     where: {transId: reference}
                 })
-                const check = DoubleSpent.create({
+                const check = await DoubleSpent.create({
                     transId: reference,
                     amount,
                     username: userUid
@@ -35,7 +35,7 @@ exports.webhook = (async (req, res) => {
                     logger.info('Already used')
                     return res.status(200)
                 } else {
-                    
+
                     if ( isUsed ) {
 
                         res.sendStatus(200);
