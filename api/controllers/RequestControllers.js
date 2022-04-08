@@ -247,7 +247,8 @@ exports.createRequest = ( async (req, res) => {
             //check user balance before creating request
 
             const {walletBal, escrowBal} = await Users.findOne({where: {userUid: userId}});
-            const total = parseFloat(amount) + parseFloat(charges)
+            const total = parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee)
+            
             if (total <= walletBal) {
                 //debit user
                 const newEscrowBal = parseFloat(escrowBal) + parseFloat(total);
