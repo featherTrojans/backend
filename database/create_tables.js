@@ -130,7 +130,7 @@ const create_notifications_table = ()=>{
         config.logger.debug(err)
     })
 }
-// create_users_table();
+create_users_table();
 // create_user_levels_table();
 // create_transactions_table();
 // create_double_spent_table();
@@ -142,5 +142,5 @@ const create_notifications_table = ()=>{
 // create_bank_accounts_table()
 // create_withdrawals_table()
 // create_bills_table()
-create_ratings_table()
-create_notifications_table()
+// create_ratings_table()
+// create_notifications_table()

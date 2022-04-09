@@ -123,7 +123,6 @@ const Users = db_con.define("users", {
     },
     "messageToken": {
         allowNull: true,
-        unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
