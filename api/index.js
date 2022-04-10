@@ -46,5 +46,6 @@ exports.controller = {
     setNewPassword: Controller.ForgotPasswordController.setNewPassword,
     updateStatusLocation: Controller.StatusController.UpdateStatusLocation,
     rateUser: Controller.RatingsController.rateUser,
-    getAllNotifications: Controller.NotificationController.notifications
+    getAllNotifications: Controller.NotificationController.notifications,
+    changePassword: Controller.ForgotPasswordController.changePassword
 }
