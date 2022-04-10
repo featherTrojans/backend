@@ -18,25 +18,27 @@ const debitService = async (data) => {
             userUid,
             transId: reference,
             initialBal: walletBal,
-            amount,
+            amount: data?.charges ? (amount - data.charges) : amount,
             finalBal,
             description,
             reference: data.id ? data.id : reference,
             direction: "out",
-            title: data?.title ?? 'funding'
+            title: data?.title ?? 'funding',
+            charges: data?.charges ?? 0
         }) : 
         await Transactions.create({
             userUid,
             transId: reference,
             initialBal: walletBal,
-            amount,
+            amount: data?.charges ? (amount - data.charges): amount,
             finalBal,
             description,
             from: data.from,
             to: data.to,
             reference: data.id ? data.id : reference,
             direction: "out",
-            title: data?.title ?? 'funding'
+            title: data?.title ?? 'funding',
+            charges: data?.charges ?? 0
         })
         const message = `@${username}, NGN${dollarUSLocale.format(amount)}, has left your account. Your new bal: ${finalBal}`;
         eventEmitter.emit('walletCredit', {email, message})
