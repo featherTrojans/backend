@@ -1,7 +1,7 @@
 const { config } = require("../../config");
 const { validationResult } = require('express-validator');
 const { Request, Users } = require("../../models");
-const {logger, Op, eventEmitter} = config
+const {logger, Op, eventEmitter, dollarUSLocale} = config
 require('../../subscribers')
 
 
@@ -50,17 +50,18 @@ exports.createNegotiation = ( async (req, res) => {
                     }, reference}}).then((data) => {
                     if (data[0] > 0 ) {
     
-                        const message = `Dear @${user.username}, your cash withdrawal ${reference} fee has been negotiated to ${negotiatedFee}`;
+                        const message = `Dear @${user.username}, your cash withdrawal ${reference} fee has been negotiated to ${dollarUSLocale.format(negotiatedFee)}`;
                         eventEmitter.emit('negotiateFee', {email: user.email, message})
     
                         //send to agent 
-                        const agentMessage = `Dear @${agent.username}, your cash withdrawal ${reference} fee has been negotiated to NGN${negotiatedFee}`;
+                        const agentMessage = `Dear @${agent.username}, your cash withdrawal ${reference} fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)}`;
                         eventEmitter.emit('negotiateFee', {email: agent.email, message: agentMessage})
+
                         //notify withdrawal
-                        eventEmitter.emit('notification', {userUid: agent.userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} fee has been negotiated to NGN${negotiatedFee} by @${user.username}`})
+                        eventEmitter.emit('notification', {userUid: agent.userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)} by @${user.username}`, redirectTo: 'Notifications'})
     
                         //notify depositor
-                        eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} fee has been negotiated to NGN${negotiatedFee}`})
+                        eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)}`, redirectTo: 'Notifications'})
     
                         return res.status(200).json({
                             status: true,
