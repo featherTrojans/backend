@@ -17,7 +17,7 @@ eventEmitter.addListener('notification', async (data) => {
       description = data.description;
       reference = 'FTHRNTF' + idGenerator(8)
 
-      const {messageToken} = await Users.findOne({
+      const { messageToken } = await Users.findOne({
         where: {userUid},
         attributes: ['messageToken']
     })
@@ -29,12 +29,17 @@ eventEmitter.addListener('notification', async (data) => {
         to: messageToken,
         title: data.title,
         body: data.description,
+        data: {
+            title: data.title,
+            body: data.description,
+            redirectTo: data.redirectTo ?? 'Root'
+        }
         
     }
 
     let fetchUrl =  await fetch("https://exp.host/--/api/v2/push/send", {
         method: 'POST',
-        body: JSON.stringify(message)
+        body: JSON.stringify(message),
     })
     fetchUrl = await fetchUrl.json()
     logger.info(` pushNotificationResult: ${fetchUrl}`)

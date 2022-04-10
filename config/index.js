@@ -16,6 +16,7 @@ const { initializeApp } = require("firebase-admin/app");
 const firebaseApp = initializeApp();
 const fcmNode = require('fcm-node');
 const fcm = new fcmNode(process.env.SERVER_KEY)
+let dollarUSLocale = Intl.NumberFormat('en-US');
 
 exports.config = {
     "port": process.env.PORT,
@@ -56,7 +57,8 @@ exports.config = {
     aws_secret:  process.env.AWS_SECRET_ACCESS_KEY,
     aws_access: process.env.AWS_ACCESS_KEY,
     firebaseApp,
-    fcm
+    fcm,
+    dollarUSLocale
     
 
 }

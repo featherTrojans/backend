@@ -92,6 +92,16 @@ router.group('/', (router) => {
             controller.setUsername
             );
 
+            router.put('/password/changepassword',
+            [   
+                Authenticate,
+                body('newpassword').isLength({ min: 8 }),
+
+                
+            ], 
+            controller.changePassword
+            );
+
             router.post('/signin',
             [   
                 body('username').toLowerCase(),

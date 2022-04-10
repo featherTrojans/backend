@@ -1,7 +1,7 @@
 const { config } = require('../../config');
 const { Users, Transactions } = require('../../models');
 require('../../subscribers')
-const {eventEmitter, logger} = config
+const { eventEmitter, logger, dollarUSLocale } = config
 
 
 const creditService = async (data) => {
@@ -35,11 +35,12 @@ const creditService = async (data) => {
             reference: data.id ? data.id : reference,
             title: data?.title ?? 'funding'
         })
-        const message = `@${username}, #${amount}, just entered your account. Your new bal: ${finalBal}`;
+        const message = `@${username}, NGN${dollarUSLocale.format(amount)}, just entered your account. Your new bal: ${dollarUSLocale.format(finalBal)}`;
     
         eventEmitter.emit('walletCredit', {email, message})
         eventEmitter.emit('send', {phoneNumber, message})
-        eventEmitter.emit('notification', {userUid, title: data?.title ?? 'Wallet Credit', description: `Hey you just got credited NGN ${amount} in your primary wallet from ${data?.from ? '@'+ data.from : 'Wallet Funding'}`})
+        eventEmitter.emit('notification', {userUid, title: data?.title ?? 'Wallet Credit', description: `Hey you just got credited NGN${dollarUSLocale.format(amount)} in your primary wallet from ${data?.from && data.from != 'Bonus' ? '@'+ (data.from).toLowerCAse() : data.from != 'Bonus' ? 'Wallet Funding' : data.from}`})
+        
     } catch (error) {
         logger.info(error)
     }

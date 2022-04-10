@@ -1,6 +1,6 @@
 const { config } = require("../../config");
 const { Request, Users } = require("../../models");
-const {logger, eventEmitter} = config
+const {logger, eventEmitter, dollarUSLocale } = config
 const {services} = require("../../services")
 const { validationResult } = require('express-validator')
 const {idGenService, debitService, creditService} = services
@@ -155,7 +155,7 @@ exports.cancelRequests = ( async (req, res) => {
 
                     Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
                     //return and debit escrow
-                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
+                    creditService({userUid, reference: transId, amount: total, description: `NGN${dollarUSLocale.format(total)} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -288,10 +288,10 @@ exports.createRequest = ( async (req, res) => {
 
                     const message = `Dear @${username}, you have a new cash withdrawal`;
                     eventEmitter.emit('createRequest', {email, message})
-                    eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: message})
+                    eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: 'Hey padi, your cash request has been successfully created', redirectTo: 'Depositupdate'})
                     //send to agent 
                     const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal from @${username}, login to complete transaction`;
-                    eventEmitter.emit('notification', {userUid: agentData.userUid, title: 'Cash Withdrawal', description: `Hey, you have a new cash withdrawal request from  @${username}.`})
+                    eventEmitter.emit('notification', {userUid: agentData.userUid, title: 'Cash Withdrawal', description: `Hey padi, you have a new cash withdrawal request from  @${username}.`, redirectTo: 'Depositupdate'})
 
                     eventEmitter.emit('createRequest', {email: agentData.email, message: agentMessage})
 
@@ -368,13 +368,13 @@ exports.markRequests = ( async (req, res) => {
 
                     const message = `Dear @${user.username}, your cash withdrawal has been accepted by ${username}. Login to view transaction and head to the meeting point to complete transaction`;
                     eventEmitter.emit('acceptRequest', {email: user.email, message})
-                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey, your cash withdrawal  has been accepted by @${username}. Head to the meeting point to complete transaction`})
+                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey, your cash withdrawal  has been accepted by @${username}. Head to the meeting point to complete transaction`, redirectTo: 'Depositupdate'})
 
                     //send to agent 
                     const agentMessage = `Dear @${username}, your cash withdrawal  has been accepted successfully. Head to the meeting point to complete transaction`;
 
                     eventEmitter.emit('createRequest', {email, message: agentMessage})
-                    eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: agentMessage})
+                    eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: agentMessage, redirectTo: 'Depositupdate'})
                     return res.status(202).json({
                         status: true,
                         data: {
