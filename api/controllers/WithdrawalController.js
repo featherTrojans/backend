@@ -42,8 +42,10 @@ exports.withdrawFund = ( async (req, res) => {
 
             
             const {account_number, account_name, bank_name} = await BankAccount.findOne({attributes: ['account_number', 'account_name', 'bank_name'], where: {account_code}});
+
             const description = `${username} withdrawal`;
-            const debit = await debitService({userUid: userId, reference, amount: (amount) + charges, description, title: 'withdrawal', from: 'primary wallet', to: bank_name })
+
+            const debit = await debitService({userUid: userId, reference, amount: (amount) + charges, description, title: 'withdrawal', from: 'primary wallet', to: bank_name, charges })
 
             if ( debit ) {
 

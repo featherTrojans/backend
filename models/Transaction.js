@@ -50,6 +50,15 @@ const Transactions = db_con.define("transactions", {
         }
 
     },
+    "charges": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: "0",
+        validate : {
+           notEmpty: true
+        }
+
+    },
     "description": {
         allowNull: false,
         type: Sequelize.STRING,
