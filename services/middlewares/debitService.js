@@ -1,7 +1,7 @@
 const { config } = require('../../config');
 const { Users, Transactions } = require('../../models');
 require('../../subscribers')
-const eventEmitter = config.eventEmitter
+const { eventEmitter, dollarUSLocale } = config
 
 
 const debitService = async (data) => {
@@ -38,10 +38,10 @@ const debitService = async (data) => {
             direction: "out",
             title: data?.title ?? 'funding'
         })
-        const message = `@${username}, NGN ${amount}, has left your account. Your new bal: ${finalBal}`;
+        const message = `@${username}, NGN${dollarUSLocale.format(amount)}, has left your account. Your new bal: ${finalBal}`;
         eventEmitter.emit('walletCredit', {email, message})
         eventEmitter.emit('send', {phoneNumber, message})
-        eventEmitter.emit('notification', {userUid, title: data?.title ?? 'funding', description: `Hey, NGN ${amount} just left your primary wallet`})
+        eventEmitter.emit('notification', {userUid, title: data?.title ?? 'funding', description: `Hey, NGN ${dollarUSLocale.format(amount)} just left your primary wallet`})
         return true;
     } else {
         return false;

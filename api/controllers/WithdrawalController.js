@@ -26,7 +26,7 @@ exports.withdrawFund = ( async (req, res) => {
                 message: "account code and amount is required"
             })
 
-        }else if ( walletBal < (amount + 50 )) {
+        }else if ( walletBal < (parseFloat(amount) + 50 )) {
 
             return res.status(400).json({
                 status: false,
@@ -39,7 +39,7 @@ exports.withdrawFund = ( async (req, res) => {
             const reference = codeGenerator(14);
             const {account_number, account_name, bank_name} = await BankAccount.findOne({attributes: ['account_number', 'account_name', 'bank_name'], where: {account_code}});
             const description = `${username} withdrawal`;
-            const debit = await debitService({userUid: userId, reference, amount: amount + 50, description, title: 'withdrawal', from: 'primary wallet', to: bank_name })
+            const debit = await debitService({userUid: userId, reference, amount: parseFloat(amount) + 50, description, title: 'withdrawal', from: 'primary wallet', to: bank_name })
 
             if ( debit ) {
 
