@@ -86,7 +86,6 @@ exports.setNewPassword = (async (req, res) => {
   
         } else {
             const checkUsername = await services.confirmData({data: username, type: 'username'})
-            logger.info(checkUsername);
             const pwd = await bcrypt.hash(password, 10);
             
             if ( checkUsername == null) {
@@ -105,6 +104,7 @@ exports.setNewPassword = (async (req, res) => {
                     const message = `Dear ${fullName}, Your password has been successfully changed. Kindly contact customer support if you didn't initiate this process`
 
                     eventEmitter.emit('changePassword', {fullName, email, message});
+                    eventEmitter.emit('notification', {userUid: userId, title: 'Password Changed', description: 'Hey padi, Your password has just been  changed. Kindly contact customer support if you didn\'t initiate this process'});
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(202).json({
                         status: true,
@@ -135,4 +135,80 @@ exports.setNewPassword = (async (req, res) => {
         })
     }
 });
+
+
+exports.changePassword = (async (req, res) => {
+    const {oldpassword, newpassword} = req.body
+
+    const {userId, username, email, fullName} = req.user
+    const errors = validationResult(req);
+
+    try
+    {
+
+        if (!errors.isEmpty()) {
+
+            return res.status(403).json({ errors: errors.array() });
+  
+        } else {
+
+            const checkUsername = await services.confirmData({data: username, type: 'username'})
+            const pwd = await bcrypt.hash(newpassword, 10);
+            
+            if ( checkUsername == null) {
+
+                return res.status(403).json({
+                    status: false,
+                    data : {},
+                    message: "Unauthorized request"
+                })
+            } else if (!(await bcrypt.compare(oldpassword, checkUsername.password))) {
+
+                res.status(400).json({
+                    status: false,
+                    data: {},
+                    message: "Incorrect password provided"
+                })
+            
+            }  else {
+                //set password in database
+                Users.update(
+                    {password: pwd, isVerified: true},
+                    {where: {userUid: userId}}
+                ).then(()=>{
+                    const message = `Dear ${fullName}, Your password has been successfully changed. Kindly contact customer support if you didn't initiate this process`
+
+                    eventEmitter.emit('changePassword', {fullName, email, message});
+                    eventEmitter.emit('notification', {userUid: userId, title: 'Password Changed', description: 'Hey padi, Your password has just been  changed. Kindly contact customer support if you didn\'t initiate this process'});
+                    const token = TokenServices({userId, username, email, fullName}, '2h')
+                    return res.status(202).json({
+                        status: true,
+                        data: {
+                            userId,
+                            username,
+                            token
+                        },
+                        message: "Password changed successfully"
+                    })
+                }).catch((err) => {
+                    logger.info(err)
+                    res.status(400).json({
+                        status: false,
+                        data: err,
+                        message: "Incorrect password provided"
+                    })
+                })
+            }
+        }
+    } catch(error) {
+
+        logger.info(error)
+        return res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        })
+    }
+});
+
 
