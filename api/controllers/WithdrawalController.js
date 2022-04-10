@@ -13,6 +13,8 @@ exports.withdrawFund = ( async (req, res) => {
     try
     {
         const { walletBal } = await Users.findOne({attributes: ['walletBal'], where: {userUid: userId}})
+        let charges = amount <= 5000 ? 10 : amount <= 50000 ? 25 : 50
+
     
         if (!errors.isEmpty()) {
 
@@ -26,25 +28,26 @@ exports.withdrawFund = ( async (req, res) => {
                 message: "account code and amount is required"
             })
 
-        }else if ( walletBal < (parseFloat(amount) + 50 )) {
+        }else if ( walletBal < (parseFloat(amount) + charges )) {
 
             return res.status(400).json({
                 status: false,
                 data: {},
-                message: "Insufficient balance, because a charge of NGN50 applies"
+                message: `Insufficient balance, because a charge of NGN${charges} applies`
             })
 
         } else {
 
             const reference = codeGenerator(14);
+
+            
             const {account_number, account_name, bank_name} = await BankAccount.findOne({attributes: ['account_number', 'account_name', 'bank_name'], where: {account_code}});
             const description = `${username} withdrawal`;
-            const debit = await debitService({userUid: userId, reference, amount: parseFloat(amount) + 50, description, title: 'withdrawal', from: 'primary wallet', to: bank_name })
+            const debit = await debitService({userUid: userId, reference, amount: (amount) + charges, description, title: 'withdrawal', from: 'primary wallet', to: bank_name })
 
             if ( debit ) {
 
-
-                const data = await withdrawFund({account_code, amount, user_uid: userId, reference, account_name, account_number, bank_name, narration: description});
+                const data = await withdrawFund({account_code, amount, user_uid: userId, reference, account_name, account_number, bank_name, narration: description, charges});
 
                 if (data != false ){
                     return res.status(200).json({
@@ -60,7 +63,7 @@ exports.withdrawFund = ( async (req, res) => {
                     })
                 }else {
                     //refund
-                    creditService({userUid: userId, reference: "FTHRVRSL" + reference, amount: amount + 50, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from: 'primary wallet', to: bank_name })
+                    creditService({userUid: userId, reference: "FTHRVRSL" + reference, amount: amount + charges, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from: 'primary wallet', to: bank_name })
 
                     return res.status(404).json({
                         status: false,
