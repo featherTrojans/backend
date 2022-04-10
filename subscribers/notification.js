@@ -29,12 +29,13 @@ eventEmitter.addListener('notification', async (data) => {
         to: messageToken,
         title: data.title,
         body: data.description,
+        data
         
     }
 
     let fetchUrl =  await fetch("https://exp.host/--/api/v2/push/send", {
         method: 'POST',
-        body: JSON.stringify(message)
+        body: JSON.stringify(message),
     })
     fetchUrl = await fetchUrl.json()
     logger.info(` pushNotificationResult: ${fetchUrl}`)
