@@ -174,7 +174,7 @@ exports.withdrawFund = async (payload) => {
 
             source: "balance",
             reason: payload.narration,
-            amount: payload.amount,
+            amount: (payload.amount * 100),
             recipient: payload.account_code,
             reference: payload.reference
 
@@ -194,7 +194,7 @@ exports.withdrawFund = async (payload) => {
                   amount: payload.amount,
                   reference: payload.reference,
                   bank_name: payload.bank_name,
-                  charges: 50,
+                  charges: payload.charges,
                   transfer_code: data.transfer_code,
                   reference: payload.reference
               })
