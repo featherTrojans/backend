@@ -32,7 +32,7 @@ eventEmitter.addListener('notification', async (data) => {
         data: {
             title: data.title,
             body: data.description,
-            redirectTo: data.redirectTo ?? 'Root'
+            redirectTo: data?.redirectTo ? data.redirectTo : 'Root'
         }
         
     }
@@ -42,7 +42,8 @@ eventEmitter.addListener('notification', async (data) => {
         body: JSON.stringify(message),
     })
     fetchUrl = await fetchUrl.json()
-    logger.info(` pushNotificationResult: ${fetchUrl}`)
+    logger.info(` pushNotificationResult: `)
+    logger.info(fetchUrl)
     // fcm.send(message, (err, result) => {
     //     if ( err) {
     //         logger.info(`error: ${err}`)
