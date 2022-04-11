@@ -246,7 +246,7 @@ exports.confirmCode = ( async (req, res) => {
                 return res.status(403).json({
                     status: false,
                     data : error,
-                    message: "error occur"
+                    message: "Incorrect code used"
                 })
             })
         }
