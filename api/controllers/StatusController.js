@@ -320,6 +320,7 @@ exports.allStatus = ( async (req, res) => {
             where: {username, status: "ACTIVE"},
             order: [['createdAt', 'DESC']],
         })
+        const feather_commission = 0.01
         if ( transactions != null && transactions.length > 0 ) {
             let acceptedRequests = await Request.findAll({
                 attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
@@ -341,10 +342,10 @@ exports.allStatus = ( async (req, res) => {
         
             const result = await Request.findAll({
                 where: {agentUsername: username, status: 'SUCCESS', statusId: transactions[0].reference},
-                attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalEarnings']]
+                attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalEarnings'], [sequelize.fn('SUM', sequelize.col('charges')), 'totalCharges'], [sequelize.fn('SUM', sequelize.col('negotiatedFee')), 'totalFees']]
             })
     
-            let totalEarnings = result[0].dataValues.totalEarnings == null ? 0 : result[0].dataValues.totalEarnings
+            let totalEarnings = result[0].dataValues.totalEarnings == null ? 0 : parseFloat(result[0].dataValues.totalEarnings - (result[0].dataValues.totalEarnings * feather_commission)) + parseFloat(result[0].dataValues.totalCharges) + parseFloat(result[0].dataValues.totalFees)
             
             return res.status(200).json({
                 status: true,
