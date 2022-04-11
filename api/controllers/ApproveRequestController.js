@@ -124,7 +124,7 @@ exports.approveRequest = ( async (req, res) => {
                             if (data[0] > 0 ) {
 
                                 //update status amount
-                                Status.update({amount: newStatusAmount}, {where: {reference: statusId}});
+                                Status.update({balance: newStatusAmount}, {where: {reference: statusId}});
                                 
                                 Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
 

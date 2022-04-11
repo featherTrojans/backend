@@ -56,6 +56,7 @@ exports.createStatus = ( async (req, res) => {
                         latitude,
                         locationText,
                         reference,
+                        balance: amount
         
                     }).then (() => {
         
@@ -132,6 +133,7 @@ exports.UpdateStatus = ( (req, res) => {
                     longitude,
                     latitude,
                     locationText,
+                    balance: amount
     
                 }, {where: {reference, username}}).then (() => {
     
@@ -316,7 +318,7 @@ exports.allStatus = ( async (req, res) => {
     try
     {
         const transactions = await Status.findAll({
-            attributes: ['username', 'fullName', 'longitude', 'latitude', 'locationText', 'amount', 'status', 'reference', 'createdAt', 'updatedAt'],
+            attributes: ['username', 'fullName', 'longitude', 'latitude', 'locationText', 'amount', 'status', 'reference', 'balance', 'createdAt', 'updatedAt'],
             where: {username, status: "ACTIVE"},
             order: [['createdAt', 'DESC']],
         })
