@@ -46,7 +46,7 @@ exports.createNegotiation = ( async (req, res) => {
                 Request.update({negotiatedFee}, {where: {
                     [Op.or]: {
                         userUid: userId,
-                        agentUsername: username
+                        agentUsername: agent.username
                     }, reference}}).then((data) => {
                     if (data[0] > 0 ) {
     
@@ -99,7 +99,7 @@ exports.createNegotiation = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "Ops something went wrong!!!!! error occur"
         })
     }
 });
