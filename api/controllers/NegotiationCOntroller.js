@@ -27,7 +27,7 @@ exports.createNegotiation = ( async (req, res) => {
             const {userUid, agentUsername } = await Request.findOne({where: {reference}})
             const user = await Users.findOne({
                 where: {userUid},
-                attributes: ['email', 'fullName', 'username', 'phoneNumber', 'walletBal']
+                attributes: ['email', 'fullName', 'username', 'phoneNumber', 'walletBal', 'escrowBal']
             })
 
             const agent = await Users.findOne({
@@ -49,19 +49,25 @@ exports.createNegotiation = ( async (req, res) => {
                         agentUsername: agent.username
                     }, reference}}).then((data) => {
                     if (data[0] > 0 ) {
-    
-                        const message = `Dear @${user.username}, your cash withdrawal ${reference} fee has been negotiated to ${dollarUSLocale.format(negotiatedFee)}`;
+                        
+                        //debit user and add it to escrow
+                        const newWalletBal = parseFloat(user.walletBal - negotiatedFee);
+                        const newEscrowBal = parseFloat(user.escrowBal + negotiatedFee);
+
+                        Users.update({walletBal: newWalletBal, escrowBal: newEscrowBal}, {userUid});
+
+                        const message = `Dear @${user.username}, your cash withdrawal fee has been negotiated to ${dollarUSLocale.format(negotiatedFee)}`;
                         eventEmitter.emit('negotiateFee', {email: user.email, message})
     
                         //send to agent 
-                        const agentMessage = `Dear @${agent.username}, your cash withdrawal ${reference} fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)}`;
+                        const agentMessage = `Dear @${agent.username}, your cash withdrawal fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)}`;
                         eventEmitter.emit('negotiateFee', {email: agent.email, message: agentMessage})
 
                         //notify withdrawal
-                        eventEmitter.emit('notification', {userUid: agent.userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)} by @${user.username}`, redirectTo: 'Notifications'})
+                        eventEmitter.emit('notification', {userUid: agent.userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)} by @${user.username}`, redirectTo: 'Notifications'})
     
                         //notify depositor
-                        eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal ${reference} fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)}`, redirectTo: 'Notifications'})
+                        eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)}`, redirectTo: 'Notifications'})
     
                         return res.status(200).json({
                             status: true,

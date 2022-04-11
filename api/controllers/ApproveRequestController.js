@@ -44,6 +44,7 @@ exports.approveRequest = ( async (req, res) => {
             });
 
             const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
+            const newWalletBal = parseFloat(walletBal) + parseFloat(total)
             if (pin_attempts > 3 ){
 
                 Request.update({status: 'CANCELLED', reasonForCancel: "Incorrect Pin"},{
@@ -51,7 +52,7 @@ exports.approveRequest = ( async (req, res) => {
                 }).then ((data) => {
                     if (data[0] > 0 ) {
 
-                        Users.update({pin_attempts: 0, escrowBal: newEscrowBal }, {where: {userUid}});
+                        Users.update({pin_attempts: 0, escrowBal: newEscrowBal,  walletBal: newWalletBal }, {where: {userUid}});
                         //notify withdrawal
                         eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been cancelled and your funds reversed`})
 
@@ -59,7 +60,8 @@ exports.approveRequest = ( async (req, res) => {
                         eventEmitter.emit('notification', {userUid: agentId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been cancelled`})
 
                         //refund & debit escrow
-                        creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal from reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
+
+                        // creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal from reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
                         return res.status(400).json({
                             status: false,
                             data: {
