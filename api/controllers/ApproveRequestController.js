@@ -114,6 +114,9 @@ exports.approveRequest = ( async (req, res) => {
                             attributes: [[sequelize.fn('COUNT', sequelize.col('amount')), 'totalCounts']]
                         })
 
+                        //first credit 
+                        await creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `NGN${amountToCredit} cash withdrawal from ${username}`, from: username, to: 'primary wallet', title: 'Wallet Credit'})
+                        
                         Request.update({status: 'SUCCESS'},{
                             where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
                         }).then ((data) => {
@@ -140,9 +143,7 @@ exports.approveRequest = ( async (req, res) => {
                                     title: "Wallet Debit"
                                 })
                                 //credit reciever and debit escrow
-                                creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `NGN${amountToCredit} cash withdrawal from ${username}`, from: username, to: 'primary wallet', title: 'Wallet Credit'});
 
-                                
                                 let totalCounts = result[0].dataValues.totalCounts == null ? 0 : result[0].dataValues.totalCounts + 1
 
                                 totalCounts >=1 && totalCounts <= 5 ?                                 creditService({userUid: agentId, reference: bonusId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
