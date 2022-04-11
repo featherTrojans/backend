@@ -35,7 +35,7 @@ exports.createNegotiation = ( async (req, res) => {
                 attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid']
             })
 
-            if (negotiatedFee > walletBal) {
+            if (negotiatedFee > user.walletBal) {
                 return res.status(404).json({
                     status: false,
                     data: {},
