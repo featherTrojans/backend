@@ -114,9 +114,7 @@ exports.approveRequest = ( async (req, res) => {
                             attributes: [[sequelize.fn('COUNT', sequelize.col('amount')), 'totalCounts']]
                         })
 
-                        //first credit 
-                        await creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `NGN${amountToCredit} cash withdrawal from ${username}`, from: username, to: 'primary wallet', title: 'Wallet Credit'})
-                        
+
                         Request.update({status: 'SUCCESS'},{
                             where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
                         }).then ((data) => {
@@ -143,30 +141,45 @@ exports.approveRequest = ( async (req, res) => {
                                     title: "Wallet Debit"
                                 })
                                 //credit reciever and debit escrow
+                                //first credit
+                                new Promise(function(resolve, reject) { 
+                                    const creditAgent = creditService({userUid: agentId, reference: transId, amount: amountToCredit, description: `NGN${amountToCredit} cash withdrawal from ${username}`, from: username, to: 'primary wallet', title: 'Wallet Credit'})
 
-                                let totalCounts = result[0].dataValues.totalCounts == null ? 0 : result[0].dataValues.totalCounts + 1
+                                    creditAgent ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
+                                }).then(()=> {
+                                    let totalCounts = result[0].dataValues.totalCounts == null ? 0 : result[0].dataValues.totalCounts + 1
 
-                                totalCounts >=1 && totalCounts <= 5 ?                                 creditService({userUid: agentId, reference: bonusId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
-
-                                let totalCount = resultTwo[0].dataValues.totalCounts == null ? 0 : resultTwo[0].dataValues.totalCounts + 1
-
-                                totalCount >= 1 && totalCount <= 5 ?                                 creditService({userUid, reference: bonusTransId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
-
-                                eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
-
-                                eventEmitter.emit('notification', {userUid: agentId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
-                                
-
-
-                                return res.status(202).json({
-                                    status: true,
-                                    data: {
-                                        reference,
-                                        "message": "Approved successfully"
-                                    },
-                                    message: "success"
+                                    totalCounts >=1 && totalCounts <= 5 ?                                 creditService({userUid: agentId, reference: bonusId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
+    
+                                    let totalCount = resultTwo[0].dataValues.totalCounts == null ? 0 : resultTwo[0].dataValues.totalCounts + 1
+    
+                                    totalCount >= 1 && totalCount <= 5 ?                                 creditService({userUid, reference: bonusTransId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
+    
+                                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
+    
+                                    eventEmitter.emit('notification', {userUid: agentId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
+                                    
+    
+    
+                                    return res.status(202).json({
+                                        status: true,
+                                        data: {
+                                            reference,
+                                            "message": "Approved successfully"
+                                        },
+                                        message: "success"
+                                    })
+    
+                                }).catch(error => {
+                                    logger.info(error)
+                                    return res.status(400).json({
+                                        status: false,
+                                        data : error,
+                                        message: "Cannot credit user"
+                        
+                                    })
                                 })
-
+                                
                             } else {
 
                                 return res.status(404).json({
