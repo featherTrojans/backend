@@ -135,6 +135,7 @@ exports.cancelRequests = ( async (req, res) => {
 
             const {amount, charges, negotiatedFee, userUid, agentUsername} = await Request.findOne({attributes: ['total','userUid', 'agentUsername', 'amount', 'charges', 'negotiatedFee'],
             where: {reference}})
+            
             const {escrowBal, walletBal} = await Users.findOne({attributes: ['escrowBal', 'walletBal'],
                     where: {
                         userUid
@@ -155,6 +156,8 @@ exports.cancelRequests = ( async (req, res) => {
                 if ( updated[0] > 0 ) {
 
                     Users.update({escrowBal: newEscrowBal, walletBal: newWalletBal }, {where: {userUid}});
+                    //notify depositor
+                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal has been cancelled`, redirectTo: 'Notifications'})
                     //return and debit escrow
 
                     // creditService({userUid, reference: transId, amount: total, description: `NGN${dollarUSLocale.format(total)} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
