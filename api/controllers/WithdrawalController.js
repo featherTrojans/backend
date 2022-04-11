@@ -28,6 +28,14 @@ exports.withdrawFund = ( async (req, res) => {
                 message: "account code and amount is required"
             })
 
+        }else if ( amount < 100) {
+
+            return res.status(400).json({
+                status: false,
+                data: {},
+                message: `You cannot withdraw NGN${charges}. Try NGN100 or more`
+            })
+
         }else if ( walletBal < (parseFloat(amount) + charges )) {
 
             return res.status(400).json({
