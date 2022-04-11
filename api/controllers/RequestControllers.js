@@ -135,7 +135,8 @@ exports.cancelRequests = ( async (req, res) => {
 
             const {amount, charges, negotiatedFee, userUid, agentUsername} = await Request.findOne({attributes: ['total','userUid', 'agentUsername', 'amount', 'charges', 'negotiatedFee'],
             where: {reference}})
-            const {escrowBal} = await Users.findOne({attributes: ['escrowBal'],
+            
+            const {escrowBal, walletBal} = await Users.findOne({attributes: ['escrowBal', 'walletBal'],
                     where: {
                         userUid
                     }
@@ -144,7 +145,8 @@ exports.cancelRequests = ( async (req, res) => {
             const total = parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee)
 
             const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
-            
+            const newWalletBal = parseFloat(walletBal) + parseFloat(total);
+
             if (username.toUpperCase() === agentUsername.toUpperCase()) {
 
                 const updated = await Request.update({status: 'CANCELLED', reasonForCancel},{
@@ -153,9 +155,12 @@ exports.cancelRequests = ( async (req, res) => {
 
                 if ( updated[0] > 0 ) {
 
-                    Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
+                    Users.update({escrowBal: newEscrowBal, walletBal: newWalletBal }, {where: {userUid}});
+                    //notify depositor
+                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal has been cancelled`, redirectTo: 'Notifications'})
                     //return and debit escrow
-                    creditService({userUid, reference: transId, amount: total, description: `NGN${dollarUSLocale.format(total)} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
+
+                    // creditService({userUid, reference: transId, amount: total, description: `NGN${dollarUSLocale.format(total)} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
                     return res.status(202).json({
                         status: true,
                         data: {
