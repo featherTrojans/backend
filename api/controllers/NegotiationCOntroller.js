@@ -54,7 +54,7 @@ exports.createNegotiation = ( async (req, res) => {
                         const newWalletBal = parseFloat(user.walletBal - negotiatedFee);
                         const newEscrowBal = parseFloat(user.escrowBal + negotiatedFee);
 
-                        Users.update({walletBal: newWalletBal, escrowBal: newEscrowBal}, {userUid});
+                        Users.update({walletBal: newWalletBal, escrowBal: newEscrowBal}, {where: {userUid}});
 
                         const message = `Dear @${user.username}, your cash withdrawal fee has been negotiated to ${dollarUSLocale.format(negotiatedFee)}`;
                         eventEmitter.emit('negotiateFee', {email: user.email, message})
