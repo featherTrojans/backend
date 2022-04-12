@@ -86,7 +86,7 @@ exports.signup = ( async (req, res) => {
                     referredBy
                 }).then( () => {
 
-                    const message = `Dear ${fullName}, your verification code is: ${code}. DO NOT DISCLOSE TO ANYONE`;
+                    const message = `Dear ${fullName}, your verification code is: `;
                     eventEmitter.emit('signup', {code, phoneNumber, email, message})
                     const token = TokenServices({userId, username, email, fullName}, '6h')
                     return res.status(201).json({
@@ -299,7 +299,7 @@ exports.setPassword = (async (req, res) => {
                     const message = `Dear ${fullName}, It is my pleasure to welcome you into this amazing community... 
                     Get cash easily without stress. Your username/tag is @${username}, you can change it to your desired one on the app. Welcome once again`
 
-                    eventEmitter.emit('signupSuccess', {fullName, email, message});
+                    eventEmitter.emit('signupSuccess', {fullName, email, message}, fullName);
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(202).json({
                         status: true,
