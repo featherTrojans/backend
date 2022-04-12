@@ -35,7 +35,7 @@ const creditService = async (data) => {
             reference: data.id ? data.id : reference,
             title: data?.title ?? 'funding'
         })
-        const message = `@${username}, NGN${dollarUSLocale.format(amount)}, just entered your account. Your new bal: ${dollarUSLocale.format(finalBal)}`;
+        const message = `@${username}, NGN${dollarUSLocale.format(amount)} just entered your account. Your new balance is: NGN${dollarUSLocale.format(finalBal)}`;
     
         eventEmitter.emit('walletCredit', {email, message})
         eventEmitter.emit('send', {phoneNumber, message})

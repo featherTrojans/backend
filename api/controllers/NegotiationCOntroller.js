@@ -64,10 +64,10 @@ exports.createNegotiation = ( async (req, res) => {
                         eventEmitter.emit('negotiateFee', {email: agent.email, message: agentMessage})
 
                         //notify withdrawal
-                        eventEmitter.emit('notification', {userUid: agent.userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)} by @${user.username}`, redirectTo: 'Notifications'})
+                        eventEmitter.emit('notification', {userUid: agent.userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)} by @${user.username}`, redirectTo: 'Withdraw'})
     
                         //notify depositor
-                        eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)}`, redirectTo: 'Notifications'})
+                        eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: `Hey your cash withdrawal fee has been negotiated to NGN${dollarUSLocale.format(negotiatedFee)}`, redirectTo: 'Depositupdate'})
     
                         return res.status(200).json({
                             status: true,
