@@ -40,10 +40,10 @@ const debitService = async (data) => {
             title: data?.title ?? 'funding',
             charges: data?.charges ?? 0
         })
-        const message = `@${username}, NGN${dollarUSLocale.format(amount)}, has left your account. Your new bal: ${finalBal}`;
+        const message = `@${username}, NGN${dollarUSLocale.format(amount)} has left your account. Your new balance is: NGN${finalBal}`;
         eventEmitter.emit('walletCredit', {email, message})
         eventEmitter.emit('send', {phoneNumber, message})
-        eventEmitter.emit('notification', {userUid, title: data?.title ?? 'funding', description: `Hey, NGN ${dollarUSLocale.format(amount)} just left your primary wallet`})
+        eventEmitter.emit('notification', {userUid, title: data?.title ?? 'funding', description: `Hey, NGN${dollarUSLocale.format(amount)} just left your primary wallet`})
         return true;
     } else {
         return false;

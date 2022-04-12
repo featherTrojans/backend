@@ -28,6 +28,7 @@ eventEmitter.addListener('notification', async (data) => {
     const message = {
         to: messageToken,
         title: data.title,
+        sound: "default",
         body: data.description,
         data: {
             title: data.title,

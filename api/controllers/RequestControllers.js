@@ -135,7 +135,7 @@ exports.cancelRequests = ( async (req, res) => {
 
             const {amount, charges, negotiatedFee, userUid, agentUsername} = await Request.findOne({attributes: ['total','userUid', 'agentUsername', 'amount', 'charges', 'negotiatedFee'],
             where: {reference}})
-            
+
             const {escrowBal, walletBal} = await Users.findOne({attributes: ['escrowBal', 'walletBal'],
                     where: {
                         userUid
@@ -293,7 +293,7 @@ exports.createRequest = ( async (req, res) => {
 
                     const message = `Dear @${username}, you have a new cash withdrawal`;
                     eventEmitter.emit('createRequest', {email, message})
-                    eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: 'Hey padi, your cash request has been successfully created', redirectTo: 'Depositupdate'})
+                    eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: 'Hey padi, your cash request has been successfully created', redirectTo: 'Withdraw'})
                     //send to agent 
                     const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal from @${username}, login to complete transaction`;
                     eventEmitter.emit('notification', {userUid: agentData.userUid, title: 'Cash Withdrawal', description: `Hey padi, you have a new cash withdrawal request from  @${username}.`, redirectTo: 'Depositupdate'})
@@ -373,7 +373,7 @@ exports.markRequests = ( async (req, res) => {
 
                     const message = `Dear @${user.username}, your cash withdrawal has been accepted by ${username}. Login to view transaction and head to the meeting point to complete transaction`;
                     eventEmitter.emit('acceptRequest', {email: user.email, message})
-                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey, your cash withdrawal  has been accepted by @${username}. Head to the meeting point to complete transaction`, redirectTo: 'Depositupdate'})
+                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey, your cash withdrawal  has been accepted by @${username}. Head to the meeting point to complete transaction`, redirectTo: 'Withdraw'})
 
                     //send to agent 
                     const agentMessage = `Dear @${username}, your cash withdrawal  has been accepted successfully. Head to the meeting point to complete transaction`;
