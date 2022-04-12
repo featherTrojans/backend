@@ -54,26 +54,30 @@ exports.webhook = (async (req, res) => {
 
             }else if (data.event == 'transfer.success') {
                 //update withdrawal status
-                Withdrawal.update({status: data.status}, {
-                    where: {reference: data.reference, transfer_code: data.transfer_code}
+                const {status, reference, transfer_code} = data.data
+                Withdrawal.update({status}, {
+                    where: {reference, transfer_code}
                 })
                 return res.sendStatus(200);
                 
             }else if (data.event = 'transfer.failed') {
                 //update withdrawal status
-                Withdrawal.update({status: data.status}, {
-                    where: {reference: data.reference, transfer_code: data.transfer_code}
+                const {status, reference, transfer_code, amount} = data.data
+
+                Withdrawal.update({status}, {
+                    where: {reference, transfer_code}
                 })
 
                 const { user_uid } = await Withdrawal.findOne({
                     attributes:['userUid'],
                     where: {
-                        reference: data.reference,
-                        transfer_code: data.transfer_code
+                        reference,
+                        transfer_code
                     }
                 })
+                const charges = amount <= 5000 ? 10 : amount <= 50000 ? 25 : 50;
 
-                await creditService({userUid: user_uid, reference: 'R' + data.reference, amount: data.amount + 50, description: `#${data.amount} withdrawal reversal`, title: 'reversal'})
+                await creditService({userUid: user_uid, reference: 'R' + reference, amount: amount + charges, description: `#${amount + charges } withdrawal reversal`, title: 'reversal'})
 
                 return res.sendStatus(200);
 
