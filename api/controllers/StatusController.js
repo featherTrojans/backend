@@ -56,7 +56,7 @@ exports.createStatus = ( async (req, res) => {
                         latitude,
                         locationText,
                         reference,
-                        balance: amoun
+                        balance: amount
         
                     }).then (() => {
         
