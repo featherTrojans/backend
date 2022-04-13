@@ -52,7 +52,7 @@ exports.createNegotiation = ( async (req, res) => {
                         
                         //debit user and add it to escrow
                         const newWalletBal = parseFloat(user.walletBal - negotiatedFee);
-                        const newEscrowBal = parseFloat(user.escrowBal + negotiatedFee);
+                        const newEscrowBal = parseFloat(user.escrowBal) + parseFloat(negotiatedFee);
 
                         Users.update({walletBal: newWalletBal, escrowBal: newEscrowBal}, {where: {userUid}});
 

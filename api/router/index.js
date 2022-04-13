@@ -48,8 +48,8 @@ router.group('/', (router) => {
             router.put('/password/set',
             [   
                 Authenticate,
-                body('password').isAlphanumeric(),
-                body('password').isLength({ min: 8 }),
+                // body('password').isAlphanumeric(),
+                body('password').isLength({ min: 6 }),
                 
             ], 
             controller.setPassword
@@ -95,7 +95,7 @@ router.group('/', (router) => {
             router.put('/password/changepassword',
             [   
                 Authenticate,
-                body('newpassword').isLength({ min: 8 }),
+                body('newpassword').isLength({ min: 6 }),
 
                 
             ], 
