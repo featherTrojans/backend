@@ -58,7 +58,8 @@ exports.config = {
     aws_access: process.env.AWS_ACCESS_KEY,
     firebaseApp,
     fcm,
-    dollarUSLocale
+    dollarUSLocale,
+    yesterday
     
 
 }
