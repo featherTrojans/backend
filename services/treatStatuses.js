@@ -33,6 +33,8 @@ const treatStatuses = async () => {
 // ...
 
 // Schedule tasks to be run on the server.
-cron.schedule('* * * * *', function() {
-    treatStatuses()
-  });
+// cron.schedule('* * * * *', function() {
+//     treatStatuses()
+//   });
+
+treatStatuses()
