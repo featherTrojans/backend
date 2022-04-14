@@ -35,4 +35,5 @@ const treatStatuses = async () => {
 //     treatStatuses()
 //   });
 
+
 treatStatuses()
