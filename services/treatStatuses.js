@@ -1,20 +1,18 @@
 const { config } = require("../config")
 const { Status } = require("../models")
-const {Op, logger } = config
+const {Op, logger, yesterday } = config
 const cron = require('node-cron');
-var date = new Date();
-var currentTime = date.getTime();
-var yest = currentTime - ( 24 * 3600 * 1000)
+
 const treatStatuses = async () => {
     try{
         logger.info('clearing statuses ....')
         const statuses = await Status.findAll({
-            where: {updatedAt: {[Op.lte]: (yest)}, status: 'ACTIVE'}
+            where: {updatedAt: {[Op.lte]: (yesterday)}, status: 'ACTIVE'}
         })
 
         if (statuses.length > 0){
             Status.update({status: 'EXPIRED'},{
-                where: {updatedAt: {[Op.lte]: (yest)}, status: 'ACTIVE'}
+                where: {updatedAt: {[Op.lte]: (yesterday)}, status: 'ACTIVE'}
             })
             logger.info(`statuses cleared successfully`)
         } else {
@@ -33,6 +31,8 @@ const treatStatuses = async () => {
 // ...
 
 // Schedule tasks to be run on the server.
-cron.schedule('* * * * *', function() {
-    treatStatuses()
-  });
+// cron.schedule('* * * * *', function() {
+//     treatStatuses()
+//   });
+
+treatStatuses()
