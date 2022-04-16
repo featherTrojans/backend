@@ -53,7 +53,12 @@ exports.withdrawFund = ( async (req, res) => {
 
             const description = `${username} withdrawal`;
 
-            const debit = await debitService({userUid: userId, reference, amount: (amount) + charges, description, title: 'withdrawal', from: 'primary wallet', to: bank_name, charges })
+            await new Promise(function(resolve, reject) {
+
+                const debit = await debitService({userUid: userId, reference, amount: parseFloat(amount + charges), description, title: 'withdrawal', from: 'primary wallet', to: bank_name, charges })
+
+                debit ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
+            })
 
             if ( debit ) {
 
@@ -71,7 +76,7 @@ exports.withdrawFund = ( async (req, res) => {
                         },
                         message: "success"
                     })
-                }else {
+                } else {
                     //refund
                     creditService({userUid: userId, reference: "FTHRVRSL" + reference, amount: amount + charges, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from: 'primary wallet', to: bank_name })
 
