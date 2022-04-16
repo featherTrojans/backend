@@ -3,7 +3,8 @@ const {withdrawFund, codeGenerator, debitService, creditService } = require('../
 const { validationResult } = require('express-validator')
 const {logger} = config
 const { BankAccount, Users } = require('../../models/')
-
+const d = new Date();
+let time = d.getTime();
 
 exports.withdrawFund = ( async (req, res) => {
 
@@ -47,50 +48,68 @@ exports.withdrawFund = ( async (req, res) => {
         } else {
 
             const reference = codeGenerator(14);
+                //check double spent
+            const transId = userId + time + walletBal;
+            DoubleSpent.create({
+                transId,
+                username,
+                amount
+            }).then(() => {
+                const {account_number, account_name, bank_name} = await BankAccount.findOne({attributes: ['account_number', 'account_name', 'bank_name'], where: {account_code}});
 
-            
-            const {account_number, account_name, bank_name} = await BankAccount.findOne({attributes: ['account_number', 'account_name', 'bank_name'], where: {account_code}});
+                const description = `${username} withdrawal`;
 
-            const description = `${username} withdrawal`;
+                await new Promise(function(resolve, reject) {
 
-            const debit = await debitService({userUid: userId, reference, amount: (amount) + charges, description, title: 'withdrawal', from: 'primary wallet', to: bank_name, charges })
+                    const debit = await debitService({userUid: userId, reference, amount: parseFloat(amount + charges), description, title: 'withdrawal', from: 'primary wallet', to: bank_name, charges })
 
-            if ( debit ) {
+                    debit ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
+                })
 
-                const data = await withdrawFund({account_code, amount, user_uid: userId, reference, account_name, account_number, bank_name, narration: description, charges});
+                if ( debit ) {
 
-                if (data != false ){
-                    return res.status(200).json({
-                        status: true,
-                        data: {
-                            account_number,
-                            account_code,
-                            amount,
-                            bank_name,
-                            status: "PROCESSING",
-                        },
-                        message: "success"
-                    })
-                }else {
-                    //refund
-                    creditService({userUid: userId, reference: "FTHRVRSL" + reference, amount: amount + charges, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from: 'primary wallet', to: bank_name })
+                    const data = await withdrawFund({account_code, amount, user_uid: userId, reference, account_name, account_number, bank_name, narration: description, charges});
 
-                    return res.status(404).json({
+                    if (data != false ){
+                        return res.status(200).json({
+                            status: true,
+                            data: {
+                                account_number,
+                                account_code,
+                                amount,
+                                bank_name,
+                                status: "PROCESSING",
+                            },
+                            message: "success"
+                        })
+                    } else {
+                        //refund
+                        creditService({userUid: userId, reference: "FTHRVRSL" + reference, amount: amount + charges, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from: 'primary wallet', to: bank_name })
+
+                        return res.status(404).json({
+                            status: false,
+                            data: {},
+                            message: "Oops!! An error occur! withdrawal can not be made. Kindly try again later"
+                        })
+                    }
+
+
+                } else {
+                    return res.status(500).json({
                         status: false,
                         data: {},
-                        message: "Oops!! An error occur! withdrawal can not be made. Kindly try again later"
+                        message: "Could not debit "
                     })
                 }
-
-
-            } else {
-                return res.status(500).json({
-                    status: false,
-                    data: {},
-                    message: "Could not debit "
-                })
-            }
-            
+        }).catch((error) => {
+            logger.debug(error)
+            return res.status(400).json({
+                status: false,
+                data : error,
+                message: "Cannot withdraw"
+    
+            })
+        })
 
         }
         
