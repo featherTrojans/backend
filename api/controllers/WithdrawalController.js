@@ -51,6 +51,7 @@ exports.withdrawFund = ( async (req, res) => {
             let debit;
                 //check double spent
             const transId =  time + userId + walletBal;
+            console.log(transId)
             const insert = await DoubleSpent.create({
                 transId,
                 username,
@@ -122,7 +123,7 @@ exports.withdrawFund = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "Aww Padi Something came up could not complete withdrawal at the moment please try again later"
         })
     }
 });
