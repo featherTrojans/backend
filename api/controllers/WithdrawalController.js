@@ -50,18 +50,20 @@ exports.withdrawFund = ( async (req, res) => {
             const reference = codeGenerator(14);
                 //check double spent
             const transId = userId + time + walletBal;
-            DoubleSpent.create({
+            const insert = await DoubleSpent.create({
                 transId,
                 username,
                 amount
-            }).then(() => {
+            })
+            if ( insert) {
+                
                 const {account_number, account_name, bank_name} = await BankAccount.findOne({attributes: ['account_number', 'account_name', 'bank_name'], where: {account_code}});
 
                 const description = `${username} withdrawal`;
 
                 await new Promise(function(resolve, reject) {
 
-                    const debit = await debitService({userUid: userId, reference, amount: parseFloat(amount + charges), description, title: 'withdrawal', from: 'primary wallet', to: bank_name, charges })
+                    const debit = debitService({userUid: userId, reference, amount: parseFloat(amount + charges), description, title: 'withdrawal', from: 'primary wallet', to: bank_name, charges })
 
                     debit ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                 })
@@ -101,15 +103,15 @@ exports.withdrawFund = ( async (req, res) => {
                         message: "Could not debit "
                     })
                 }
-        }).catch((error) => {
-            logger.debug(error)
-            return res.status(400).json({
-                status: false,
-                data : error,
-                message: "Cannot withdraw"
-    
-            })
-        })
+            } else {
+                return res.status(400).json({
+                    status: false,
+                    data : {},
+                    message: "Cannot create make withdrawal"
+        
+                })
+            
+            }
 
         }
         
