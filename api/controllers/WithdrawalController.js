@@ -2,7 +2,7 @@ const { config } = require("../../config");
 const {withdrawFund, codeGenerator, debitService, creditService } = require('../../services/').services
 const { validationResult } = require('express-validator')
 const {logger} = config
-const { BankAccount, Users } = require('../../models/')
+const { BankAccount, Users, DoubleSpent } = require('../../models/')
 const d = new Date();
 let time = d.getTime();
 
@@ -48,6 +48,7 @@ exports.withdrawFund = ( async (req, res) => {
         } else {
 
             const reference = codeGenerator(14);
+            let debit;
                 //check double spent
             const transId = userId + time + walletBal;
             const insert = await DoubleSpent.create({
@@ -63,7 +64,7 @@ exports.withdrawFund = ( async (req, res) => {
 
                 await new Promise(function(resolve, reject) {
 
-                    const debit = debitService({userUid: userId, reference, amount: parseFloat(amount + charges), description, title: 'withdrawal', from: 'primary wallet', to: bank_name, charges })
+                    debit = debitService({userUid: userId, reference, amount: parseFloat(amount + charges), description, title: 'withdrawal', from: 'primary wallet', to: bank_name, charges })
 
                     debit ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                 })
