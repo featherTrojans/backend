@@ -50,7 +50,7 @@ exports.withdrawFund = ( async (req, res) => {
             const reference = codeGenerator(14);
             let debit;
                 //check double spent
-            const transId = userId + time + walletBal;
+            const transId =  time + userId + walletBal;
             const insert = await DoubleSpent.create({
                 transId,
                 username,
