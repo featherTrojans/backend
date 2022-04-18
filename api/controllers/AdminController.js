@@ -91,7 +91,8 @@ exports.stats = ( async (req, res) => {
                     count: totalRequestsCount ?? 0
                 }
 
-            }
+            },
+            message: "success"
         })
     } catch (error) {
         logger.info(error)
