@@ -376,6 +376,8 @@ router.group('/', (router) => {
             controller.getAllBills
         );
         });
+
+        router.get('/admin/stats', controller.stats)
     
     })
 })
