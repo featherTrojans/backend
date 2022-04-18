@@ -24,6 +24,7 @@ const ForgotPasswordController = require('./ForgotPasswordController')
 const RatingsController = require('./RatingsController')
 const NotificationController = require('./NotificationController')
 const AdminController = require('./AdminController')
+const ReferralController = require('./ReferralController')
 
 module.exports = {
     
@@ -52,5 +53,6 @@ module.exports = {
     ForgotPasswordController,
     RatingsController,
     NotificationController,
-    AdminController
+    AdminController,
+    ReferralController
 }
