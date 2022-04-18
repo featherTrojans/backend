@@ -377,7 +377,8 @@ router.group('/', (router) => {
         );
         });
 
-        router.get('/admin/stats', controller.stats)
+        router.get('/admin/stats', controller.stats);
+        router.get('/referral/stats/:referredBy', controller.referralStats)
     
     })
 })
