@@ -257,7 +257,7 @@ exports.findStatus = async (req, res) => {
     const errors = validationResult(req);
     try
     {
-        const charges = Math.ceil(amount / 5000) * 50 //100 per 5000
+        const charges = Math.ceil(amount / 5000) * 50 //50 per 5000
         if (!errors.isEmpty()) {
 
             return res.status(403).json({ errors: errors.array() });

@@ -23,6 +23,7 @@ const UploadController = require('./UploadController')
 const ForgotPasswordController = require('./ForgotPasswordController')
 const RatingsController = require('./RatingsController')
 const NotificationController = require('./NotificationController')
+const AdminController = require('./AdminController')
 
 module.exports = {
     
@@ -50,5 +51,6 @@ module.exports = {
     UploadController,
     ForgotPasswordController,
     RatingsController,
-    NotificationController
+    NotificationController,
+    AdminController
 }
