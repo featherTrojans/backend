@@ -88,11 +88,17 @@ exports.returnLocation = async (data) => {
 
                 for (const [key, value] of Object.entries(distance)) {
                     // logger.info(value.distance.value)
-                    if (value !== undefined) {
+                    // console.log(typeof value.duration == 'undefined')
+                    if (typeof value.duration == 'undefined') {
+                        continue;
+                    } else {
+                        
                         allStatuses[key].duration = value.duration.text
                         if ( value.distance.value <= 1000000){
                             logger.info(allStatuses[key])
                             results.push(allStatuses[key]);
+                        }else{
+                            continue
                         }
                     }
                     
