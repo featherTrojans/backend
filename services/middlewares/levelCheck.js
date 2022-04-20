@@ -65,6 +65,14 @@ const LevelCheck = (async(req, res, next) =>{
                         message: `You cannot withdraw amount greater than ${privilege.cashWithdrawal}`
                     })
                 }
+            } else if (url == '/withdraw') {
+                if (amount > privilege.cashWithdrawal){
+                    return res.status(403).json({
+                        status: false,
+                        data: {},
+                        message: `You cannot withdraw amount greater than ${privilege.cashWithdrawal}`
+                    })
+                }
             }
 
         }
