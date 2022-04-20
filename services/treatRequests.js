@@ -7,13 +7,13 @@ const treatRequests = async () => {
     try{
         logger.info('clearing request ....')
         const requests = await Request.findAll({
-            where: {updatedAt: {[Op.gte]: (yesterday)}, status: 'PENDING',}
+            where: {updatedAt: {[Op.lte]: (yesterday)}, status: 'PENDING',}
         })
 
         if (requests.length > 0){
             
             Request.update({status: 'CANCELLED', reasonForCancel: 'Abandoned Request'},{
-                where: {updatedAt: {[Op.gte]: (yesterday)}, status: ['PENDING', 'ACCEPTED']}
+                where: {updatedAt: {[Op.lte]: (yesterday)}, status: ['PENDING', 'ACCEPTED']}
             })
             for (const [key, value] of Object.entries(requests)) {
                 
