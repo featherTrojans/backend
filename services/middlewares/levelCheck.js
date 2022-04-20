@@ -73,7 +73,8 @@ const LevelCheck = (async(req, res, next) =>{
                         data: {},
                         message: "Hey padi bank transfers are not available at the moment. Kindly try again later"
                     })
-                } else if (amount > privilege.cashWithdrawal){
+                } 
+                if (amount > privilege.cashWithdrawal){
                     return res.status(403).json({
                         status: false,
                         data: {},

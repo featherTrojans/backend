@@ -40,8 +40,8 @@ exports.buyAirtime = ( async (req, res) => {
             })
         } else{
 
-            const reference = 'FTH' + idGenService(10);
-            const creditReference = 'FTH' + idGenService(10)
+            const reference = 'FTH' + await idGenService(10);
+            const creditReference = 'FTH' + await idGenService(10)
             const transId =  time + userId + walletBal;
             const insert = await DoubleSpent.create({
                 transId,
@@ -54,7 +54,7 @@ exports.buyAirtime = ( async (req, res) => {
                     const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: network, to: phone, title: "Airtime Purchase"});
 
                     debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
-                    // set timer to  9 secs to give room for db updates
+                    // set timer to 7 secs to give room for db updates
 
                 }).then(() => {
 
@@ -71,11 +71,7 @@ exports.buyAirtime = ( async (req, res) => {
                         if ( buyAirtime == false) {
 
                             //return charged amount
-                            new Promise(function(resolve, reject) {
-                                let reCredit = creditService({userUid: userId, reference: creditReference, amount, from: 'pay bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
-
-                                reCredit ? setTimeout(() => resolve("done"), 9000) : setTimeout(() => reject( new Error(`Cannot re credit`)));
-                            })
+                            creditService({userUid: userId, reference: creditReference, amount, from: 'pay bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
                             //update bills status 
                             Bills.update({status: "FAILED"}, {where: {reference}})
                             return res.status(400).json({
