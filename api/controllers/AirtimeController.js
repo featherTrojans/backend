@@ -4,13 +4,15 @@ const {
     debitService,
     idGenService
 } = require('../../services').services
-const {Users, Bills} = require('../../models')
+const {Users, Bills, DoubleSpent} = require('../../models')
 const {logger} = require('../../config/').config
 const bcrypt = require('bcryptjs');
+const d = new Date();
+let time = d.getTime();
 
 exports.buyAirtime = ( async (req, res) => {
 
-    const {userId} = req.user
+    const {userId, username} = req.user
     const { phone, network, amount, userPin } = req.body
 
     try{
@@ -37,71 +39,88 @@ exports.buyAirtime = ( async (req, res) => {
     
             })
         } else{
+
             const reference = 'FTH' + await idGenService(10);
             const creditReference = 'FTH' + await idGenService(10)
-            new Promise(function(resolve, reject) {
+            const transId =  time + userId + walletBal;
+            const insert = await DoubleSpent.create({
+                transId,
+                username,
+                amount
+            })
+            if (insert) {
+                new Promise(function(resolve, reject) {
 
-                const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: network, to: phone, title: "Airtime Purchase"});
+                    const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: network, to: phone, title: "Airtime Purchase"});
 
-                debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
-                // set timer to 7 secs to give room for db updates
+                    debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
+                    // set timer to 7 secs to give room for db updates
 
-            }).then(() => {
+                }).then(() => {
 
-                Bills.create({
-                    userUid: userId,
-                    amount,
-                    beneficiary: phone,
-                    reference,
-                    transId: reference,
-                    network,
-                    description: `NGN${amount} ${network} airtime purchased on ${phone}`
-                })
-                buyAirtimeData({phone,network, amount, type: 'airtime'}).then((buyAirtime) => {
-                    if ( buyAirtime == false) {
+                    Bills.create({
+                        userUid: userId,
+                        amount,
+                        beneficiary: phone,
+                        reference,
+                        transId: reference,
+                        network,
+                        description: `NGN${amount} ${network} airtime purchased on ${phone}`
+                    })
+                    buyAirtimeData({phone,network, amount, type: 'airtime'}).then((buyAirtime) => {
+                        if ( buyAirtime == false) {
 
-                        //return charged amount
-                        creditService({userUid: userId, reference: creditReference, amount, from: 'pay bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
-                        //update bills status 
-                        Bills.update({status: "FAILED"}, {where: {reference}})
-                        return res.status(400).json({
-                            status: false,
-                            data : {
-                                network,
-                                phone,
-                                amount
-                            },
-                            message: "Cannot purchase airtime at the moment please try again later"
-            
-                        })
-                    } else {
-                        //update bills table
-                        Bills.update({status: "SUCCESS", transId: buyAirtime.request_id}, {where: {reference}})
-                        return res.status(200).json({
-                            status: true,
-                            data: {
-                                network,
-                                amount,
-                                phone
-                            },
-                            message: "Successfully purchased"
-                        })
-                    }
-                })
-
+                            //return charged amount
+                            creditService({userUid: userId, reference: creditReference, amount, from: 'pay bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
+                            //update bills status 
+                            Bills.update({status: "FAILED"}, {where: {reference}})
+                            return res.status(400).json({
+                                status: false,
+                                data : {
+                                    network,
+                                    phone,
+                                    amount
+                                },
+                                message: "Cannot purchase airtime at the moment please try again later"
                 
-                
-            }).catch(error => {
-                logger.debug(error)
+                            })
+                        } else {
+                            //update bills table
+                            Bills.update({status: "SUCCESS", transId: buyAirtime.request_id}, {where: {reference}})
+                            return res.status(200).json({
+                                status: true,
+                                data: {
+                                    network,
+                                    amount,
+                                    phone
+                                },
+                                message: "Successfully purchased"
+                            })
+                        }
+                    })
+
+                    
+                    
+                }).catch(error => {
+                    logger.debug(error)
+                    return res.status(400).json({
+                        status: false,
+                        data : error,
+                        message: "Cannot create transaction"
+
+                    })
+                });
+
+            }  else {
                 return res.status(400).json({
                     status: false,
-                    data : error,
-                    message: "Cannot create transaction"
-
+                    data : {},
+                    message: "Cannot make transaction"
+        
                 })
-            });
-
-        }
+            
+            }
+        } 
         
     } catch (error) {
         logger.info(error)

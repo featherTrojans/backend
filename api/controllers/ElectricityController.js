@@ -4,13 +4,15 @@ const {
     debitService,
     idGenService
 } = require('../../services').services
-const {Users, Bills} = require('../../models')
+const {Users, Bills, DoubleSpent} = require('../../models')
 const {logger} = require('../../config/').config
 const bcrypt = require('bcryptjs');
+const d = new Date();
+let time = d.getTime();
 
 exports.buyElect = ( async (req, res) => {
 
-    const {userId} = req.user
+    const {userId, username} = req.user
     const { service, amount, meter_number, variation, phone , userPin} = req.body
 
     try{
@@ -40,6 +42,13 @@ exports.buyElect = ( async (req, res) => {
         
             const reference = 'FTHR' + await idGenService(7);
             const creditReference = 'FTHR' + await idGenService(7)
+            const transId =  time + userId + walletBal;
+            const insert = await DoubleSpent.create({
+                transId,
+                username,
+                amount
+            })
+            if (insert) {
             new Promise(function(resolve, reject) {
 
                 const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${variation} ${service} token purchased on ${meter_number}`, from: "primary wallet", to: "pay bills", title: "Utility Payment"});
@@ -105,7 +114,16 @@ exports.buyElect = ( async (req, res) => {
 
                 })
             });
+        } else {
+            return res.status(400).json({
+                status: false,
+                data : {},
+                message: "Cannot make transaction"
+    
+            })
+        
         }
+    }
     } catch (error) {
         logger.info(error)
         return res.status(409).json({
