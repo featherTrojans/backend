@@ -24,7 +24,7 @@ const LevelCheck = (async(req, res, next) =>{
             // get level details
             let {privilege} = await UserLevels.findOne({where: {level: userLevel}})
             // check type of operation
-            console.log ((req.url))
+            console.log ((url) == '/withdraw')
             console.log(privilege)
             privilege = JSON.parse(privilege)
             if (url == "/pay") {
@@ -41,7 +41,27 @@ const LevelCheck = (async(req, res, next) =>{
                         message: `You cannot have more than ${privilege.wallet}, fund with amount lesser than ${amount}`
                     })
                 }
-            }else if ( url == '/transfer'){
+            }else if (url == '/withdraw') {
+                const status = 'OFF';
+                console.log(status)
+                if (status == 'OFF') {
+                    
+                    return res.status(400).json({
+                        status: false,
+                        data: {},
+                        message: "Hey padi bank transfers are not available at the moment. Kindly try again later"
+                    });
+
+                } else if (amount > privilege.cashWithdrawal){
+
+                    return res.status(403).json({
+                        status: false,
+                        data: {},
+                        message: `You cannot withdraw amount greater than ${privilege.cashWithdrawal}`
+                    });
+
+                }
+            } else if ( url == '/transfer'){
                 if (amount > privilege.transfer){
                     return res.status(403).json({
                         status: false,
@@ -59,21 +79,6 @@ const LevelCheck = (async(req, res, next) =>{
                 }
             } else if (url == '/status/find'){
                 if (amount > privilege.cashWithdrawal){
-                    return res.status(403).json({
-                        status: false,
-                        data: {},
-                        message: `You cannot withdraw amount greater than ${privilege.cashWithdrawal}`
-                    })
-                }
-            } else if (url == '/withdraw') {
-                const status = 'OFF'
-                if (status == 'OFF') {
-                    return res.status(400).json({
-                        status: false,
-                        data: {},
-                        message: "Hey padi bank transfers are not available at the moment. Kindly try again later"
-                    })
-                } else if (amount > privilege.cashWithdrawal){
                     return res.status(403).json({
                         status: false,
                         data: {},

@@ -308,17 +308,21 @@ router.group('/', (router) => {
         });
 
         router.group('/withdraw', (router) => {
-            router.post('/', 
-                [
-                    Authenticate,
-                    body('amount').isLength({ min: 3, max: 8 }),
-                    body('amount').isNumeric(),
-
-
-                ], 
-                    controller.withdraw
-                );
+            
         });
+
+        router.post('/withdraw', 
+            [
+                Authenticate,
+                LevelCheck,
+                body('amount').isLength({ min: 3, max: 8 }),
+                body('amount').isNumeric(),
+
+
+
+            ], 
+                controller.withdraw
+        );
 
         router.group('/balance', (router) => {
             router.get('/get', 
