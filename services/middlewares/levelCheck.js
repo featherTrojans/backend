@@ -66,6 +66,14 @@ const LevelCheck = (async(req, res, next) =>{
                     })
                 }
             } else if (url == '/withdraw') {
+                const status = 'OFF'
+                if (status == 'OFF') {
+                    return res.status(400).json({
+                        status: false,
+                        data: {},
+                        message: "Hey padi bank transfers are not available at the moment. Kindly try again later"
+                    })
+                } 
                 if (amount > privilege.cashWithdrawal){
                     return res.status(403).json({
                         status: false,
