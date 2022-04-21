@@ -69,7 +69,7 @@ exports.webhook = (async (req, res) => {
                 })
 
                 const { user_uid } = await Withdrawal.findOne({
-                    attributes:['userUid'],
+                    attributes:['user_uid'],
                     where: {
                         reference,
                         transfer_code
