@@ -72,7 +72,8 @@ exports.webhook = (async (req, res) => {
                     attributes:['user_uid'],
                     where: {
                         reference,
-                        transfer_code
+                        transfer_code,
+                        status: ['processing', 'pending']
                     }
                 })
                 const charges = amount <= 5000 ? 10 : amount <= 50000 ? 25 : 50;
