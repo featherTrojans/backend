@@ -10,7 +10,9 @@ UserLevels.create({
         totalCashWithdrawal: 80000,
         transfer: 50000,
         totalTransfer: 150000,
-        deposit: 50000
+        deposit: 50000,
+        bankWithdrawal: 10000,
+        totalBankWithdrawal: 50000
     }),
     details: "Starter Level"
 })
@@ -24,7 +26,9 @@ UserLevels.create({
         totalCashWithdrawal: 200000,
         transfer: 100000,
         totalTransfer: 500000,
-        deposit: 100000
+        deposit: 100000,
+        bankWithdrawal: 50000,
+        totalBankWithdrawal: 300000
     }),
     details: "Odogwu Level"
 })

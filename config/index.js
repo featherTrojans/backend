@@ -17,7 +17,11 @@ const firebaseApp = initializeApp();
 const fcmNode = require('fcm-node');
 const fcm = new fcmNode(process.env.SERVER_KEY)
 let dollarUSLocale = Intl.NumberFormat('en-US');
+var dd = String(d.getDate()).padStart(2, '0');
+var mm = String(d.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = d.getFullYear();
 
+let today =  yyyy + '-' + mm + '-' + dd;
 exports.config = {
     "port": process.env.PORT,
     "host": process.env.HOST,
@@ -59,7 +63,8 @@ exports.config = {
     firebaseApp,
     fcm,
     dollarUSLocale,
-    yesterday
+    yesterday,
+    today
     
 
 }
