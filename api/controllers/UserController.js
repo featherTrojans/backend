@@ -13,7 +13,8 @@ exports.getUser = ( async (req, res) => {
         const users = await  Users.findOne({where: {
             [Op.or]: {
                 username,
-                phoneNumber: username
+                phoneNumber: username,
+                userUid: username,
             },
             },
             attributes: {exclude: ['id', 'pin', 'pin_attempts', 'password', 'updatedAt', 'referredBy', 'code']}
