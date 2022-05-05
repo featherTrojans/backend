@@ -95,8 +95,8 @@ exports.returnLocation = async (data) => {
                         
                         allStatuses[key].duration = value.duration.text
                         if ( value.distance.value <= 1000000){
-                            logger.info(allStatuses[key])
-                            results.push(allStatuses[key]);
+                            logger.info(allStatuses[key].dataValues)
+                            results.push(allStatuses[key].dataValues);
                         }else{
                             continue
                         }
@@ -107,7 +107,22 @@ exports.returnLocation = async (data) => {
 
                 // logger.info(results.length)
                 // logger.info(results)
-                return  results
+                // use slice() to copy the array and not just make a reference
+                let sortByDuration = results.slice(0);
+                sortByDuration.sort(function(a,b) {
+
+                    let aArray = a.duration.split(" ")
+                    let bArray = b.duration.split(" ");
+
+                    let aValue = aArray.length > 2 ? parseInt(aArray[0] * 60) + parseInt(aArray[2]) : aArray[0]
+
+                    let bValue = bArray.length > 2 ? parseInt(bArray[0] * 60)  + parseInt(bArray[2]) : bArray[0]
+
+                    return aValue - bValue;
+                });
+                // console.log(results);
+                // console.log(newData);
+                return  sortByDuration
             }
 
 
