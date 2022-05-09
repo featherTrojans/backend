@@ -75,7 +75,7 @@ exports.transferFunds = ( async (req, res) => {
                 })
             } else {
                 //check double spent
-                const transId = userId + time + walletBal;
+                const transId =  time + userId + walletBal;
                 const reference = services.idGenService(10);
                 const creditReference = services.idGenService(10);
                 DoubleSpent.create({

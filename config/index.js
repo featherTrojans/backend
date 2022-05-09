@@ -64,7 +64,11 @@ exports.config = {
     fcm,
     dollarUSLocale,
     yesterday,
-    today
+    today,
+    mobilenig_sk_key: process.env.MOBILENIG_SK_KEY,
+    mobilenig_pk_key: process.env.MOBILENIG_PK_KEY,
+    mobilenig_url: process.env.MOBILENIG_URL
+
     
 
 }
