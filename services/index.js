@@ -43,5 +43,5 @@ exports.services = {
     buyCable: payBillService.buyCable,
     awsService: awsService.uploadFile,
     LevelCheck,
-    sendSms: termiiService.sendSMS
+    sendSMS: termiiService.sendSMS
 }
