@@ -5,6 +5,7 @@ const { validationResult } = require('express-validator');
 const {Users, DoubleSpent } = require("../../models");
 const bcrypt = require('bcryptjs');
 const d = new Date();
+d.setSeconds(0,0)
 let time = d.getTime();
 
 
