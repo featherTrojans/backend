@@ -4,6 +4,7 @@ const { validationResult } = require('express-validator')
 const {logger} = config
 const { BankAccount, Users, DoubleSpent } = require('../../models/')
 const d = new Date();
+d.setSeconds(0,0)
 let time = d.getTime();
 
 exports.withdrawFund = ( async (req, res) => {
