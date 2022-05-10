@@ -1,7 +1,8 @@
 const { config } = require('../config')
 const logger = config.logger
 const eventEmitter = config.eventEmitter
-const {sendSms} = require('../services/').services
+const sendSMS = require('../services/middlewares/termiiService').sendSMS
+
 
 const twilio = require('twilio')(config.twilio_sid, config.twilio_auth_token)
 
@@ -12,7 +13,7 @@ eventEmitter.on('signup', async (data) => {
     const message = data.message;
     const phone = data.phoneNumber.length == 11 ? "+234" + data.phoneNumber.substring(1) : data.phoneNumber;
     try {
-        sendSms({to: phone, message})
+        sendSMS({to: phone, message})
     } catch (error) {
         logger.info(error)
     }
