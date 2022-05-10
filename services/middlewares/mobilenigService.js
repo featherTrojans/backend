@@ -176,13 +176,3 @@ exports.buyCable = async({phone, service, smartcard_number, variation}) => {
 // this.buyLight({phone: "07068006837", service: "ibadan-electric", amount: "500", variation: "prepaid", meter_number: "7867766660"})
 
 // this.getBalance()
-
-var date = new Date()
-
-console.log(date)
-console.log(date.getTime())
-
-date.setSeconds(0,0)
-
-console.log(date)
-console.log(date.getTime())
