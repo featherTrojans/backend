@@ -48,6 +48,6 @@ exports.sendSMS = async (data) => {
     })
 
     const response = await fetchApiPost({url, body})
-    console.log(response)
+    logger.info(response)
 
 }
