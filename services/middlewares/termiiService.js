@@ -19,10 +19,10 @@ const fetchApiPost = async (data) => {
         // console.log(response)
 
         response = await response.json()
-        //  logger.info(response);
+         logger.info(response);
+         console.log(response)
         if (response.message == 'success') {
-            logger.info(response)
-            return response.details
+            return response.data
         } else {
             logger.info(response)
             return false
@@ -36,15 +36,15 @@ const fetchApiPost = async (data) => {
 
 exports.sendSMS = async (data) => {
 
-    $url = `${termii_url}api/sms/send`
+    var url = `${termii_url}api/sms/send`
 
-    const body = JSON.stringify({
+    const body = ({
         api_key: termii_key,
         to: data.to,
         from : "Feather NG",
         sms: data.message,
         type: "plain",
-        channel: "generic"
+        channel: "dnd"
     })
 
     const response = await fetchApiPost({url, body})

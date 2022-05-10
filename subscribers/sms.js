@@ -11,7 +11,7 @@ const twilio = require('twilio')(config.twilio_sid, config.twilio_auth_token)
 eventEmitter.on('signup', async (data) => {
     //send sms
     const message = data.message;
-    const phone = data.phoneNumber.length == 11 ? "+234" + data.phoneNumber.substring(1) : data.phoneNumber;
+    const phone = data.phoneNumber.length == 11 ? "234" + data.phoneNumber.substring(1) : data.phoneNumber;
     try {
         sendSMS({to: phone, message})
     } catch (error) {
