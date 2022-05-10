@@ -20,6 +20,9 @@ let dollarUSLocale = Intl.NumberFormat('en-US');
 var dd = String(d.getDate()).padStart(2, '0');
 var mm = String(d.getMonth() + 1).padStart(2, '0'); //January is 0!
 var yyyy = d.getFullYear();
+var dateToUse = new Date();
+dateToUse.setSeconds(0,0);
+var timeToUse = dateToUse.getTime();
 
 let today =  yyyy + '-' + mm + '-' + dd;
 exports.config = {
@@ -43,6 +46,7 @@ exports.config = {
     eventEmitter,
     time,
     yesterday,
+    timeToUse,
     client,
     "twilio_sid": process.env.TWILIO_ACCOUNT_SID,
     "twilio_auth_token": process.env.TWILIO_AUTH_TOKEN,
@@ -67,7 +71,9 @@ exports.config = {
     today,
     mobilenig_sk_key: process.env.MOBILENIG_SK_KEY,
     mobilenig_pk_key: process.env.MOBILENIG_PK_KEY,
-    mobilenig_url: process.env.MOBILENIG_URL
+    mobilenig_url: process.env.MOBILENIG_URL,
+    termii_url: process.env.TERMII_URL,
+    termii_key: process.env.TERMII_KEY
 
     
 

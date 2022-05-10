@@ -8,6 +8,7 @@ const {Users, Bills, DoubleSpent} = require('../../models')
 const {logger} = require('../../config/').config
 const bcrypt = require('bcryptjs');
 const d = new Date();
+d.setSeconds(0,0);
 let time = d.getTime();
 
 exports.buyElect = ( async (req, res) => {
