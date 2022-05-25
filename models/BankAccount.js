@@ -2,9 +2,9 @@ const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
 
-const Payments = db_con.define("payments", {
-
-    "userUid": {
+const BankAccount = db_con.define("bank_accounts", {
+    
+    "user_uid": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
@@ -12,50 +12,45 @@ const Payments = db_con.define("payments", {
         }
 
     },
-
-    "transId": {
+    "account_code": {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
-
     },
-    "authorizationUrl": {
+    "account_number": {
+        allowNull: false,
+        unique: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "account_name": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
-
     },
-    "amount": {
+    "bank_name": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
-
     },
-    "accessCode": {
-        allowNull: false,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "isUsed": {
+    "is_beneficiary": {
         allowNull: false,
         type: Sequelize.BOOLEAN,
         defaultValue: false,
         validate : {
            notEmpty: true
         }
-
     },
-        
+    
 })
 
-module.exports = Payments
+module.exports = BankAccount

@@ -2,8 +2,9 @@ const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
 
-const Transactions = db_con.define("transactions", {
-    "userUid": {
+const Withdrawal = db_con.define("withdrawals", {
+    
+    "user_uid": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
@@ -11,22 +12,41 @@ const Transactions = db_con.define("transactions", {
         }
 
     },
-    "transId": {
+    "reference": {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
-
     },
-    "initialBal": {
+    "account_code": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
-
+    },
+    "account_number": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "account_name": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "bank_name": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
     },
     "amount": {
         allowNull: false,
@@ -34,48 +54,30 @@ const Transactions = db_con.define("transactions", {
         validate : {
            notEmpty: true
         }
-
     },
-    "finalBal": {
+    "charges": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
-
     },
-    "description": {
+    "status": {
         allowNull: false,
         type: Sequelize.STRING,
-        validate : {
-            notEmpty: true
-         }
-
-    },
-    "from": {
-        allowNull: false,
-        type: Sequelize.STRING,
+        defaultValue: 'PROCESSING',
         validate : {
            notEmpty: true
         }
-
     },
-    "to": {
+    "transfer_code": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
-           notEmpty: true
-        }
-
-    },
-    "direction": {
-        allowNull: true,
-        type: Sequelize.STRING,
-        validate: {
            notEmpty: true
         }
     },
     
 })
 
-module.exports = Transactions
+module.exports = Withdrawal

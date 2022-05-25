@@ -1,5 +1,12 @@
 node_modules/
 .env
+.env.development
+t.env.development
+.env.live
 output.log
+cert.pem
+key.pem
+subcribers/tester.js
+config.tester.js
 /test/*
   !test/index.js

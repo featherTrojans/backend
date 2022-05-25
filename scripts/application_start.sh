@@ -6,6 +6,9 @@ sudo chmod -R 777 /home/ec2-user/feather-app
 #navigate into our working directory where we have all our github files
 cd /home/ec2-user/feather-app
 
+#copy .env
+cp /home/ec2-user/.env /home/ec2-user/feather-app/.env
+
 # add npm and node to path
 export NVM_DIR="$HOME/.nvm"	
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # loads nvm	

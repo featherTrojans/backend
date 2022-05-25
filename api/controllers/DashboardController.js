@@ -7,20 +7,55 @@ exports.dashboard = ( async (req, res) => {
     const { userId, username, email, fullName } = req.user
     try
     {
-        const {walletBal} = await Users.findOne({attributes: ['walletBal'], where: {userUid: userId}})
+        const userDetails = await Users.findOne({attributes: {exclude: ['id', 'pin', 'pin_attempts', 'password', 'updatedAt', 'referredBy', 'code']}, where: {userUid: userId}});
+        const bal = parseFloat(userDetails.walletBal) + parseFloat(userDetails.escrowBal) //wallet bal + escrow bal
+        let results = []
         const transactions = await Transactions.findAll({
-            attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'createdAt'],
-            where: {userUid: userId}})
+            attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'title', 'createdAt'],
+            where: {userUid: userId},
+            order: [['createdAt', 'DESC']],
+            limit: 10,
+            include: [{
+                model: Users,
+                attributes: ['fullName', 'imageUrl'],
+                
+               }]
+
+        })
+
+        let otherUser;
+        for (const [key, value] of Object.entries(transactions)){
+
+            //get agentDetails
+            if (value.dataValues.direction == 'out') {
+                otherUser = await Users.findOne({
+                    where: {username: value.dataValues.to},
+                    attributes: ['fullName', 'imageUrl']
+                })
+            } else if (value.dataValues.direction == 'in') {
+                otherUser = await Users.findOne({
+                    where: {username: value.dataValues.from},
+                    attributes: ['fullName', 'imageUrl']
+                })
+            }
+
+            if ( otherUser != null ){
+                value.dataValues.otherUser = otherUser
+                results.push(value.dataValues)
+            } else {
+                results.push(value.dataValues)
+            }
+
+
+
+        }
         return res.status(200).json({
             status: true,
             data : {
-                userId,
-                username,
-                email,
-                fullName,
-                walletBal,
-                transactions
 
+                userDetails,
+                walletBal: bal,
+                transactions: results
             },
             message: "success"
         })

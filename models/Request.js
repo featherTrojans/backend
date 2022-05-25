@@ -2,34 +2,16 @@ const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
 
-const Users = db_con.define("users", {
+const Request = db_con.define("requests", {
     "userUid": {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
 
     },
-    "username": {
-        allowNull: false,
-        unique: true,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "fullName": {
-        allowNull: false,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "phoneNumber": {
+    "transId": {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING,
@@ -38,71 +20,93 @@ const Users = db_con.define("users", {
         }
 
     },
-    "email": {
+    "statusId": {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
 
     },
-    "isVerified": {
+    "reference": {
         allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
-
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
     },
-    "walletBal": {
+    "amount": {
         allowNull: false,
-        type: Sequelize.DOUBLE,
-        defaultValue: 0.00,
+        type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
 
     },
-    "userLevel": {
+    "charges": {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
+        type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
 
     },
-    "code": {
+    "total": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+
+    },
+    "agent": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+
+    },
+    "agentUsername": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+
+    },
+    "negotiatedFee": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: "0",
+        validate: {
+           notEmpty: true
+        }
+    }, 
+    "status": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        defaultValue: "PENDING",
+        validate: {
+           notEmpty: true
+        }
+    },
+
+    "reasonForCancel": {
         allowNull: true,
-        unique: true,
         type: Sequelize.STRING,
-        validate : {
+        validate: {
            notEmpty: true
         }
     },
-    "pin": {
-        allowNull: true,
-        unique: true,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-    },
-    "password": {
-        allowNull: true,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "refId": {
+    "meetupPoint": {
         allowNull: false,
-        unique: true,
         type: Sequelize.STRING,
-        validate : {
+        validate: {
            notEmpty: true
         }
-    }
+    },
+    
 })
 
-module.exports = Users
+module.exports = Request
