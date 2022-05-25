@@ -1,7 +1,7 @@
 const { config } = require('../../config');
 const { Users, Transactions } = require('../../models');
 require('../../subscribers')
-const { eventEmitter, dollarUSLocale } = config
+const { eventEmitter, dollarUSLocale, firebaseDB, set, ref } = config
 
 
 const debitService = async (data) => {
@@ -40,6 +40,13 @@ const debitService = async (data) => {
             title: data?.title ?? 'funding',
             charges: data?.charges ?? 0
         })
+        let obj = {
+            userUid,
+            walletBal: finalBal
+        }
+        //update
+        // let firebasUpdate = set(ref(firebaseDB), "wallet/" + userUid, obj)
+        // console.log(firebasUpdate)
         const message = `@${username}, NGN${dollarUSLocale.format(amount)} has left your account. Your new balance is: NGN${finalBal}`;
         eventEmitter.emit('walletCredit', {email, message})
         eventEmitter.emit('send', {phoneNumber, message})

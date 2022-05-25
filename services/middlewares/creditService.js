@@ -1,7 +1,7 @@
 const { config } = require('../../config');
 const { Users, Transactions } = require('../../models');
 require('../../subscribers')
-const { eventEmitter, logger, dollarUSLocale } = config
+const { eventEmitter, logger, dollarUSLocale, firebaseDB, set, ref } = config
 
 
 const creditService = async (data) => {
@@ -35,6 +35,14 @@ const creditService = async (data) => {
             reference: data.id ? data.id : reference,
             title: data?.title ?? 'funding'
         })
+
+        let obj = {
+            userUid,
+            walletBal: finalBal
+        }
+        //update
+        // let firebasUpdate = set(ref(firebaseDB), "wallet/" + userUid, obj)
+        // console.log(firebasUpdate)
         const message = `@${username}, NGN${dollarUSLocale.format(amount)} just entered your account. Your new balance is: NGN${dollarUSLocale.format(finalBal)}`;
     
         eventEmitter.emit('walletCredit', {email, message})
