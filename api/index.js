@@ -49,5 +49,6 @@ exports.controller = {
     getAllNotifications: Controller.NotificationController.notifications,
     changePassword: Controller.ForgotPasswordController.changePassword,
     stats: Controller.AdminController.stats,
-    referralStats: Controller.ReferralController.referralStats
+    referralStats: Controller.ReferralController.referralStats,
+    getMultipleUser: Controller.UserController.getMultipleUser
 }

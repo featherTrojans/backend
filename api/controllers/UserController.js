@@ -237,3 +237,49 @@ exports.changePassword = ( async (req, res) => {
         })
     }
 });
+
+exports.getMultipleUser = ( async (req, res) => {
+
+    const  {numbers} = req.body
+    let username;
+    console.log(numbers)
+    try
+    {
+        let result = [];
+        for (let i = 0; i < numbers.length; i++){
+            username = numbers[i].length > 11 ? '0' + numbers[i].substr(3, 12) : numbers[i]
+
+            let users = await  Users.findOne({where: {
+                [Op.or]: {
+                    username,
+                    phoneNumber: username,
+                    userUid: username,
+                },
+                },
+                attributes: {exclude: ['id', 'pin', 'pin_attempts', 'password', 'updatedAt', 'referredBy', 'code']}
+            });
+    
+            if (users == null) {
+                //not a registered user 
+                continue;
+            }else {
+                result.push(users)
+            }
+        }
+        return res.status(200).json({
+            status: true,
+            data : result,
+            message: "success"
+        })
+
+
+
+    } catch (error) {
+        logger.info(error)
+        return res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        })
+    }
+});
