@@ -19,8 +19,7 @@ var yyyy = d.getFullYear();
 var dateToUse = new Date();
 dateToUse.setSeconds(0,0);
 var timeToUse = dateToUse.getTime();
-const firebaseDB = require('./firebase')
-const { ref, set } = require("firebase/database");
+const firebaseDB = require('./firebase').database
 
 let today =  yyyy + '-' + mm + '-' + dd;
 exports.config = {
@@ -71,8 +70,6 @@ exports.config = {
     termii_url: process.env.TERMII_URL,
     termii_key: process.env.TERMII_KEY,
     firebaseDB,
-    ref,
-    set
     
 
 }
