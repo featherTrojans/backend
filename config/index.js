@@ -12,10 +12,6 @@ const yesterday = time - ( 24 * 3600 * 1000)
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
 const {Op} = require('sequelize');
-const { initializeApp } = require("firebase-admin/app");
-const firebaseApp = initializeApp();
-const fcmNode = require('fcm-node');
-const fcm = new fcmNode(process.env.SERVER_KEY)
 let dollarUSLocale = Intl.NumberFormat('en-US');
 var dd = String(d.getDate()).padStart(2, '0');
 var mm = String(d.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -23,6 +19,7 @@ var yyyy = d.getFullYear();
 var dateToUse = new Date();
 dateToUse.setSeconds(0,0);
 var timeToUse = dateToUse.getTime();
+const firebaseDB = require('./firebase').database
 
 let today =  yyyy + '-' + mm + '-' + dd;
 exports.config = {
@@ -64,8 +61,6 @@ exports.config = {
     paygold_url: process.env.BILLSURL,
     aws_secret:  process.env.AWS_SECRET_ACCESS_KEY,
     aws_access: process.env.AWS_ACCESS_KEY,
-    firebaseApp,
-    fcm,
     dollarUSLocale,
     yesterday,
     today,
@@ -73,8 +68,8 @@ exports.config = {
     mobilenig_pk_key: process.env.MOBILENIG_PK_KEY,
     mobilenig_url: process.env.MOBILENIG_URL,
     termii_url: process.env.TERMII_URL,
-    termii_key: process.env.TERMII_KEY
-
+    termii_key: process.env.TERMII_KEY,
+    firebaseDB,
     
 
 }

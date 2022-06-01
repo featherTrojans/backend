@@ -289,7 +289,15 @@ router.group('/', (router) => {
                     Authenticate,
                 ], 
                 controller.users
-            )
+            );
+
+            router.post('/multiple', 
+            [
+                Authenticate
+    
+            ], 
+                controller.getMultipleUser
+            );
         });
 
         router.group('/account', (router) => {
@@ -331,7 +339,7 @@ router.group('/', (router) => {
 
                 ], 
                     controller.getBalance
-                );
+            );
         });
 
         router.group('/upload', (router) => {
@@ -388,4 +396,4 @@ router.group('/', (router) => {
 })
 
 
-module.exports = router; 
+module.exports = router;

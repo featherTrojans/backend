@@ -50,7 +50,7 @@ exports.transferFunds = ( async (req, res) => {
                     message: "Pin is Incorrect"
         
                 })
-            }else if (username == transferTo ) {
+            }else if (username.toUpperCase() == transferTo.toUpperCase() ) {
                 return res.status(400).json({
 
                     status: false,
