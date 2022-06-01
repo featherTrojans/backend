@@ -19,7 +19,9 @@ var yyyy = d.getFullYear();
 var dateToUse = new Date();
 dateToUse.setSeconds(0,0);
 var timeToUse = dateToUse.getTime();
+
 const firebaseDB = require('./firebase').database
+
 
 let today =  yyyy + '-' + mm + '-' + dd;
 exports.config = {

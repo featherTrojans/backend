@@ -1,6 +1,7 @@
 const { config } = require('../../config');
 const { Users, Transactions } = require('../../models');
 require('../../subscribers')
+
 const { eventEmitter, dollarUSLocale, firebaseDB, logger } = config
 
 
