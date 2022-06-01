@@ -1,7 +1,8 @@
 const { config } = require('../../config');
 const { Users, Transactions } = require('../../models');
 require('../../subscribers')
-const { eventEmitter, dollarUSLocale, firebaseDB, set, ref } = config
+
+const { eventEmitter, dollarUSLocale, firebaseDB, logger } = config
 
 
 const debitService = async (data) => {
@@ -45,13 +46,17 @@ const debitService = async (data) => {
             walletBal: finalBal
         }
         //update
-        // let firebasUpdate = set(ref(firebaseDB), "wallet/" + userUid, obj)
-        // console.log(firebasUpdate)
-        const message = `@${username}, NGN${dollarUSLocale.format(amount)} has left your account. Your new balance is: NGN${finalBal}`;
-        eventEmitter.emit('walletCredit', {email, message})
-        eventEmitter.emit('send', {phoneNumber, message})
-        eventEmitter.emit('notification', {userUid, title: data?.title ?? 'funding', description: `Hey, NGN${dollarUSLocale.format(amount)} just left your primary wallet`})
-        return true;
+        try{
+            let firebasUpdate = await firebaseDB.doc(userUid).set(obj)
+            // console.log(firebasUpdate)
+            const message = `@${username}, NGN${dollarUSLocale.format(amount)} has left your account. Your new balance is: NGN${finalBal}`;
+            eventEmitter.emit('walletCredit', {email, message})
+            eventEmitter.emit('send', {phoneNumber, message})
+            eventEmitter.emit('notification', {userUid, title: data?.title ?? 'funding', description: `Hey, NGN${dollarUSLocale.format(amount)} just left your primary wallet`})
+            return true;
+        } catch (error) {
+            logger.info(error)
+        }
     } else {
         return false;
     }
