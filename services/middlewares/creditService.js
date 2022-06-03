@@ -42,6 +42,7 @@ const creditService = async (data) => {
         }
         //update
         let firebasUpdate = await firebaseDB.doc(userUid).set(obj)
+
         // console.log(firebasUpdate)
         const message = `@${username}, NGN${dollarUSLocale.format(amount)} just entered your account. Your new balance is: NGN${dollarUSLocale.format(finalBal)}`;
     
