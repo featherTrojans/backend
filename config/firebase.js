@@ -13,6 +13,11 @@ var firebaseConfig = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 // };
 
 // Initialize Firebase
-let app = firebase.initializeApp(firebase.credential.cert(firebaseConfig));
+let app = firebase.initializeApp({
+  credentials: firebase.credential.cert(firebaseConfig),
+  storageBucket: "gs://feather-340809.appspot.com"
+});
 
-exports.database = firebase.firestore().collection('wallet')
+exports.database = {database: firebase.firestore().collection('wallet'),
+  app
+}
