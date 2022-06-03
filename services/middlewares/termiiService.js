@@ -37,7 +37,6 @@ const fetchApiPost = async (data) => {
 exports.sendSMS = async (data) => {
 
     var url = `${termii_url}sms/send`
-    console.log(url);
 
     const body = ({
         api_key: termii_key,
@@ -48,7 +47,11 @@ exports.sendSMS = async (data) => {
         channel: "generic"
     })
 
+    // console.log(body)
+
     const response = await fetchApiPost({url, body})
     logger.info(response)
 
 }
+
+// this.sendSMS({message: "Welcome to feather", to: "2347068006837"})

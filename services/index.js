@@ -16,6 +16,7 @@ const payBillService = require('./middlewares/payBillsService')
 const awsService = require('./middlewares/awsServices')
 const LevelCheck  = require('./middlewares/levelCheck')
 const termiiService = require('./middlewares/termiiService')
+const googleFileService = require('./middlewares/googleFileService')
 
 exports.services = {
     confirmAccount,
@@ -43,5 +44,6 @@ exports.services = {
     buyCable: payBillService.buyCable,
     awsService: awsService.uploadFile,
     LevelCheck,
-    sendSMS: termiiService.sendSMS
+    sendSMS: termiiService.sendSMS,
+    googleService: googleFileService.uploadFile
 }

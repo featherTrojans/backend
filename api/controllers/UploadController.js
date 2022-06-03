@@ -2,7 +2,7 @@ const { config } = require("../../config");
 const { validationResult } = require('express-validator');
 const {logger} = config;
 const {services} = require('../../services')
-const {awsService} = services
+const {awsService, googleService} = services
 var formidable = require('formidable')
 
 exports.uploadImages = (async (req, res) => {
@@ -47,7 +47,7 @@ exports.uploadImages = (async (req, res) => {
                             message: "Unsupported format, Only images can be uploaded"
                         })
                     } else {
-                        const uploaded = awsService({file: path, name})
+                        const uploaded = googleService({file: path, name})
                         if (uploaded) {
                             return res.status(202).json({
                                 status: true,
