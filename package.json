@@ -39,6 +39,7 @@
     "pino": "^7.6.2",
     "sequelize": "^6.12.5",
     "twilio": "^3.73.0",
+    "uuid-v4": "^0.1.0",
     "websocket": "^1.0.34"
   },
   "devDependencies": {

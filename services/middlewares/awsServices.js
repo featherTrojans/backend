@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const {config} = require('../../config/')
+const fs = require('fs')
 const {aws_secret, aws_access, logger} = config
 
 const s3 = new AWS.S3({
@@ -10,11 +11,16 @@ const s3 = new AWS.S3({
 exports.uploadFile = (data) => {
 
     try {
+
+
+        let imagePath = data.file;
+        const blob = fs.readFileSync(imagePath)
         const params = {
             Bucket: 'feather',
-            Key: `banks/${data.name}`,
-            Body: data.file
-        };
+            Key: data.name,
+            Body: blob,
+          }
+        // const uploadedImage = await s3.upload().promise()
     
         s3.upload(params, function(err, data) {
             console.log(err, data);
