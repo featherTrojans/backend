@@ -8,6 +8,6 @@ cert.pem
 key.pem
 subcribers/tester.js
 config.tester.js
-.github/
 /test/*
   !test/index.js
+.github/
