@@ -346,7 +346,6 @@ router.group('/', (router) => {
             router.post('/image', 
                 [
                     Authenticate
-
                 ], 
                     controller.uploadFile
                 );
