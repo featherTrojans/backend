@@ -68,7 +68,7 @@ exports.buyAirtime = ( async (req, res) => {
                         network,
                         description: `NGN${amount} ${network} airtime purchased on ${phone}`
                     })
-                    buyAirtimeData({phone,network, amount, type: 'airtime'}).then((buyAirtime) => {
+                    buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference}).then((buyAirtime) => {
                         if ( buyAirtime == false) {
 
                             //return charged amount
