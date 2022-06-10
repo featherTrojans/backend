@@ -7,16 +7,18 @@ const {
 const {Users, Bills, DoubleSpent} = require('../../models')
 const {logger} = require('../../config/').config
 const bcrypt = require('bcryptjs');
-const d = new Date();
-d.setSeconds(0,0)
-let time = d.getTime();
 
 exports.buyAirtime = ( async (req, res) => {
 
     const {userId, username} = req.user
     const { phone, network, amount, userPin } = req.body
 
+
     try{
+        let d = new Date();
+        d.setSeconds(0,0)
+        let time = d.getTime();
+        
         const {walletBal, pin} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin']})
         const verifyPin = await bcrypt.compare(userPin, pin);
 
