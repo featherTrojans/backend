@@ -108,7 +108,7 @@ exports.buyAirtimeData = async ({phone, network, amount, type, trans_id}) =>{
             amount
         })
         const data = await fetchApiPost({url, key: mobilenig_sk_key, body})
-        console.log(data)
+        console.log('data', data)
         if (data !== false){
             /**
              * {
