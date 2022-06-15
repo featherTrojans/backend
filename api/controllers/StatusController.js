@@ -30,7 +30,7 @@ exports.createStatus = ( async (req, res) => {
         } else {
 
 
-            if (locationText.includes('undefined')) {
+            if (locationText == undefined ) {
                 return res.status(400).json({
                     status: false,
                     data : {},
