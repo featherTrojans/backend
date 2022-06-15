@@ -111,11 +111,15 @@ exports.buyAirtimeData = async ({phone, network, amount, type, trans_id}) =>{
         console.log('data', data)
         if (data !== false){
             /**
-             * {
-                network: 'MTN',
-                phone: '07068006837',
-                amount: 'NGN50',
-                request_id: '414111443093821647116925632'
+             * data {
+                trans_id: '9VOwZVJ5lj',
+                service: 'VisaphoneVtu',
+                details: {
+                    amount: '100',
+                    phoneNumber: '07068006837',
+                    referenceID: '9VOwZVJ5lj'
+                },
+                wallet_balance: '499904'
                 }
              */
             return data

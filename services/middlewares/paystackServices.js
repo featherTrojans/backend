@@ -208,3 +208,34 @@ exports.withdrawFund = async (payload) => {
         
 }
 
+
+exports.resolveBvn = async (payload) => {
+    try {
+        
+        let { body: { status, message, data } } = await paystack.matchBVN({
+
+            account_number: payload.acc_num, 
+            bank_code: this.sortCode(payload.bank_name),
+            bvn: payload.bvn,
+            first_name: payload.first_name,
+	        last_name: payload.last_name,
+            middle_name: payload.middle_name
+          })
+          console.log(data)
+          if(status === false){
+              logger.info(message)
+              return false;
+          }else{
+              return data;
+          }
+    }catch(ex){
+        logger.info(ex.message)
+
+        return false;
+    }
+
+        
+}
+
+this.resolveBvn({bvn: '20423459876', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi"})
+
