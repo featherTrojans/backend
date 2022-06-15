@@ -7,16 +7,18 @@ const {
 const {Users, Bills, DoubleSpent} = require('../../models')
 const {logger} = require('../../config/').config
 const bcrypt = require('bcryptjs');
-const d = new Date();
-d.setSeconds(0,0)
-let time = d.getTime();
 
 exports.buyAirtime = ( async (req, res) => {
 
     const {userId, username} = req.user
     const { phone, network, amount, userPin } = req.body
 
+
     try{
+        let d = new Date();
+        d.setSeconds(0,0)
+        let time = d.getTime();
+
         const {walletBal, pin} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin']})
         const verifyPin = await bcrypt.compare(userPin, pin);
 
@@ -41,7 +43,7 @@ exports.buyAirtime = ( async (req, res) => {
             })
         } else{
 
-            const reference = 'FTH' + idGenService(10);
+            const reference = idGenService(10);
             const creditReference = 'FTH' + idGenService(10)
             const transId =  time + userId + walletBal;
             const insert = await DoubleSpent.create({
@@ -52,7 +54,7 @@ exports.buyAirtime = ( async (req, res) => {
             if (insert) {
                 new Promise(function(resolve, reject) {
 
-                    const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: network, to: phone, title: "Airtime Purchase"});
+                    const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: network, to: phone.toString(), title: "Airtime Purchase"});
 
                     debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                     // set timer to  9 secs to give room for db updates
@@ -68,7 +70,7 @@ exports.buyAirtime = ( async (req, res) => {
                         network,
                         description: `NGN${amount} ${network} airtime purchased on ${phone}`
                     })
-                    buyAirtimeData({phone,network, amount, type: 'airtime'}).then((buyAirtime) => {
+                    buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference}).then((buyAirtime) => {
                         if ( buyAirtime == false) {
 
                             //return charged amount
