@@ -1,10 +1,10 @@
 let PayStack = require('paystack-node');
 const { config } = require('../../config');
 const { BankAccount, Withdrawal } = require('../../models');
-const logger = config.logger
+const {logger, paystack_secret_key, environment} = config
+const fetch = require('node-fetch');
 
-let APIKEY = config.paystack_secret_key;
-const environment = config.environment;
+let APIKEY = paystack_secret_key;
 
 const paystack = new PayStack(APIKEY, environment)
 
@@ -212,7 +212,7 @@ exports.withdrawFund = async (payload) => {
 exports.resolveBvn = async (payload) => {
     try {
         
-        let { body: { status, message, data } } = await paystack.matchBVN({
+          let body = JSON.stringify({
 
             account_number: payload.acc_num, 
             bank_code: this.sortCode(payload.bank_name),
@@ -221,13 +221,26 @@ exports.resolveBvn = async (payload) => {
 	        last_name: payload.last_name,
             middle_name: payload.middle_name
           })
-          console.log(data)
-          if(status === false){
-              logger.info(message)
-              return false;
-          }else{
-              return data;
-          }
+
+          let response =  await fetch("https://api.paystack.co/bvn/match", {
+            method: 'POST',
+            headers: {Authorization: `Bearer ${APIKEY}`,
+                      "Content-Type": "application/json"
+                    },
+            body
+        })
+
+
+        response = await response.json()
+        //  logger.info(response);
+        if (response.message == 'success' && response.status != false) {
+            logger.info(response)
+            return response
+        } else {
+            console.log('response : ')
+            logger.info(response)
+            return false
+        }
     }catch(ex){
         logger.info(ex.message)
 
@@ -237,5 +250,5 @@ exports.resolveBvn = async (payload) => {
         
 }
 
-this.resolveBvn({bvn: '20423459876', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi"})
+// this.resolveBvn({bvn: '20423459876', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi"})
 

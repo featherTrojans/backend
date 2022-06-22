@@ -50,5 +50,6 @@ exports.controller = {
     changePassword: Controller.ForgotPasswordController.changePassword,
     stats: Controller.AdminController.stats,
     referralStats: Controller.ReferralController.referralStats,
-    getMultipleUser: Controller.UserController.getMultipleUser
+    getMultipleUser: Controller.UserController.getMultipleUser,
+    verifyUsers: Controller.VerificationController.verifyUser,
 }

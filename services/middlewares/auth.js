@@ -5,8 +5,12 @@ const logger = config.logger
 
 
 const Authenticate = ((req, res, next) =>{
-    const token = req.headers['token']?? (req.headers['authorization']).substr(7, (req.headers['authorization']).length - 7);
-    // logger.info(token);
+    
+    
+    try
+    {
+        const token = req.headers['token']?? (req.headers['authorization']).substr(7, (req.headers['authorization']).length - 7);
+        // logger.info(token);
 
     if (!token){
 
@@ -16,9 +20,6 @@ const Authenticate = ((req, res, next) =>{
             message: "Unauthorized request"
         })
     }
-    
-    try
-    {
         const decoded = jwt.verify(token, config.jwt_secret)
         req.user = decoded
 
@@ -27,7 +28,7 @@ const Authenticate = ((req, res, next) =>{
         logger.info(err)
         return res.status(401).json({
             status: false,
-            data: {},
+            data: err,
             message: "Token not valid"
         })
     }

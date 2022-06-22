@@ -45,5 +45,6 @@ exports.services = {
     awsService: awsService.uploadFile,
     LevelCheck,
     sendSMS: termiiService.sendSMS,
-    googleService: googleFileService.uploadFile
+    googleService: googleFileService.uploadFile,
+    verifyBvn: PaystackServices.resolveBvn,
 }

@@ -28,7 +28,7 @@ exports.uploadFile = async (data) => {
         });
 
         console.log(`${filename} uploaded.`);
-        console.log(uploadFile[0].metadata)
+        console.log(uploadFile)
         return uploadFile[0].metadata.mediaLink
 
     } catch (err) {
