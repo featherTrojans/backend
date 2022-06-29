@@ -298,6 +298,19 @@ router.group('/', (router) => {
             ], 
                 controller.getMultipleUser
             );
+
+            router.post('/verify', 
+            [
+                Authenticate,
+                body('bank_name').toUpperCase(),
+                body('acc_num').isLength({ min: 10, max: 10 }),
+                body('acc_num').isNumeric(),
+                body('bank_name').isLength({ max: 11, min: 3 }),
+                body('bvn').isNumeric()
+    
+            ], 
+                controller.verifyUsers
+            );
         });
 
         router.group('/account', (router) => {
