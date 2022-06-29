@@ -3,7 +3,7 @@ const {
     Transactions, DoubleSpent, Users, 
     UserLevels, Payments, Location, 
     LocationHistory, Request, Status, BankAccount, Withdrawal,
-    Bills, Rating, Notification
+    Bills, Rating, Notification, BVN
 } = require('../models/')
 
 const create_users_table = ()=>{
@@ -130,8 +130,17 @@ const create_notifications_table = ()=>{
         config.logger.debug(err)
     })
 }
+
+const create_bvns_table = ()=>{
+    BVN.sync({force: true}).then(()=>{
+    
+    config.logger.info('bvns table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
 // create_users_table();
-create_user_levels_table();
+// create_user_levels_table();
 // create_transactions_table();
 // create_double_spent_table();
 // create_payments_table();
@@ -144,3 +153,4 @@ create_user_levels_table();
 // create_bills_table()
 // create_ratings_table()
 // create_notifications_table()
+create_bvns_table()

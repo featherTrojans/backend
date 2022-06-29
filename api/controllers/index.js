@@ -25,6 +25,7 @@ const RatingsController = require('./RatingsController')
 const NotificationController = require('./NotificationController')
 const AdminController = require('./AdminController')
 const ReferralController = require('./ReferralController')
+const VerificationController = require('./VerificationController')
 
 module.exports = {
     
@@ -54,5 +55,6 @@ module.exports = {
     RatingsController,
     NotificationController,
     AdminController,
-    ReferralController
+    ReferralController,
+    VerificationController,
 }
