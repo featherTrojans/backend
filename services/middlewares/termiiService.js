@@ -1,7 +1,7 @@
 const {
     logger,
     termii_key,
-    termii_url
+    termii_url,
 } = require('../../config/').config
 
 const fetch = require('node-fetch');
@@ -12,11 +12,11 @@ const fetchApiPost = async (data) => {
         let response =  await fetch(data.url, {
             method: 'POST',
             headers: {
-                      "Content-Type": "application/json"
+                      "Content-Type": "application/json",
                     },
             body: data?.body ?? ''
         })
-        // console.log(response)
+        console.log(data.body)
 
         response = await response.json()
          logger.info(response);
@@ -54,4 +54,4 @@ exports.sendSMS = async (data) => {
 
 }
 
-// this.sendSMS({message: "Welcome to feather", to: "2347068006837"})
+this.sendSMS({message: "Welcome to feather", to: "2347068006837"})

@@ -3,21 +3,23 @@ const {config} = require('../../config/')
 const fs = require('fs')
 const {aws_secret, aws_access, logger} = config
 
+
 const s3 = new AWS.S3({
   accessKeyId: aws_access,
   secretAccessKey: aws_secret
 });
 
-exports.uploadFile = (data) => {
+exports.uploadFile = async (data) => {
 
     try {
 
+        AWS.config.update({region: 'us-east-1'});
 
         let imagePath = data.file;
-        const blob = fs.readFileSync(imagePath)
+        const blob = await fs.readFileSync(imagePath)
         const params = {
-            Bucket: 'feather',
-            Key: data.name,
+            Bucket: 'featherimages',
+            Key: 'users/' + data.name + '.' + data.ext,
             Body: blob,
           }
         // const uploadedImage = await s3.upload().promise()
