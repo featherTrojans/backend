@@ -1,7 +1,7 @@
 const {
     logger,
     termii_key,
-    termii_url
+    termii_url,
 } = require('../../config/').config
 
 const fetch = require('node-fetch');
@@ -12,11 +12,11 @@ const fetchApiPost = async (data) => {
         let response =  await fetch(data.url, {
             method: 'POST',
             headers: {
-                      "Content-Type": "application/json"
+                      "Content-Type": "application/json",
                     },
-            body: data?.body ?? ''
+            body: data.body 
         })
-        // console.log(response)
+        console.log(data.body)
 
         response = await response.json()
          logger.info(response);
@@ -36,22 +36,14 @@ const fetchApiPost = async (data) => {
 
 exports.sendSMS = async (data) => {
 
-    var url = `${termii_url}sms/send`
+    var url = `${termii_url}sms/send?to=${data.to}&from=Feather NG&sms=${data.message}&type=plain&channel=generic&api_key=${termii_key}`
 
-    const body = ({
-        api_key: termii_key,
-        to: data.to,
-        from : "Feather NG",
-        sms: data.message,
-        type: "plain",
-        channel: "generic"
-    })
 
     // console.log(body)
 
-    const response = await fetchApiPost({url, body})
+    const response = await fetchApiPost({url, body: null})
     logger.info(response)
 
 }
 
-// this.sendSMS({message: "Welcome to feather", to: "2347068006837"})
+// this.sendSMS({message: "Welcome to feather, with love from ezeko", to: 2348133211658})
