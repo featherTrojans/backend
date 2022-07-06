@@ -48,20 +48,28 @@ exports.uploadImages = (async (req, res) => {
                             message: "Unsupported format, Only images can be uploaded"
                         })
                     } else {
-                        const uploaded = cloudServices({file: path, name, ext: (type.split("/"))[1], userId})
-                        if (uploaded) {
+                        cloudServices({file: path, name, ext: (type.split("/"))[1], userId})
+                        .then(resp => {
+                            console.log(resp)
                             return res.status(202).json({
-                                status: true,
-                                data: {},
-                                message: `${name} ${uploaded} uploaded successfully`
-                            })
-                        } else {
-                            return res.status(500).json({
-                                status: false,
-                                data: {},
-                                message: `Could not upload ${name}`
-                            }) 
-                        }
+                                    status: true,
+                                    data: {},
+                                    message: `${name} uploaded successfully`
+                                })
+                        })
+                        .catch(err => res.status(500).json({
+                            status: false,
+                            data: {},
+                            message: `Could not upload ${name}`
+                        })  )
+
+                        // if (uploaded) {
+                        //     return res.status(202).json({
+                        //         status: true,
+                        //         data: {},
+                        //         message: `${name} uploaded successfully`
+                        //     })
+                        // }
                     }
                 }
               });
