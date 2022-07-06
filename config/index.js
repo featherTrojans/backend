@@ -70,8 +70,12 @@ exports.config = {
     mobilenig_url: process.env.MOBILENIG_URL,
     termii_url: process.env.TERMII_URL,
     termii_key: process.env.TERMII_KEY,
+    // termii_secret: process.env.TERMII_SECRET,
     firebaseDB,
-    firebaseApp
+    firebaseApp,
+    cloud_name: process.env.CLOUD_NAME,
+    cloud_api_key: process.env.CLOUD_API_KEY,
+    cloud_api_secret: process.env.CLOUD_API_SECRET
     
 
 }

@@ -17,6 +17,7 @@ const awsService = require('./middlewares/awsServices')
 const LevelCheck  = require('./middlewares/levelCheck')
 const termiiService = require('./middlewares/termiiService')
 const googleFileService = require('./middlewares/googleFileService')
+const cloudServices = require('./middlewares/cloudinaryServices')
 
 exports.services = {
     confirmAccount,
@@ -47,4 +48,5 @@ exports.services = {
     sendSMS: termiiService.sendSMS,
     googleService: googleFileService.uploadFile,
     verifyBvn: PaystackServices.resolveBvn,
+    cloudServices: cloudServices.uploadFile
 }

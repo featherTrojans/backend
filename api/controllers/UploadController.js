@@ -2,11 +2,12 @@ const { config } = require("../../config");
 const { validationResult } = require('express-validator');
 const {logger} = config;
 const {services} = require('../../services')
-const {awsService, googleService} = services
+const {awsService, googleService, cloudServices} = services
 var formidable = require('formidable')
 
 exports.uploadImages = (async (req, res) => {
     const errors = validationResult(req);
+    const {userId} = req.user
 
     try{
 
@@ -47,20 +48,28 @@ exports.uploadImages = (async (req, res) => {
                             message: "Unsupported format, Only images can be uploaded"
                         })
                     } else {
-                        const uploaded = googleService({file: path, name})
-                        if (uploaded) {
+                        cloudServices({file: path, name, ext: (type.split("/"))[1], userId})
+                        .then(resp => {
+                            console.log(resp)
                             return res.status(202).json({
-                                status: true,
-                                data: {},
-                                message: `${name} uploaded successfully`
-                            })
-                        } else {
-                            return res.status(500).json({
-                                status: false,
-                                data: {},
-                                message: `Could not upload ${name}`
-                            }) 
-                        }
+                                    status: true,
+                                    data: {},
+                                    message: `${name} uploaded successfully`
+                                })
+                        })
+                        .catch(err => res.status(500).json({
+                            status: false,
+                            data: {},
+                            message: `Could not upload ${name}`
+                        })  )
+
+                        // if (uploaded) {
+                        //     return res.status(202).json({
+                        //         status: true,
+                        //         data: {},
+                        //         message: `${name} uploaded successfully`
+                        //     })
+                        // }
                     }
                 }
               });
