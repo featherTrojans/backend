@@ -3,7 +3,7 @@ const {
     Transactions, DoubleSpent, Users, 
     UserLevels, Payments, Location, 
     LocationHistory, Request, Status, BankAccount, Withdrawal,
-    Bills, Rating, Notification, BVN
+    Bills, Rating, Notification, BVN, Webhook
 } = require('../models/')
 
 const create_users_table = ()=>{
@@ -139,6 +139,15 @@ const create_bvns_table = ()=>{
         config.logger.debug(err)
     })
 }
+
+const create_webhooks_table = ()=>{
+    Webhook.sync({force: true}).then(()=>{
+    
+    config.logger.info('webhooks table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
 // create_users_table();
 // create_user_levels_table();
 // create_transactions_table();
@@ -154,3 +163,4 @@ const create_bvns_table = ()=>{
 // create_ratings_table()
 // create_notifications_table()
 create_bvns_table()
+create_webhooks_table()
