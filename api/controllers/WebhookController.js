@@ -88,7 +88,7 @@ exports.webhook = (async (req, res) => {
             }
         }
         logger.info("webhook not useful");
-        res.sendStatus(200);
+        return res.sendStatus(200);
     } catch(error) {
         logger.info(error)
         return res.sendStatus(200)
