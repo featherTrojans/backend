@@ -46,4 +46,4 @@ exports.sendSMS = async (data) => {
 
 }
 
-// this.sendSMS({message: "Welcome to feather, with love from ezeko", to: 2348133211658})
+// this.sendSMS({message: "Welcome to feather, with love from ezeko", to: 2347068006837})
