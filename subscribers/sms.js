@@ -14,7 +14,7 @@ eventEmitter.on('signup', async (data) => {
     // const phone = data.phoneNumber.length == 11 ? "+234" + data.phoneNumber.substring(1) : "+" + data.phoneNumber;
     const phone = data.phoneNumber.length == 11 ? "234" + data.phoneNumber.substring(1) : data.phoneNumber;
     try {
-        sendSMS({to: phone, message})
+        // sendSMS({to: phone, message})
         // twilio.messages
         // .create({
         // body: message,
