@@ -50,10 +50,11 @@ const fetchApiPost = async (data) => {
                     },
             body: data?.body ?? ''
         })
-        // console.log(response)
+        console.log(data.body)
 
         response = await response.json()
         //  logger.info(response);
+        console.log('response', response)
         if (response.message == 'success') {
             logger.info(response)
             return response.details
