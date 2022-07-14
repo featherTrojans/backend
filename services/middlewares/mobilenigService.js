@@ -32,12 +32,12 @@ const fetchApi = async (url) => {
 }
 
 const getServiceId = (network) => {
-    switch (network) {
+    switch (network.toLowerCase()) {
         case "mtn": return 'BAD'; break;
         case "glo": return "BAB"; break;
         case "airtel": return "BAA"; break;
         case "9mobile": return "BAC"; break;
-        default: return "BAE"
+        default: return "BAD"
     }
 }
 
@@ -50,10 +50,11 @@ const fetchApiPost = async (data) => {
                     },
             body: data?.body ?? ''
         })
-        // console.log(response)
+        console.log(data.body)
 
         response = await response.json()
         //  logger.info(response);
+        console.log('response', response)
         if (response.message == 'success') {
             logger.info(response)
             return response.details
