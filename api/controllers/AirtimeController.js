@@ -41,6 +41,22 @@ exports.buyAirtime = ( async (req, res) => {
                 message: "Pin is Incorrect"
     
             })
+        }else if (amount < 100 ) {
+            return res.status(400).json({
+
+                status: false,
+                data : {},
+                message: "Oops Padi!!! You can not purchase airtime lower than NGN100. Kindly try with NGN100 or more"
+    
+            })
+        }else if (network.toLowerCase() == 'airtel' ) {
+            return res.status(400).json({
+
+                status: false,
+                data : {},
+                message: "Oops Padi!!! You can not purchase airtime for this network at the moment please try again later"
+    
+            })
         } else{
 
             const reference = 3 + idGenService(10);
