@@ -10,7 +10,5 @@ exports.home = ( async (req, res) => {
 })
 
 exports.docs = ( async (req, res) => {
-
     return res.redirect("https://documenter.getpostman.com/view/9190659/UzJLNvuW");
-    
 })
