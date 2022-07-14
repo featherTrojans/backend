@@ -43,7 +43,7 @@ exports.buyAirtime = ( async (req, res) => {
             })
         } else{
 
-            const reference = idGenService(10);
+            const reference = 3 + idGenService(10);
             const creditReference = 'FTH' + idGenService(10)
             const transId =  time + userId + walletBal;
             const insert = await DoubleSpent.create({
