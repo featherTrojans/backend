@@ -39,9 +39,16 @@ exports.buyElect = ( async (req, res) => {
                 message: "Pin is Incorrect"
     
             })
+        } if ( variation.toLowerCase() != "prepaid") {
+            return res.status(400).json({
+                status: false,
+                data : {},
+                message: "Cannot purchase electricity at the moment for postpaid account at the moment "
+
+            })
         } else{
         
-            const reference = 'FTHR' + await idGenService(7);
+            const reference = '8' + await idGenService(7);
             const creditReference = 'FTHR' + await idGenService(7)
             const transId =  time + userId + walletBal;
             const insert = await DoubleSpent.create({
@@ -69,7 +76,7 @@ exports.buyElect = ( async (req, res) => {
                     description: `NGN${amount} ${variation} ${service} token purchased on ${meter_number}`
                 });
 
-                buyLight({phone,service, amount, meter_number, variation}).then((buyElect) =>{
+                buyLight({service, amount, meter_number, reference}).then((buyElect) =>{
                     if ( buyElect == false) {
 
                         //return charged amount
