@@ -77,7 +77,10 @@ exports.config = {
     cloud_api_key: process.env.CLOUD_API_KEY,
     cloud_api_secret: process.env.CLOUD_API_SECRET,
     clientId: process.env.GMAIL_CLIENT_ID,
-    clientSecret: process.env.GMAIL_CLIENT_SECRET
+    clientSecret: process.env.GMAIL_CLIENT_SECRET,
+    vfdWalletCreden: process.env.V_WALLET_CRE,
+    vfdTestKey: process.env.V_TEST_API_KEY,
+    vfdUrl: process.env.V_URL
     
 
 }
