@@ -3,7 +3,7 @@ const { validationResult } = require('express-validator');
 const {logger} = config;
 const {services} = require('../../services')
 const {awsService, googleService, cloudServices} = services
-var formidable = require('formidable')
+var formidable = require('formidable');
 
 exports.uploadImages = (async (req, res) => {
     const errors = validationResult(req);
@@ -50,7 +50,8 @@ exports.uploadImages = (async (req, res) => {
                     } else {
                         cloudServices({file: path, name, ext: (type.split("/"))[1], userId})
                         .then(resp => {
-                            console.log(resp)
+                            console.log('image url', resp)
+
                             return res.status(202).json({
                                     status: true,
                                     data: {},
