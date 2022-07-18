@@ -14,6 +14,7 @@ const Rating = require('./Rating')
 const Notification = require('./Notification')
 const BVN = require('./BVN')
 const Webhook = require('./Webhook')
+const CollectionAccounts = require('./CollectionAccount')
 
 const models = {
     Users,
@@ -31,7 +32,8 @@ const models = {
     Rating,
     Notification,
     BVN,
-    Webhook
+    Webhook,
+    CollectionAccounts
 }
 
 module.exports = models

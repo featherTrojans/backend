@@ -5,6 +5,8 @@ const {
     vfdUrl
 } = require('../../config/').config
 
+const {Users, CollectionAccounts} = require('../../models')
+
 const fetch = require('node-fetch');
 
 
@@ -48,6 +50,16 @@ const fetchApiPost = async (data) => {
         if (response.status == '00') {
             logger.info(response)
             Users.update({accountNo: response.data.accountNo}, {where: {userUid: data.userId}})
+            CollectionAccounts.create({
+                userUid: data.userId,
+                firstname: response.data.firstname,
+                middlename: response.data.middlename ?? null,
+                lastname: response.data.lastname,
+                bvn: response.data.bvn,
+                phone: response.data.phone,
+                dob: response.data.dob,
+                accountNo: response.data.accountNo
+            })
             return true
         } else {
             logger.info(response)
@@ -61,20 +73,20 @@ const fetchApiPost = async (data) => {
 }
 
 
-exports.createAccount = async() => {
+exports.createAccount = async(data) => {
 
     const body = {
         "wallet-credentials": vfdWalletCreden,
-        "bvn": "2048767677",
-        "dateOfBirth": "06-Apr-1994"
+        "bvn": data.bvn,
+        "dateOfBirth": data.dob
     }
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
     const url = vfdUrl + `/wallet2/client/create?${queryString}`
-    const res = await fetchApiPost({url, key: vfdTestKey})
+    const res = await fetchApiPost({url, key: vfdTestKey, userId: data.userId})
     console.log(res)
 }
 
 
 
 
-this.createAccount()
+this.createAccount({bvn: "22222222223", dob: "05-Apr-1994", userId: "aw08HmcKBP" })
