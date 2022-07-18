@@ -152,7 +152,14 @@ const Users = db_con.define("users", {
            notEmpty: true
         }
     },
-
+    "accountNo": {
+        allowNull: true,
+        unique: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
     "dateOfBirth": {
         allowNull: true,
         type: Sequelize.STRING,
