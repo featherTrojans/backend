@@ -2,12 +2,12 @@ const { config } = require("../../config");
 const { validationResult } = require('express-validator');
 const {logger} = config;
 const {services} = require('../../services')
-const {verifyBvn} = services
+const {createCollectionAccount} = services
 
-exports.upgradeUser = (async (req, res) => {
+exports.createCollectionaccount = (async (req, res) => {
     const errors = validationResult(req);
-    const {userId, fullName} = req.user
-    const {bvn, bank_name, acc_num, dob } = req.body
+    const {userId} = req.user
+    const {bvn, dob } = req.body
 
     try{
 
@@ -21,18 +21,6 @@ exports.upgradeUser = (async (req, res) => {
                 data: {},
                 message: "bvn is required"
             })
-        }else if (!bank_name) {
-            return res.status(400).json({
-                status: false,
-                data: {},
-                message: "bank name is required"
-            })
-        } else if (!acc_num) {
-            return res.status(400).json({
-                status: false,
-                data: {},
-                message: "account number is required"
-            })
         } else if (!dob) {
             return res.status(400).json({
                 status: false,
@@ -40,20 +28,19 @@ exports.upgradeUser = (async (req, res) => {
                 message: "Aww padi, you must provide your date of birth"
             })
         }  else {
-            const first_name = (fullName.split(" "))[1];
-            const last_name = (fullName.split(" "))[0]
-            const verifyUser = await verifyBvn({bvn, bank_name, acc_num, first_name, last_name, userId, dob})
-            if (verifyUser ){
+            const createAccount = await createCollectionAccount(({bvn, dob, userId}))
+            console.log(createAccount)
+            if (createAccount ){
                 return res.status(200).json({
                     status: true,
                     data: {},
-                    message: "Hey Padi!!! You have been verified succesfully and upgraded to Odogwu Level"
+                    message: "Hey Padi!!! Your account has been created successfully"
                 })
             } else {
                 return res.status(400).json({
                     status: false,
-                    data: {verifyUser},
-                    message: "Hi Padi, error occur could not verify you at the moment. Kindly try again"
+                    data: {createAccount},
+                    message: "Hi Padi, error occur could not crate your account at the moment. Kindly try again"
                 })
             }
         }

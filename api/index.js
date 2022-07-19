@@ -53,5 +53,6 @@ exports.controller = {
     getMultipleUser: Controller.UserController.getMultipleUser,
     verifyUsers: Controller.VerificationController.verifyUser,
     vfdwebhook: Controller.VfdWebhookController.webhook,
-    upgradeUser: Controller.UpgradeController.upgradeUser
+    upgradeUser: Controller.UpgradeController.upgradeUser,
+    createCollectionAcc: Controller.CollectionController.createCollectionaccount
 }

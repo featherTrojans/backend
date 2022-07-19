@@ -310,6 +310,14 @@ router.group('/', (router) => {
                 controller.upgradeUser
             );
 
+            router.post('/account', 
+            [
+                Authenticate
+    
+            ], 
+                controller.createCollectionAcc
+            );
+
             router.post('/verify', 
             [
                 Authenticate,
