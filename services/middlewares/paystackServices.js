@@ -1,8 +1,9 @@
 let PayStack = require('paystack-node');
 const { config } = require('../../config');
-const { BankAccount, Withdrawal } = require('../../models');
+const { BankAccount, Withdrawal, Users, BVN } = require('../../models');
 const {logger, paystack_secret_key, environment} = config
 const fetch = require('node-fetch');
+const {createCollectionAccount} = require('../../services')
 
 let APIKEY = paystack_secret_key;
 
@@ -219,7 +220,7 @@ exports.resolveBvn = async (payload) => {
             bvn: payload.bvn,
             first_name: payload.first_name,
 	        last_name: payload.last_name,
-            middle_name: payload.middle_name
+            middle_name: payload.middle_name?? null
           })
 
           let response =  await fetch("https://api.paystack.co/bvn/match", {
@@ -235,7 +236,23 @@ exports.resolveBvn = async (payload) => {
         //  logger.info(response);
         if (response.message == 'success' && response.status != false) {
             logger.info(response)
-            return response
+            //create bvn table
+            const create = await BVN.create({
+                userUid: payload.userId,
+                bvn: payload.bvn,
+                acc_num: payload.acc_num,
+                bank_name: payload.bank_name       
+            })
+
+            if (create) {
+                Users.update({userLevel: 2}, {where: {userUid: payload.userId}})
+                //generate unique account
+                createCollectionAccount({bvn: payload.bvn, dob: payload.dob, userId: payload.userId })
+                return true
+            } else {
+                return false
+            }
+
         } else {
             console.log('response : ')
             logger.info(response)
@@ -243,12 +260,12 @@ exports.resolveBvn = async (payload) => {
         }
     }catch(ex){
         logger.info(ex.message)
-
+        console.log('erroror', ex)
         return false;
     }
 
         
 }
 
-// this.resolveBvn({bvn: '20423459876', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi"})
+// this.resolveBvn({bvn: '22222222223', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi", userId})
 

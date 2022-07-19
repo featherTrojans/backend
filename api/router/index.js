@@ -302,6 +302,14 @@ router.group('/', (router) => {
                 controller.getMultipleUser
             );
 
+            router.post('/upgrade', 
+            [
+                Authenticate
+    
+            ], 
+                controller.upgradeUser
+            );
+
             router.post('/verify', 
             [
                 Authenticate,

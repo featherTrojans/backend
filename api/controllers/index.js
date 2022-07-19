@@ -27,6 +27,7 @@ const AdminController = require('./AdminController')
 const ReferralController = require('./ReferralController')
 const VerificationController = require('./VerificationController')
 const VfdWebhookController = require('./VfdWebhookController')
+const UpgradeController = require('./UpgradeController')
 
 module.exports = {
     
@@ -58,5 +59,6 @@ module.exports = {
     AdminController,
     ReferralController,
     VerificationController,
-    VfdWebhookController
+    VfdWebhookController,
+    UpgradeController
 }

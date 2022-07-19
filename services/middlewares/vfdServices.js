@@ -50,7 +50,7 @@ const fetchApiPost = async (data) => {
         if (response.status == '00') {
             logger.info(response)
             Users.update({accountNo: response.data.accountNo}, {where: {userUid: data.userId}})
-            CollectionAccounts.create({
+            const create = await CollectionAccounts.create({
                 userUid: data.userId,
                 firstname: response.data.firstname,
                 middlename: response.data.middlename ?? null,
@@ -60,6 +60,7 @@ const fetchApiPost = async (data) => {
                 dob: response.data.dob,
                 accountNo: response.data.accountNo
             })
+            console.log(create)
             return true
         } else {
             logger.info(response)
