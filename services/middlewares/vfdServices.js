@@ -50,7 +50,7 @@ const fetchApiPost = async (data) => {
         if (response.status == '00') {
             logger.info(response)
             Users.update({accountNo: response.data.accountNo}, {where: {userUid: data.userId}})
-            CollectionAccounts.create({
+            const create = await CollectionAccounts.create({
                 userUid: data.userId,
                 firstname: response.data.firstname,
                 middlename: response.data.middlename ?? null,
@@ -83,10 +83,10 @@ exports.createAccount = async(data) => {
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
     const url = vfdUrl + `/wallet2/client/create?${queryString}`
     const res = await fetchApiPost({url, key: vfdTestKey, userId: data.userId})
-    console.log(res)
+    return res
 }
 
 
 
 
-this.createAccount({bvn: "22222222223", dob: "05-Apr-1994", userId: "aw08HmcKBP" })
+// this.createAccount({bvn: "22222222223", dob: "05-Apr-1994", userId: "aw08HmcKBP" })
