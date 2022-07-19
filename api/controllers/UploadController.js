@@ -2,7 +2,7 @@ const { config } = require("../../config");
 const { validationResult } = require('express-validator');
 const {logger} = config;
 const {services} = require('../../services')
-const {awsService, googleService, cloudServices} = services
+const {cloudServices} = services
 var formidable = require('formidable');
 
 exports.uploadImages = (async (req, res) => {

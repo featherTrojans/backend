@@ -52,5 +52,7 @@ exports.controller = {
     referralStats: Controller.ReferralController.referralStats,
     getMultipleUser: Controller.UserController.getMultipleUser,
     verifyUsers: Controller.VerificationController.verifyUser,
-    vfdwebhook: Controller.VfdWebhookController.webhook
+    vfdwebhook: Controller.VfdWebhookController.webhook,
+    upgradeUser: Controller.UpgradeController.upgradeUser,
+    createCollectionAcc: Controller.CollectionController.createCollectionaccount
 }
