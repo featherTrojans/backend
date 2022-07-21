@@ -4,7 +4,7 @@ const {logger} = config;
 const {services} = require('../../services')
 const {createCollectionAccount} = services
 
-exports.createCollectionaccount = (async (req, res) => {
+exports.createCollectionAccountNum = (async (req, res) => {
     const errors = validationResult(req);
     const {userId} = req.user
     const {bvn, dob } = req.body
