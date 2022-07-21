@@ -149,13 +149,13 @@ exports.approveRequest = ( async (req, res) => {
 
                                     creditAgent ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                                 }).then(()=> {
-                                    let totalCounts = result[0].dataValues.totalCounts == null ? 0 : result[0].dataValues.totalCounts + 1
+                                    // let totalCounts = result[0].dataValues.totalCounts == null ? 0 : result[0].dataValues.totalCounts + 1
 
-                                    totalCounts >=1 && totalCounts <= 5 ?                                 creditService({userUid: agentId, reference: bonusId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
+                                    // totalCounts >=1 && totalCounts <= 5 ? creditService({userUid: agentId, reference: bonusId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
     
-                                    let totalCount = resultTwo[0].dataValues.totalCounts == null ? 0 : resultTwo[0].dataValues.totalCounts + 1
+                                    // let totalCount = resultTwo[0].dataValues.totalCounts == null ? 0 : resultTwo[0].dataValues.totalCounts + 1
     
-                                    totalCount >= 1 && totalCount <= 5 ?                                 creditService({userUid, reference: bonusTransId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
+                                    // totalCount >= 1 && totalCount <= 5 ? creditService({userUid, reference: bonusTransId, amount: 100, description: `NGN100 cash withdrawal bonus from ${reference}`, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'}): '';
     
                                     eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
     
