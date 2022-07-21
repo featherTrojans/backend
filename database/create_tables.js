@@ -171,6 +171,6 @@ const create_collections_table = ()=>{
 // create_bills_table()
 // create_ratings_table()
 // create_notifications_table()
-// create_bvns_table()
-// create_webhooks_table()
+create_bvns_table()
+create_webhooks_table()
 create_collections_table()

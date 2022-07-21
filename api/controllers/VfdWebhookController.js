@@ -16,7 +16,7 @@ exports.webhook = (async (req, res) => {
         var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         Webhook.create({
             ip,
-            data: JSON.stringify(body)
+            data: (body)
         })
         logger.info("Vfd webhook called");
         return res.sendStatus(200);
