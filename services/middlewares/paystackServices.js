@@ -245,7 +245,7 @@ exports.resolveBvn = async (payload) => {
             })
 
             if (create) {
-                Users.update({userLevel: 2}, {where: {userUid: payload.userId}})
+                Users.update({userLevel: 2, dateOfBirth: dob}, {where: {userUid: payload.userId}})
                 //generate unique account
                 createCollectionAccount({bvn: payload.bvn, dob: payload.dob, userId: payload.userId })
                 return true

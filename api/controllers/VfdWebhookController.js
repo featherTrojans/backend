@@ -1,25 +1,71 @@
-var crypto = require('crypto');
 const { request } = require('https');
 const { config } = require('../../config');
-const { Payments, Withdrawal, DoubleSpent, Webhook } = require('../../models');
+const { DoubleSpent, Webhook, Users, VfdPayment } = require('../../models');
 const { services } = require('../../services');
-const creditService = require('../../services/middlewares/creditService');
-var secret = config.paystack_secret_key;
 const logger = config.logger
 // Using Express
 exports.webhook = (async (req, res) => {
     //validate event
     try{
         
-        const {body} = req
+        logger.info("Vfd webhook called");
+        const body = req.body
         // console.log(req.connection.remoteAddress)
         var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         Webhook.create({
             ip,
-            data: (body)
+            data: JSON.stringify(body)
         })
-        logger.info("Vfd webhook called");
-        return res.sendStatus(200);
+        const {
+            account_number, amount,reference,
+            originator_account_number, originator_account_name,
+            originator_bank, originator_narration, timestamp
+         } = body; //deconstruct
+        
+        //get user_id with account_no
+        const {userUid} = await Users.findOne({
+            where: {accountNo: account_number},
+            attributes: ['userUid']
+
+        })
+        const check = await DoubleSpent.create({
+            transId: reference,
+            amount,
+            username: userUid
+        })
+
+        const uploadPayment = await VfdPayment.create({
+            reference,
+            userUid,
+            amount,
+            account_number,
+            originator_account_number,
+            originator_account_name,
+            originator_bank,
+            originator_narration,
+            timestamp
+        })
+
+        if ( !check ) {
+            logger.info('Already used')
+            return res.status(200)
+        } else {
+
+            if ( !uploadPayment ) {
+
+                res.sendStatus(200);
+                logger.info(`previously credited ${reference}`)
+                return  res.sendStatus(200);
+                
+            } else {
+
+                //credit user
+                services.creditService({userUid, reference, amount})
+                return res.sendStatus(200);
+
+            }
+        }
+        
     } catch(error) {
         logger.info(error)
         return res.sendStatus(200)
