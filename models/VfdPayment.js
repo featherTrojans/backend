@@ -2,7 +2,7 @@ const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
 
-const BVN = db_con.define("bvns", {
+const VfdPayment = db_con.define("vfd_payments", {
     
     "userUid": {
         allowNull: false,
@@ -13,7 +13,7 @@ const BVN = db_con.define("bvns", {
         }
 
     },
-    "bvn": {
+    "reference": {
         allowNull: false,
         type: Sequelize.STRING,
         unique: true,
@@ -21,42 +21,49 @@ const BVN = db_con.define("bvns", {
            notEmpty: true
         }
     },
-    "firstname": {
+    "amount": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "lastname": {
+    "account_number": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "middlename": {
+    "originator_account_number": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "gender": {
+    "originator_account_name": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "dateOfBirth": {
+    "originator_bank": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "phoneNumber": {
+    "originator_narration": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "timestamp": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
@@ -65,4 +72,4 @@ const BVN = db_con.define("bvns", {
     },
 })
 
-module.exports = BVN
+module.exports = VfdPayment

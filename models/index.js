@@ -15,6 +15,7 @@ const Notification = require('./Notification')
 const BVN = require('./BVN')
 const Webhook = require('./Webhook')
 const CollectionAccounts = require('./CollectionAccount')
+const VfdPayment = require('./VfdPayment')
 
 const models = {
     Users,
@@ -33,7 +34,8 @@ const models = {
     Notification,
     BVN,
     Webhook,
-    CollectionAccounts
+    CollectionAccounts,
+    VfdPayment
 }
 
 module.exports = models
