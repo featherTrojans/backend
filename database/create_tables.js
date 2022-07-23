@@ -3,7 +3,8 @@ const {
     Transactions, DoubleSpent, Users, 
     UserLevels, Payments, Location, 
     LocationHistory, Request, Status, BankAccount, Withdrawal,
-    Bills, Rating, Notification, BVN, Webhook, CollectionAccounts
+    Bills, Rating, Notification, BVN, Webhook, CollectionAccounts,
+    VfdPayment
 } = require('../models/')
 
 const create_users_table = ()=>{
@@ -157,6 +158,15 @@ const create_collections_table = ()=>{
         config.logger.debug(err)
     })
 }
+const create_vfd_payments_table = ()=>{
+    VfdPayment.sync({force: true}).then(()=>{
+    
+    config.logger.info('vfd_payments table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
+
 // create_users_table();
 // create_user_levels_table();
 // create_transactions_table();
@@ -172,5 +182,6 @@ const create_collections_table = ()=>{
 // create_ratings_table()
 // create_notifications_table()
 create_bvns_table()
-create_webhooks_table()
-create_collections_table()
+// create_webhooks_table()
+// create_collections_table()
+create_vfd_payments_table()
