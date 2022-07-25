@@ -50,5 +50,6 @@ exports.services = {
     googleService: googleFileService.uploadFile,
     verifyBvn: PaystackServices.resolveBvn,
     cloudServices: cloudServices.uploadFile,
-    createCollectionAccount: vfdServices.createAccount
+    createCollectionAccount: vfdServices.createAccount,
+    queryBvn: vfdServices.queryBvn
 }

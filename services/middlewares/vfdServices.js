@@ -18,22 +18,37 @@ const fetchApi = async (params) => {
                 "Content-Type": "application/json"
             }
         })
-         response = await data.text()
+         response = await data.json()
         logger.info(response)
         if (response.status == '00') {
             // logger.info(data)
-            Users.update({userLevel: 2, dateOfBirth: response.data.dateOfBirth}, {where: {userUid: data.userId}})
-            await BVN.create({
-                userUid: data.userId,
-                firstname: response.data.firstName,
-                middlename: response.data.middleName ?? null,
-                lastname: response.data.lastName,
-                bvn: response.data.bvn,
-                phoneNumber: response.data.phoneNo,
-                dateOfBirth: response.data.dateOfBirth,
-                gender: response.data.gender
+            // console.log(params)
+            const {fullName} = await Users.findOne({
+                where: {userUid: params.userId},
+                attributes: ['fullName']
             })
-            return true;
+            const nameGotten = ((response.data.lastName + "" + response.data.firstName).toLowerCase()).replace(/\s+/g, " ").trim();
+
+            if ( ((fullName.toLowerCase()).replace(/\s+/g, " ").trim()) == nameGotten) {
+                Users.update({userLevel: 2, dateOfBirth: response.data.dateOfBirth}, {where: {userUid: params.userId}})
+                BVN.create({
+                    userUid: params.userId,
+                    firstname: response.data.firstName,
+                    middlename: response.data.middleName ?? null,
+                    lastname: response.data.lastName,
+                    bvn: params.bvn,
+                    phoneNumber: response.data.phoneNo,
+                    dateOfBirth: response.data.dateOfBirth,
+                    gender: response.data.gender
+                })
+                this.createAccount({bvn: params.bvn, dob: response.data.dateOfBirth, userId: params.userId })
+                return true;
+            } else {
+                console.log(fullName.toLowerCase() + " not tally with ", nameGotten )
+                console.log(nameGotten.length, fullName.trim().length)
+                return false;
+            }
+
         } else {
             // logger.info(data)
             return false
@@ -108,12 +123,12 @@ exports.queryBvn = async(data) => {
     }
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
     const url = vfdUrl + `/wallet2/client?${queryString}`
-    console.log(url)
-    const res = await fetchApi({url, key: vfdTestKey, userId: data.userId})
+    // console.log(url)
+    const res = await fetchApi({url, key: vfdTestKey, userId: data.userId, bvn: data.bvn})
     return res
 }
 
 
 // this.createAccount({bvn: "22222222223", dob: "05-Apr-1994", userId: "aw08HmcKBP" })
 
-this.queryBvn({bvn: "22222222223", userId: "aw08HmcKBP" })
+// this.queryBvn({bvn: "22222222223", userId: "aw08HmcKBP" })
