@@ -27,8 +27,9 @@ const fetchApi = async (params) => {
                 where: {userUid: params.userId},
                 attributes: ['fullName']
             })
-            console.log('fullName', fullName)
-            if ( (fullName.toLowerCase()).replace(/\s+/g, " ") == ((response.data.lastName + "" + response.data.firstName).toLowerCase()).replace(/\s+/g, " ")) {
+            const nameGotten = ((response.data.lastName + "" + response.data.firstName).toLowerCase()).replace(/\s+/g, " ").trim();
+
+            if ( ((fullName.toLowerCase()).replace(/\s+/g, " ").trim()) == nameGotten) {
                 Users.update({userLevel: 2, dateOfBirth: response.data.dateOfBirth}, {where: {userUid: params.userId}})
                 BVN.create({
                     userUid: params.userId,
@@ -43,7 +44,8 @@ const fetchApi = async (params) => {
                 this.createAccount({bvn: params.bvn, dob: response.data.dateOfBirth, userId: params.userId })
                 return true;
             } else {
-                console.log(fullName.toLowerCase() + " not tally with ", ((response.data.lastName + "" + response.data.firstName).toLowerCase()).replace(/\s+/g, " ") )
+                console.log(fullName.toLowerCase() + " not tally with ", nameGotten )
+                console.log(nameGotten.length, fullName.trim().length)
                 return false;
             }
 
