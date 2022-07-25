@@ -2,7 +2,7 @@ const { config } = require("../../config");
 const { validationResult } = require('express-validator');
 const {logger} = config;
 const {services} = require('../../services')
-const {verifyBvn} = services
+const {verifyBvn, queryBvn} = services
 
 exports.upgradeUser = (async (req, res) => {
     const errors = validationResult(req);
@@ -21,28 +21,11 @@ exports.upgradeUser = (async (req, res) => {
                 data: {},
                 message: "bvn is required"
             })
-        }else if (!bank_name) {
-            return res.status(400).json({
-                status: false,
-                data: {},
-                message: "bank name is required"
-            })
-        } else if (!acc_num) {
-            return res.status(400).json({
-                status: false,
-                data: {},
-                message: "account number is required"
-            })
-        } else if (!dob) {
-            return res.status(400).json({
-                status: false,
-                data: {},
-                message: "Aww padi, you must provide your date of birth"
-            })
         }  else {
-            const first_name = (fullName.split(" "))[1];
-            const last_name = (fullName.split(" "))[0]
-            const verifyUser = await verifyBvn({bvn, bank_name, acc_num, first_name, last_name, userId, dob})
+            // const first_name = (fullName.split(" "))[1];
+            // const last_name = (fullName.split(" "))[0]
+            // const verifyUser = await verifyBvn({bvn, bank_name, acc_num, first_name, last_name, userId, dob})
+            const verifyUser = await queryBvn({bvn, userId})
             if (verifyUser ){
                 return res.status(200).json({
                     status: true,
