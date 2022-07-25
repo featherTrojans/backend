@@ -28,7 +28,7 @@ const fetchApi = async (params) => {
                 attributes: ['fullName']
             })
             console.log('fullName', fullName)
-            if ( fullName.toLowerCase() == (response.data.lastName + "" + response.data.firstName).toLowerCase()) {
+            if ( (fullName.toLowerCase()).replace(/\s+/g, " ") == ((response.data.lastName + "" + response.data.firstName).toLowerCase()).replace(/\s+/g, " ")) {
                 Users.update({userLevel: 2, dateOfBirth: response.data.dateOfBirth}, {where: {userUid: params.userId}})
                 BVN.create({
                     userUid: params.userId,
@@ -43,7 +43,7 @@ const fetchApi = async (params) => {
                 this.createAccount({bvn: params.bvn, dob: response.data.dateOfBirth, userId: params.userId })
                 return true;
             } else {
-                console.log(fullName + " not tally with ", (response.data.lastName + " " + response.data.firstName).toLowerCase() )
+                console.log(fullName.toLowerCase() + " not tally with ", ((response.data.lastName + "" + response.data.firstName).toLowerCase()).replace(/\s+/g, " ") )
                 return false;
             }
 
