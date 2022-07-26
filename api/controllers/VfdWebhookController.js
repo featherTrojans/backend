@@ -1,8 +1,7 @@
-const { request } = require('https');
 const { config } = require('../../config');
 const { DoubleSpent, Webhook, Users, VfdPayment } = require('../../models');
 const { services } = require('../../services');
-const logger = config.logger
+const {logger, time} = config
 // Using Express
 exports.webhook = (async (req, res) => {
     //validate event
@@ -34,37 +33,57 @@ exports.webhook = (async (req, res) => {
             username: userUid
         })
 
-        const uploadPayment = await VfdPayment.create({
-            reference,
-            userUid,
-            amount,
-            account_number,
-            originator_account_number,
-            originator_account_name,
-            originator_bank,
-            originator_narration,
-            timestamp
-        })
+        if (userUid && userUid != null) {
+            const uploadPayment = await VfdPayment.create({
+                reference,
+                userUid,
+                amount,
+                account_number,
+                originator_account_number,
+                originator_account_name,
+                originator_bank,
+                originator_narration,
+                timestamp
+            })
 
-        if ( !check ) {
-            logger.info('Already used')
-            return res.status(200)
+            if ( !check ) {
+                logger.info('Already used')
+                return res.status(200)
+            } else {
+    
+                if ( !uploadPayment ) {
+    
+                    res.sendStatus(200);
+                    logger.info(`previously credited ${reference}`)
+                    return  res.sendStatus(200);
+                    
+                } else {
+    
+                    //credit user
+                    services.creditService({userUid, reference, amount})
+                    return res.sendStatus(200);
+    
+                }
+            }
         } else {
 
-            if ( !uploadPayment ) {
-
-                res.sendStatus(200);
-                logger.info(`previously credited ${reference}`)
-                return  res.sendStatus(200);
-                
-            } else {
-
-                //credit user
-                services.creditService({userUid, reference, amount})
-                return res.sendStatus(200);
-
-            }
+            logger.info("Account does not belong to any user")
+            VfdPayment.create({
+                reference,
+                userUid: `${time}noUser${account_number}` ,
+                amount,
+                account_number,
+                originator_account_number,
+                originator_account_name,
+                originator_bank,
+                originator_narration,
+                timestamp
+            })
+            return res.sendStatus(200)
         }
+
+
+        
         
     } catch(error) {
         logger.info(error)
