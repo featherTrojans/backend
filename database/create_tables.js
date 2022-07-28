@@ -184,4 +184,4 @@ const create_vfd_payments_table = ()=>{
 // create_bvns_table()
 // create_webhooks_table()
 // create_collections_table()
-// create_vfd_payments_table()
+create_vfd_payments_table()

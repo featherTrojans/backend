@@ -7,7 +7,6 @@ const VfdPayment = db_con.define("vfd_payments", {
     "userUid": {
         allowNull: false,
         type: Sequelize.STRING,
-        unique: true,
         validate : {
            notEmpty: true
         }
