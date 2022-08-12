@@ -1,6 +1,6 @@
 const { config } = require('../config')
-const logger = config.logger
-const eventEmitter = config.eventEmitter
+const {logger, eventEmitter} = config
+
 const sendSMS = require('../services/middlewares/termiiService').sendSMS
 
 
@@ -14,7 +14,7 @@ eventEmitter.on('signup', async (data) => {
     // const phone = data.phoneNumber.length == 11 ? "+234" + data.phoneNumber.substring(1) : "+" + data.phoneNumber;
     const phone = data.phoneNumber.length == 11 ? "234" + data.phoneNumber.substring(1) : data.phoneNumber;
     try {
-        // sendSMS({to: phone, message})
+        sendSMS({to: phone, message})
         // twilio.messages
         // .create({
         // body: message,
@@ -44,7 +44,8 @@ eventEmitter.on('send', async (data) => {
     .create({
        body: message,
        from: config.twilio_sender_number,
-       to: phone
+       to: phone,
+       messagingServiceSid: config.messagingServiceSid
      })
     .then(response => {
         logger.info(response.sid);
