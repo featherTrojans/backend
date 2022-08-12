@@ -81,7 +81,8 @@ exports.config = {
     clientSecret: process.env.GMAIL_CLIENT_SECRET,
     vfdWalletCreden: process.env.V_WALLET_CRE,
     vfdTestKey: process.env.V_TEST_API_KEY,
-    vfdUrl: process.env.V_URL
+    vfdUrl: process.env.V_URL,
+    sendgrid_api_key: process.env.SENDGRID_API_KEY,
     
 
 }
