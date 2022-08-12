@@ -11,7 +11,7 @@ const sendEmail = async (data) => {
         sgMail.setApiKey(sendgrid_api_key); // Add API key
         const msg = {
         to: (data.email).toLowerCase(),
-        from: `${mail_from_name} <info@feather.africa>`, // Use the email address or domain you verified above
+        from: `${mail_from_name} <padi@feather.africa>`, // Use the email address or domain you verified above
         subject: data.subject,
         text: data.message,
         html: `<strong>${data.message}</strong>`,
