@@ -44,6 +44,7 @@ exports.getDepAcceptedRequests = (  async (req, res) => {
 
     try
     {
+        
         Request.findAll({
             attributes: ['userUid','reference', 'amount', 'charges', 'total', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
             where: {agentUsername: username, status: 'ACCEPTED'},
