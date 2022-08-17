@@ -1,7 +1,9 @@
 const { config } = require("../config")
 const { Status } = require("../models")
-const {Op, logger, yesterday } = config
-const cron = require('node-cron');
+const {Op, logger } = config
+// const cron = require('node-cron');
+const {timeService} = require("../services").services
+let yesterday = timeService.serverTime().yesterday
 
 const treatStatuses = async () => {
     try{

@@ -1,7 +1,9 @@
 const { config } = require("../config")
 const { Request } = require("../models")
 const refundUser = require("./middlewares/refundUser")
-const {Op, logger, yesterday } = config
+const {Op, logger } = config
+const {timeService} = require("../services").services
+let yesterday = timeService.serverTime().yesterday
 
 const treatRequests = async () => {
     try{

@@ -2,7 +2,8 @@ const {
     buyAirtimeData, 
     creditService,
     debitService,
-    idGenService
+    idGenService,
+    timeService
 } = require('../../services').services
 const {Users, Bills, DoubleSpent} = require('../../models')
 const {logger} = require('../../config/').config
@@ -15,9 +16,8 @@ exports.buyAirtime = ( async (req, res) => {
 
 
     try{
-        let d = new Date();
-        d.setSeconds(0,0)
-        let time = d.getTime();
+
+        let time = timeService.serverTime().timeToUse;
 
         const {walletBal, pin} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin']})
         const verifyPin = await bcrypt.compare(userPin, pin);
