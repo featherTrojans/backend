@@ -6,6 +6,11 @@ const WebSocketServer = require('websocket').server;
 const { getBalance, getRequest } = require('./services').services;
 require('./models/Associate')
 
+let ts = Date.now();
+var dateToUse = new Date();
+// dateToUse.setSeconds(0,0);
+var timeToUse = dateToUse.getTime();
+
 const normalizePort = val => { //normalize port check forr real number 
   const port = parseInt(val, 10);
 
@@ -61,7 +66,7 @@ server.on('listening', () => {
 });
 
 server.listen(port);
-
+// setInterval( () => console.log(timeToUse), 1000)
 
 wsServer = new WebSocketServer({
   httpServer: server,

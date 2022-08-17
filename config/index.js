@@ -7,9 +7,9 @@ const {Client} = require("@googlemaps/google-maps-services-js");
 const client = new Client({});
 const googleMapsClient = require('@google/maps')
 let ts = Date.now();
-const d = new Date(ts);
-const time = d.getTime();
-const yesterday = time - ( 24 * 3600 * 1000)
+let d = new Date(ts);
+let time = d.getTime();
+let yesterday = time - ( 24 * 3600 * 1000)
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
 const {Op} = require('sequelize');
@@ -24,6 +24,8 @@ const firebase = require('./firebase').database
 const firebaseDB = firebase.database;
 const firebaseApp = firebase.app
 let today =  yyyy + '-' + mm + '-' + dd;
+
+
 exports.config = {
     "port": process.env.PORT,
     "host": process.env.HOST,
