@@ -1,9 +1,11 @@
 const { config } = require('../../config');
-const { Users, UserLevels, Withdrawal } = require('../../models');
-const {logger, today, Op } = config
+const { Users, UserLevels, Withdrawal, Request } = require('../../models');
+const {logger, Op } = config
+const timeService = require('./timeservice')
 const sequelize = require('sequelize')
+const today = timeService.serverTime().fullYear
 
-
+// console.log(today)
 
 const LevelCheck = (async(req, res, next) =>{
     
@@ -26,8 +28,9 @@ const LevelCheck = (async(req, res, next) =>{
             // get level details
             let {privilege} = await UserLevels.findOne({where: {level: userLevel}})
             // check type of operation
-            console.log ((url) == '/withdraw')
+            // console.log ((url) == '/withdraw')
             console.log(privilege)
+            console.log('url', url)
             privilege = JSON.parse(privilege)
             if (url == "/pay") {
                 if (amount > privilege.funding){
@@ -85,6 +88,40 @@ const LevelCheck = (async(req, res, next) =>{
                         });
                     }
                 }
+                return next()
+            }else if (url == '/request/create') {
+
+                const checkRequests = await Request.findAll({
+                    where: {userUid: userId, createdAt: {[Op.substring]: `${today}`}, 
+                    //createdAt: {[Op.lte]: `${today} 23:59:00`}
+                },
+                    attributes: [
+                        [sequelize.fn('SUM', sequelize.col('amount')), 'totalRequests'],
+                    ]
+                })
+                const { totalRequests } = checkRequests[0].dataValues
+                // console.log(totalWithdrawals);
+                // console.log(parseFloat(amount + totalWithdrawals))
+                // console.log(privilege.totalBankWithdrawal)
+                // console.log(today)
+
+                
+                if (amount > privilege.cashWithdrawal){
+
+                    return res.status(403).json({
+                        status: false,
+                        data: {},
+                        message: `Aww padi, You cannot withdraw cash amount greater than NGN${privilege.cashWithdrawal}`
+                    });
+
+                } else if ( parseFloat(amount + totalRequests) > privilege.totalCashWithdrawal) {
+                    return res.status(403).json({
+                        status: false,
+                        data: {},
+                        message: `Hey, padi you have passed the cash withdrawal threshold for today! Try again tomorrow.`
+                    });
+                }
+                
                 return next()
             } else if ( url == '/transfer'){
                 if (amount > privilege.transfer){
