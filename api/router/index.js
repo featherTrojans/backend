@@ -217,6 +217,7 @@ router.group('/', (router) => {
         router.post('/request/create',
             [   
                 Authenticate,
+                LevelCheck,
                 body('agent').toUpperCase(),
                 body('agentUsername').toUpperCase(),
                 
