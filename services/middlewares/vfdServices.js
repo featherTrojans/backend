@@ -29,23 +29,36 @@ const fetchApi = async (params) => {
             })
             const nameGotten = ((response.data.lastName + "" + response.data.firstName).toLowerCase()).replace(/\s+/g, " ").trim();
 
-            if ( ((fullName.toLowerCase()).replace(/\s+/g, " ").trim()) == nameGotten) {
+
+            let firstname = (response.data.firstName).trim()
+            let middlename = (response.data.middleName).trim() ?? null
+            let lastname = (response.data.lastName).trim()
+            let bvn = params.bvn
+            let phone = response.data.phoneNo
+            let dob = response.data.dateOfBirth
+            let gender = response.data.gender
+
+
+            // if ( (((fullName.toLowerCase()).replace(/\s+/g, " ").trim()) == nameGotten) || phone == params.phoneNumber) {
+            if (phone == params.phoneNumber) {
                 Users.update({userLevel: 2, dateOfBirth: response.data.dateOfBirth}, {where: {userUid: params.userId}})
+
                 BVN.create({
                     userUid: params.userId,
-                    firstname: response.data.firstName,
-                    middlename: response.data.middleName ?? null,
-                    lastname: response.data.lastName,
-                    bvn: params.bvn,
-                    phoneNumber: response.data.phoneNo,
-                    dateOfBirth: response.data.dateOfBirth,
-                    gender: response.data.gender
+                    firstname,
+                    middlename,
+                    lastname,
+                    bvn,
+                    phoneNumber: phone,
+                    dateOfBirth: dob,
+                    gender
                 })
-                this.createAccount({bvn: params.bvn, dob: response.data.dateOfBirth, userId: params.userId })
+                // this.createAccount({bvn, dob, userId: params.userId, firstname, middlename, lastname, phone, gender })
+                this.createAccount({bvn, dob, userId: params.userId})
                 return true;
             } else {
                 console.log(fullName.toLowerCase() + " not tally with ", nameGotten )
-                console.log(nameGotten.length, fullName.trim().length)
+                console.log(phone , ' does not tally with', params.phoneNumber)
                 return false;
             }
 
@@ -63,17 +76,18 @@ const fetchApi = async (params) => {
 
 const fetchApiPost = async (data) => {
     try{
+        console.log(data.url)
         let response =  await fetch(data.url, {
             method: 'POST',
             headers: {
                       Authorization: `Bearer ${data.key}`,
                       "Content-Type": "application/json"
                     }
-            // ,body: data?.body ?? ''
+            // ,body: data.body
         })
         response = await response.json()
         //  logger.info(response);
-        // console.log('response', response)
+        console.log('response', response)
         if (response.status == '00') {
             logger.info(response)
                 Users.update({accountNo: response.data.accountNo}, {where: {userUid: data.userId}})
@@ -104,12 +118,23 @@ const fetchApiPost = async (data) => {
 
 exports.createAccount = async(data) => {
 
+    // const body = {
+    //     "wallet-credentials": vfdWalletCreden,
+    //     "bvn": data.bvn,
+    //     "phone": data.phone,
+    //     "firstname": data.firstname,
+    //     "lastname": data.lastname,
+    //     "middlename": data.middlename,
+    //     "gender": data.gender,
+    //     "dob": `${data.dob}`,
+    // }
     const body = {
         "wallet-credentials": vfdWalletCreden,
         "bvn": data.bvn,
         "dateOfBirth": data.dob
     }
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
+    // console.log(queryString)
     const url = vfdUrl + `/wallet2/client/create?${queryString}`
     const res = await fetchApiPost({url, key: vfdTestKey, userId: data.userId})
     return res
@@ -124,7 +149,7 @@ exports.queryBvn = async(data) => {
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
     const url = vfdUrl + `/wallet2/client?${queryString}`
     // console.log(url)
-    const res = await fetchApi({url, key: vfdTestKey, userId: data.userId, bvn: data.bvn})
+    const res = await fetchApi({url, key: vfdTestKey, userId: data.userId, bvn: data.bvn, phoneNumber: data.phoneNumber})
     return res
 }
 
