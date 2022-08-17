@@ -3,9 +3,9 @@ const { Request, Users } = require("../../models");
 const {logger, eventEmitter, dollarUSLocale } = config
 const {services} = require("../../services")
 const { validationResult } = require('express-validator')
-const {idGenService, debitService, creditService} = services
+const {idGenService, debitService, creditService, timeService} = services
 require('../../subscribers')
-
+now = timeService.serverTime().now
 
 
 exports.getPendingRequests = (  async (req, res) => {
@@ -234,7 +234,13 @@ exports.createRequest = ( async (req, res) => {
 
     try
     {
-        if (!errors.isEmpty()) {
+        if (now == "00:00" || now < "05:01") {
+            return res.status(400).json({
+                status : false,
+                data: {},
+                message: "Aw Padi!! Cash requests are not available during this period, try again later!!!"
+            })
+        } else if (!errors.isEmpty()) {
 
             return res.status(403).json({ errors: errors.array() });
   

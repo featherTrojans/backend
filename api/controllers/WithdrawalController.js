@@ -1,11 +1,9 @@
 const { config } = require("../../config");
-const {withdrawFund, codeGenerator, debitService, creditService } = require('../../services/').services
+const {withdrawFund, codeGenerator, debitService, creditService , timeService} = require('../../services/').services
 const { validationResult } = require('express-validator')
 const {logger} = config
 const { BankAccount, Users, DoubleSpent } = require('../../models/')
-const d = new Date();
-d.setSeconds(0,0)
-let time = d.getTime();
+let time = timeService.serverTime().timeToUse;;
 
 exports.withdrawFund = ( async (req, res) => {
 

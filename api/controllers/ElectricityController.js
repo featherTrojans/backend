@@ -2,14 +2,13 @@ const {
     buyLight, 
     creditService,
     debitService,
-    idGenService
+    idGenService,
+    timeService
 } = require('../../services').services
 const {Users, Bills, DoubleSpent} = require('../../models')
 const {logger} = require('../../config/').config
 const bcrypt = require('bcryptjs');
-const d = new Date();
-d.setSeconds(0,0);
-let time = d.getTime();
+let time = timeService.serverTime().timeToUse;
 
 exports.buyElect = ( async (req, res) => {
 

@@ -19,6 +19,7 @@ const termiiService = require('./middlewares/termiiService')
 const googleFileService = require('./middlewares/googleFileService')
 const cloudServices = require('./middlewares/cloudinaryServices')
 const vfdServices = require('./middlewares/vfdServices')
+const timeService = require('./middlewares/timeservice')
 
 exports.services = {
     confirmAccount,
@@ -51,5 +52,6 @@ exports.services = {
     verifyBvn: PaystackServices.resolveBvn,
     cloudServices: cloudServices.uploadFile,
     createCollectionAccount: vfdServices.createAccount,
-    queryBvn: vfdServices.queryBvn
+    queryBvn: vfdServices.queryBvn,
+    timeService
 }
