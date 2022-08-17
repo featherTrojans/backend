@@ -1,7 +1,9 @@
 const { config } = require('../../config');
 const { DoubleSpent, Webhook, Users, VfdPayment } = require('../../models');
 const { services } = require('../../services');
-const {logger, time} = config
+const {logger} = config
+const { timeService} = services
+let time = timeService.serverTime().timeToUse
 // Using Express
 exports.webhook = (async (req, res) => {
     //validate event

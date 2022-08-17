@@ -3,8 +3,8 @@ const { config } = require('../../config');
 const { Payments, Withdrawal, DoubleSpent } = require('../../models');
 const { services } = require('../../services');
 const creditService = require('../../services/middlewares/creditService');
-var secret = config.paystack_secret_key;
-const logger = config.logger
+const {logger, paystack_secret_key} = config
+let secret = paystack_secret_key
 // Using Express
 exports.webhook = (async (req, res) => {
     //validate event
