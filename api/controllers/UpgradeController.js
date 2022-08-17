@@ -1,7 +1,8 @@
 const { config } = require("../../config");
 const { validationResult } = require('express-validator');
 const {logger} = config;
-const {services} = require('../../services')
+const {services} = require('../../services');
+const { Users } = require("../../models");
 const {verifyBvn, queryBvn} = services
 
 exports.upgradeUser = (async (req, res) => {
@@ -10,6 +11,12 @@ exports.upgradeUser = (async (req, res) => {
     const {bvn, bank_name, acc_num, dob } = req.body
 
     try{
+        const {phoneNumber, userLevel} = await Users.findOne({
+            where: {
+            userUid: userId
+            },
+            attributes: ['phoneNumber', 'userLevel']
+        })
 
         if (!errors.isEmpty()) {
 
@@ -21,11 +28,18 @@ exports.upgradeUser = (async (req, res) => {
                 data: {},
                 message: "bvn is required"
             })
+        } else if ( userLevel > 1 ) {
+            return res.status(400).json({
+                status: false,
+                data: {},
+                message: "Hi Padi, you have previously been verified"
+            })
         }  else {
             // const first_name = (fullName.split(" "))[1];
             // const last_name = (fullName.split(" "))[0]
             // const verifyUser = await verifyBvn({bvn, bank_name, acc_num, first_name, last_name, userId, dob})
-            const verifyUser = await queryBvn({bvn, userId})
+            
+            const verifyUser = await queryBvn({bvn, userId, phoneNumber})
             if (verifyUser ){
                 return res.status(200).json({
                     status: true,

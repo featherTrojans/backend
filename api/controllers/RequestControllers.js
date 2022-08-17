@@ -252,81 +252,96 @@ exports.createRequest = ( async (req, res) => {
             })
         } else {
 
-            //check user balance before creating request
-
-            const {walletBal, escrowBal} = await Users.findOne({where: {userUid: userId}});
-            const total = parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee)
-
-            if (total <= walletBal) {
-                //debit user
-                const newEscrowBal = parseFloat(escrowBal) + parseFloat(total);
-                // const ref = userId + config.time + walletBal;
-                // await new Promise(function(resolve, reject) {
-
-                //     const debitUser = debitService({userUid: userId, reference: transId, amount: total, description: `#${total} cash withdrawal`, from: username, to: agentUsername, id: ref, title: "Wallet Debit"});
-
-                //     debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
-                //     // set timer to 7 secs to give room for db updates
-
-                // })
-                // credit user escrow balance
-                Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal - total)}, {where: {userUid: userId}});
-                const agentData = await Users.findOne({
-                    where: {username: agentUsername},
-                    attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid']
-                })
-                Request.create({
-
+            //find requests that are not completed or cancelled
+            const activeRequests = await Request.findAll({
+                where: {
                     userUid: userId,
-                    amount,
-                    charges,
-                    agent,
-                    agentUsername,
-                    transId,
-                    reference: transId,
-                    total,
-                    statusId,
-                    meetupPoint,
-                    negotiatedFee: negotiatedFee ? negotiatedFee : 0
-    
-                }).then (() => {
+                    status: ['PENDING', 'ACCEPTED']
+                }
+            })
 
-                    const message = `Dear @${username}, you have a new cash withdrawal`;
-                    eventEmitter.emit('createRequest', {email, message})
-                    eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: 'Hey padi, your cash request has been successfully created', redirectTo: 'Withdraw'})
-                    //send to agent 
-                    const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal from @${username}, login to complete transaction`;
-                    eventEmitter.emit('notification', {userUid: agentData.userUid, title: 'Cash Withdrawal', description: `Hey padi, you have a new cash withdrawal request from  @${username}.`, redirectTo: 'Depositupdate'})
-
-                    eventEmitter.emit('createRequest', {email: agentData.email, message: agentMessage})
-
-    
-                    return res.status(201).json({
-                        status: true,
-                        data: {
-                            amount,
-                            agent,
-                            "message": "request created successfully"
-                        },
-                        message: "success"
-                    }) 
-                        
-                }).catch((error) => {
-                    logger.info(error)
-                    return res.status(404).json({
-                        status: false,
-                        data : error,
-                        message: "Cannot create data"
-                    })
-                })
-            } else {
-                return res.status(403).json({
+            if (activeRequests.length >= 3 ) {
+                return res.status(400).json({
                     status: false,
                     data: {},
-                    message: "Insufficient balance"
+                    message: "Sorry Padi, you cannot have more than 3 active requests at a time!!!!"
                 })
+            } else {
+                //check user balance before creating request
+
+                const {walletBal, escrowBal} = await Users.findOne({where: {userUid: userId}});
+                const total = parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee)
+
+                if (total <= walletBal) {
+                    //debit user
+                    const newEscrowBal = parseFloat(escrowBal) + parseFloat(total);
+                    // const ref = userId + config.time + walletBal;
+                    // await new Promise(function(resolve, reject) {
+
+                    //     const debitUser = debitService({userUid: userId, reference: transId, amount: total, description: `#${total} cash withdrawal`, from: username, to: agentUsername, id: ref, title: "Wallet Debit"});
+
+                    //     debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
+                    //     // set timer to 7 secs to give room for db updates
+
+                    // })
+                    // credit user escrow balance
+                    Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal - total)}, {where: {userUid: userId}});
+                    const agentData = await Users.findOne({
+                        where: {username: agentUsername},
+                        attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid']
+                    })
+                    Request.create({
+
+                        userUid: userId,
+                        amount,
+                        charges,
+                        agent,
+                        agentUsername,
+                        transId,
+                        reference: transId,
+                        total,
+                        statusId,
+                        meetupPoint,
+                        negotiatedFee: negotiatedFee ? negotiatedFee : 0
+        
+                    }).then (() => {
+
+                        const message = `Dear @${username}, you have a new cash withdrawal`;
+                        eventEmitter.emit('createRequest', {email, message})
+                        eventEmitter.emit('notification', {userUid: userId, title: 'Cash Withdrawal', description: 'Hey padi, your cash request has been successfully created', redirectTo: 'Withdraw'})
+                        //send to agent 
+                        const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal from @${username}, login to complete transaction`;
+                        eventEmitter.emit('notification', {userUid: agentData.userUid, title: 'Cash Withdrawal', description: `Hey padi, you have a new cash withdrawal request from  @${username}.`, redirectTo: 'Depositupdate'})
+
+                        eventEmitter.emit('createRequest', {email: agentData.email, message: agentMessage})
+
+        
+                        return res.status(201).json({
+                            status: true,
+                            data: {
+                                amount,
+                                agent,
+                                "message": "request created successfully"
+                            },
+                            message: "success"
+                        }) 
+                            
+                    }).catch((error) => {
+                        logger.info(error)
+                        return res.status(404).json({
+                            status: false,
+                            data : error,
+                            message: "Cannot create data"
+                        })
+                    })
+                } else {
+                    return res.status(403).json({
+                        status: false,
+                        data: {},
+                        message: "Insufficient balance"
+                    })
+                }
             }
-            
         }
         
     } catch (error) {
