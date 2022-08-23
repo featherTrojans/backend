@@ -31,7 +31,8 @@ exports.signup = ( async (req, res) => {
             const checkEmail = await services.confirmData({data: data.email, type: 'email'});
             const checkPhoneNumber = await services.confirmData({data: data.phoneNumber, type: 'phoneNumber'});
 
-            if (!(data.firstName && data.phoneNumber && data.email && data.lastName)){
+
+            if (!(data.firstName && data.phoneNumber && data.email && data.lastName && data.password)){
 
                 return res.status(400).json({
                     status : false,
@@ -73,7 +74,8 @@ exports.signup = ( async (req, res) => {
                 const phoneNumber = data.phoneNumber
                 const fullName = data.lastName + " " + data.firstName
                 const email = data.email
-
+                const pwd = await bcrypt.hash(data.password, 10);
+                const hashedPin = await bcrypt.hash("0000", 10);
 
                 Users.create({
                     userUid: userId,
@@ -83,7 +85,9 @@ exports.signup = ( async (req, res) => {
                     email,
                     refId,
                     code,
-                    referredBy
+                    referredBy,
+                    password: pwd,
+                    pin: hashedPin
                 }).then( () => {
 
                     const message = `Dear ${fullName}, your verification code is: ${code}. DO NOT DISCLOSE TO ANYONE`;
