@@ -63,6 +63,21 @@ const BVN = db_con.define("bvns", {
            notEmpty: true
         }
     },
+    "isVerified": {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "codeToSend": {
+        allowNull: false,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
 })
 
 module.exports = BVN
