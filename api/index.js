@@ -54,5 +54,6 @@ exports.controller = {
     verifyUsers: Controller.VerificationController.verifyUser,
     vfdwebhook: Controller.VfdWebhookController.webhook,
     upgradeUser: Controller.UpgradeController.upgradeUser,
-    createCollectionAcc: Controller.CollectionController.createCollectionAccountNum
+    createCollectionAcc: Controller.CollectionController.createCollectionAccountNum,
+    confirmBvnCode: Controller.BvnCodeController.confirmBvnCode
 }

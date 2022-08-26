@@ -2,12 +2,17 @@ const {
     logger,
     vfdTestKey,
     vfdWalletCreden,
-    vfdUrl
+    vfdUrl,
+    eventEmitter,
+    environment
 } = require('../../config/').config
 
 const {Users, CollectionAccounts, BVN} = require('../../models')
 
 const fetch = require('node-fetch');
+
+const codeGenerator = require('../generateCode')
+require('../../subscribers')
 
 
 const fetchApi = async (params) => {
@@ -40,25 +45,34 @@ const fetchApi = async (params) => {
 
 
             // if ( (((fullName.toLowerCase()).replace(/\s+/g, " ").trim()) == nameGotten) || phone == params.phoneNumber) {
-            if (phone == params.phoneNumber) {
-                Users.update({userLevel: 2, dateOfBirth: response.data.dateOfBirth}, {where: {userUid: params.userId}})
+            Users.update({dateOfBirth: response.data.dateOfBirth}, {where: {userUid: params.userId}})
+            let codeToSend = codeGenerator(6);
+            BVN.create({
+                userUid: params.userId,
+                firstname,
+                middlename,
+                lastname,
+                bvn,
+                phoneNumber: phone,
+                dateOfBirth: dob,
+                gender,
+                codeToSend
+            })
+            // this.createAccount({bvn, dob, userId: params.userId, firstname, middlename, lastname, phone, gender })
+            this.createAccount({bvn, dob, userId: params.userId})
 
-                BVN.create({
-                    userUid: params.userId,
-                    firstname,
-                    middlename,
-                    lastname,
-                    bvn,
-                    phoneNumber: phone,
-                    dateOfBirth: dob,
-                    gender
-                })
-                // this.createAccount({bvn, dob, userId: params.userId, firstname, middlename, lastname, phone, gender })
-                this.createAccount({bvn, dob, userId: params.userId})
+            //send verification code 
+
+            phoneNumber = environment == 'live' ? phone : params.phoneNumber;
+            message = `Hi Padi, your verification code to ugrade your account to Odogwu level is: ${codeToSend}. DO NOT DISCLOSE TO ANYONE`;
+            const sendCode = await eventEmitter.emit('sendMessage', {
+                phoneNumber, message
+            })
+            console.log(sendCode)
+            if (sendCode) {
                 return true;
             } else {
-                console.log(fullName.toLowerCase() + " not tally with ", nameGotten )
-                console.log(phone , ' does not tally with', params.phoneNumber)
+                console.log(sendCode)
                 return false;
             }
 

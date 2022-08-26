@@ -311,6 +311,14 @@ router.group('/', (router) => {
                 controller.upgradeUser
             );
 
+            router.post('/verify/upgrade', 
+            [
+                Authenticate
+    
+            ], 
+                controller.confirmBvnCode
+            );
+
             router.post('/account', 
             [
                 Authenticate
