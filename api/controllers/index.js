@@ -29,6 +29,7 @@ const VerificationController = require('./VerificationController')
 const VfdWebhookController = require('./VfdWebhookController')
 const UpgradeController = require('./UpgradeController')
 const CollectionController = require('./CollectionAccountController')
+const BvnCodeController = require('./BvnCodeConfirmationController')
 
 module.exports = {
     
@@ -62,5 +63,6 @@ module.exports = {
     VerificationController,
     VfdWebhookController,
     UpgradeController,
-    CollectionController
+    CollectionController,
+    BvnCodeController
 }
