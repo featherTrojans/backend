@@ -1,7 +1,7 @@
 const { config } = require('../../config');
 const { DoubleSpent, Webhook, Users, VfdPayment } = require('../../models');
 const { services } = require('../../services');
-const {logger} = config
+const {logger, environment} = config
 const { timeService} = services
 let time = timeService.serverTime().timeToUse
 // Using Express
@@ -20,9 +20,18 @@ exports.webhook = (async (req, res) => {
         const {
             account_number, amount,reference,
             originator_account_number, originator_account_name,
-            originator_bank, originator_narration, timestamp
+            originator_bank, originator_narration, timestamp, auth_token
          } = body; //deconstruct
         
+         if (environment == 'live') {
+            if (auth_token != 'VfdFeatheR$%$') {
+                logger.info('Already used')
+                return res.status(400).json({
+                    message: 'invalid request'
+                })
+            }
+         }
+         
         //get user_id with account_no
         const {userUid} = await Users.findOne({
             where: {accountNo: account_number},
