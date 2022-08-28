@@ -12,7 +12,7 @@ exports.upgradeUser = (async (req, res) => {
     const {bvn, bank_name, acc_num, dob } = req.body
 
     const check = await BVN.findOne({where: {bvn}, attributes: ['bvn', 'isVerified', 'codeToSend', 'phoneNumber']})
-console.log(check['isVerified'])
+// console.log(check['isVerified'])
     try{
         const {phoneNumber, userLevel} = await Users.findOne({
             where: {
