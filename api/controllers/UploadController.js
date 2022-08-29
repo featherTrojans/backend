@@ -33,45 +33,53 @@ exports.uploadImages = (async (req, res) => {
                   return;
                 } else {
                     const {name} = fields
-                    const {size, path, type} = files.file
+                    if (files.file != null ) {
+                        const {size, path, type} = files.file
 
-                    if ( size > 2000000){
+                        if ( size > 2000000){
+                            return res.status(400).json({
+                                status: false,
+                                data: {},
+                                message: "File cannot be greater than 2MB"
+                            })
+                        }else if ((type.split("/"))[1] !== 'jpeg' && (type.split("/"))[1] !== 'jpg' && (type.split("/"))[1] !== 'png' ) {
+                            return res.status(400).json({
+                                status: false,
+                                data: {},
+                                message: "Unsupported format, Only images can be uploaded"
+                            })
+                        } else {
+                            cloudServices({file: path, name, ext: (type.split("/"))[1], userId})
+                            .then(resp => {
+                                console.log('image url', resp)
+
+                                return res.status(202).json({
+                                        status: true,
+                                        data: {},
+                                        message: `${name} uploaded successfully`
+                                    })
+                            })
+                            .catch(err => res.status(500).json({
+                                status: false,
+                                data: {},
+                                message: `Could not upload ${name}`
+                            })  )
+
+                            // if (uploaded) {
+                            //     return res.status(202).json({
+                            //         status: true,
+                            //         data: {},
+                            //         message: `${name} uploaded successfully`
+                            //     })
+                            // }
+                        }
+                   }  else {
                         return res.status(400).json({
                             status: false,
                             data: {},
-                            message: "File cannot be greater than 2MB"
+                            message: "No file uploaded"
                         })
-                    }else if ((type.split("/"))[1] !== 'jpeg' && (type.split("/"))[1] !== 'jpg' && (type.split("/"))[1] !== 'png' ) {
-                        return res.status(400).json({
-                            status: false,
-                            data: {},
-                            message: "Unsupported format, Only images can be uploaded"
-                        })
-                    } else {
-                        cloudServices({file: path, name, ext: (type.split("/"))[1], userId})
-                        .then(resp => {
-                            console.log('image url', resp)
-
-                            return res.status(202).json({
-                                    status: true,
-                                    data: {},
-                                    message: `${name} uploaded successfully`
-                                })
-                        })
-                        .catch(err => res.status(500).json({
-                            status: false,
-                            data: {},
-                            message: `Could not upload ${name}`
-                        })  )
-
-                        // if (uploaded) {
-                        //     return res.status(202).json({
-                        //         status: true,
-                        //         data: {},
-                        //         message: `${name} uploaded successfully`
-                        //     })
-                        // }
-                    }
+                   }  
                 }
               });
             
