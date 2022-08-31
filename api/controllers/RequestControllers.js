@@ -234,7 +234,7 @@ exports.createRequest = ( async (req, res) => {
 
     try
     {
-        if (now == "00:00" || now < "05:01") {
+        if (now >= "00:00" && now < "05:01") {
             return res.status(400).json({
                 status : false,
                 data: {},
