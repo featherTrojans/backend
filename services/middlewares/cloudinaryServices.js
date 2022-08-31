@@ -17,7 +17,7 @@ exports.uploadFile = async (data) => {
             return false
         } else {
             console.log('result', result.secure_url)
-            Users.update({imageUrl: result.secure_url}, {where: {userUid: data.userId}})
+            Users.update({imageUrl: result.secure_url}, {where: {userUid: data.userId}}).then(() => result.secure_url).catch(() => false)
             return result.secure_url
         }
 
