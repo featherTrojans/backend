@@ -1,5 +1,5 @@
 const { config } = require("../../config");
-const { Transactions, Users } = require("../../models");
+const { Transactions, Users, Withdrawal } = require("../../models");
 const logger = config.logger
 
 exports.transactions = ( async (req, res) => {
@@ -19,7 +19,7 @@ exports.transactions = ( async (req, res) => {
                 
                }]
         })
-        let otherUser;
+        let otherUser, bankDetails;
         for (const [key, value] of Object.entries(transactions)){
 
             //get agentDetails
@@ -35,8 +35,18 @@ exports.transactions = ( async (req, res) => {
                 })
             }
 
+            if (value.dataValues.title == 'Funds Transfer' || value.dataValues.title == 'withdrawal'){
+                bankDetails = await Withdrawal.findOne({ 
+                    where: {reference: value.dataValues.transId}, 
+                    attributes: ['account_number', 'account_name', 'bank_name']
+                })
+            }
+
             if ( otherUser != null ){
                 value.dataValues.otherUser = otherUser
+                results.push(value.dataValues)
+            }else if (bankDetails != null){
+                value.dataValues.bankDetails = bankDetails
                 results.push(value.dataValues)
             } else {
                 results.push(value.dataValues)
