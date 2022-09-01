@@ -90,10 +90,9 @@ const LevelCheck = (async(req, res, next) =>{
                 }
                 return next()
             }else if (url == '/request/create') {
-
-                const checkRequests = await Request.findAll({
-                    where: {userUid: userId, createdAt: {[Op.substring]: `${today}`}, 
                     //createdAt: {[Op.lte]: `${today} 23:59:00`}
+                const checkRequests = await Request.findAll({
+                    where: {userUid: userId, createdAt: {[Op.substring]: `${today}`}, status: {[Op.ne]: 'EXPIRED'}, status: {[Op.ne]: 'CANCELLED'}
                 },
                     attributes: [
                         [sequelize.fn('SUM', sequelize.col('amount')), 'totalRequests'],

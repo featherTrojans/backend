@@ -64,7 +64,7 @@ exports.withdrawFund = ( async (req, res) => {
 
                 await new Promise(function(resolve, reject) {
 
-                    debit = debitService({userUid: userId, reference, amount: parseFloat(amount + charges), description, title: 'withdrawal', from: 'primary wallet', to: bank_name, charges })
+                    debit = debitService({userUid: userId, reference, amount: parseFloat(amount + charges), description, title: 'Funds Transfer', from: 'primary wallet', to: bank_name, charges })
 
                     debit ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                 })
