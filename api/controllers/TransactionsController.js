@@ -35,8 +35,8 @@ exports.transactions = ( async (req, res) => {
                 })
             }
 
-            if (value.dataValues.title == 'Funds Transfer'){
-                bankDetails = Withdrawal.findOne({ 
+            if (value.dataValues.title == 'Funds Transfer' || value.dataValues.title == 'withdrawal'){
+                bankDetails = await Withdrawal.findOne({ 
                     where: {reference: value.dataValues.transId}, 
                     attributes: ['account_number', 'account_name', 'bank_name']
                 })
@@ -45,7 +45,7 @@ exports.transactions = ( async (req, res) => {
             if ( otherUser != null ){
                 value.dataValues.otherUser = otherUser
                 results.push(value.dataValues)
-            }else if (otherData != null){
+            }else if (bankDetails != null){
                 value.dataValues.bankDetails = bankDetails
                 results.push(value.dataValues)
             } else {
