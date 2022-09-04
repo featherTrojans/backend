@@ -25,8 +25,9 @@ exports.getPendingRequests = (  async (req, res) => {
                 //get agentDetails
                 let agent = await Users.findOne({
                     where: {username: value.dataValues.agentUsername},
-                    attributes: ['phoneNumber', 'imageUrl', 'userUId']
+                    attributes: ['phoneNumber', 'imageUrl', 'userUid']
                 })
+                console.log(agent)
                 results.push({
                     reference: value.dataValues.reference,
                     amount: value.dataValues.amount,
@@ -79,7 +80,7 @@ exports.getAcceptedRequests = (  async (req, res) => {
                 //get agentDetails
                 let agent = await Users.findOne({
                     where: {username: value.dataValues.agentUsername},
-                    attributes: ['phoneNumber', 'imageUrl', 'userUId']
+                    attributes: ['phoneNumber', 'imageUrl', 'userUid']
                 })
                 results.push({
                     reference: value.dataValues.reference,

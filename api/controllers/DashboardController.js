@@ -23,7 +23,7 @@ exports.dashboard = ( async (req, res) => {
 
         })
 
-        let otherUser;
+        let otherUser, bankDetails;
         for (const [key, value] of Object.entries(transactions)){
 
             //get agentDetails
