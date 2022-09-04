@@ -25,7 +25,7 @@ exports.getPendingRequests = (  async (req, res) => {
                 //get agentDetails
                 let agent = await Users.findOne({
                     where: {username: value.dataValues.agentUsername},
-                    attributes: ['phoneNumber']
+                    attributes: ['phoneNumber', 'imageUrl', 'userUId']
                 })
                 results.push({
                     reference: value.dataValues.reference,
@@ -38,7 +38,9 @@ exports.getPendingRequests = (  async (req, res) => {
                     phoneNumber: agent.phoneNumber,
                     status: value.dataValues.status,
                     meetupPoint: value.dataValues.meetupPoint,
-                    createdAt: value.dataValues.createdAt
+                    createdAt: value.dataValues.createdAt,
+                    image: agent.imageUrl,
+                    agentId: agent.userUid
 
                 })
 
@@ -77,7 +79,7 @@ exports.getAcceptedRequests = (  async (req, res) => {
                 //get agentDetails
                 let agent = await Users.findOne({
                     where: {username: value.dataValues.agentUsername},
-                    attributes: ['phoneNumber']
+                    attributes: ['phoneNumber', 'imageUrl', 'userUId']
                 })
                 results.push({
                     reference: value.dataValues.reference,
@@ -90,7 +92,9 @@ exports.getAcceptedRequests = (  async (req, res) => {
                     phoneNumber: agent.phoneNumber,
                     status: value.dataValues.status,
                     meetupPoint: value.dataValues.meetupPoint,
-                    createdAt: value.dataValues.createdAt
+                    createdAt: value.dataValues.createdAt,
+                    image: agent.imageUrl,
+                    agentId: agent.userUid
 
                 })
 
