@@ -39,12 +39,25 @@ exports.dashboard = ( async (req, res) => {
                 })
             }
 
+
+            if (value.dataValues.title == 'Funds Transfer' || value.dataValues.title == 'withdrawal'){
+                bankDetails = await Withdrawal.findOne({ 
+                    where: {reference: value.dataValues.transId}, 
+                    attributes: ['account_number', 'account_name', 'bank_name']
+                })
+            }
+
             if ( otherUser != null ){
                 value.dataValues.otherUser = otherUser
+                results.push(value.dataValues)
+            }else if (bankDetails != null){
+                value.dataValues.bankDetails = bankDetails
                 results.push(value.dataValues)
             } else {
                 results.push(value.dataValues)
             }
+
+
 
 
 

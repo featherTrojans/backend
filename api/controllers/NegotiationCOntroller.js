@@ -27,12 +27,12 @@ exports.createNegotiation = ( async (req, res) => {
             const {userUid, agentUsername } = await Request.findOne({where: {reference}})
             const user = await Users.findOne({
                 where: {userUid},
-                attributes: ['email', 'fullName', 'username', 'phoneNumber', 'walletBal', 'escrowBal']
+                attributes: ['email', 'fullName', 'username', 'phoneNumber', 'walletBal', 'escrowBal', 'imageUrl']
             })
 
             const agent = await Users.findOne({
                 where: {username: agentUsername},
-                attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid']
+                attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid', 'imageUrl']
             })
 
             if (negotiatedFee > user.walletBal) {
