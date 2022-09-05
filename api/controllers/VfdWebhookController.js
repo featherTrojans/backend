@@ -23,6 +23,7 @@ exports.webhook = (async (req, res) => {
             originator_bank, originator_narration, timestamp,
          } = body; //deconstruct
         const auth_token = req.headers['auth_token'];
+        console.log(token, auth_token)
          if (environment == 'live') {
             if (auth_token != 'VfdFeatheR$%$') {
                 logger.info('Already used')
