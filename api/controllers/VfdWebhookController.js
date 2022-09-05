@@ -20,14 +20,14 @@ exports.webhook = (async (req, res) => {
         const {
             account_number, amount,reference,
             originator_account_number, originator_account_name,
-            originator_bank, originator_narration, timestamp, auth_token
+            originator_bank, originator_narration, timestamp,
          } = body; //deconstruct
-        
+        const auth_token = req.headers['auth_token'];
          if (environment == 'live') {
             if (auth_token != 'VfdFeatheR$%$') {
                 logger.info('Already used')
                 return res.status(400).json({
-                    message: 'invalid request'
+                    message: 'invalid request, auth token not correct'
                 })
             }
          }
