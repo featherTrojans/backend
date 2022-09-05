@@ -23,6 +23,7 @@ exports.webhook = (async (req, res) => {
             originator_bank, originator_narration, timestamp,
          } = body; //deconstruct
         const auth_token = req.headers['auth_token'];
+        console.log(token, auth_token)
          if (environment == 'live') {
             if (auth_token != 'VfdFeatheR$%$') {
                 logger.info('Already used')
@@ -64,15 +65,18 @@ exports.webhook = (async (req, res) => {
     
                 if ( !uploadPayment ) {
     
-                    res.sendStatus(200);
                     logger.info(`previously credited ${reference}`)
-                    return  res.sendStatus(200);
+                    return  res.sendStatus(400).json({
+                        message: 'previously credited'
+                    });
                     
                 } else {
     
                     //credit user
                     services.creditService({userUid, reference, amount})
-                    return res.sendStatus(200);
+                    return res.sendStatus(200).json({
+                        message: 'credited successfully'
+                    });
     
                 }
             }
@@ -90,7 +94,9 @@ exports.webhook = (async (req, res) => {
                 originator_narration,
                 timestamp
             })
-            return res.sendStatus(200)
+            return res.sendStatus(404).json({
+                message: "Account does not belong to any user"
+            })
         }
 
 
@@ -98,7 +104,9 @@ exports.webhook = (async (req, res) => {
         
     } catch(error) {
         logger.info(error)
-        return res.sendStatus(200)
+        return res.sendStatus(500).json({
+            message: "Internal error"
+        })
     }
     
 });
