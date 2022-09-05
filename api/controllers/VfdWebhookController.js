@@ -98,8 +98,6 @@ exports.webhook = (async (req, res) => {
                 message: "Account does not belong to any user"
             })
         }
-
-
         
         
     } catch(error) {
