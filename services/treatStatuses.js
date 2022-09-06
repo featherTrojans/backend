@@ -1,11 +1,10 @@
 const { config } = require("../config")
 const { Status } = require("../models")
 const {Op, logger } = config
-// const cron = require('node-cron');
+const cron = require('node-cron');
 const {timeService} = require("../services").services
-let yesterday = timeService.serverTime().yesterday
 
-const treatStatuses = async () => {
+const treatStatuses = async (yesterday = timeService.serverTime().yesterday) => {
     try{
         logger.info('clearing statuses ....')
         const statuses = await Status.findAll({
@@ -32,10 +31,10 @@ const treatStatuses = async () => {
 
 // ...
 
-// Schedule tasks to be run on the server.
-// cron.schedule('* * * * *', function() {
-//     treatStatuses()
-//   });
+// // Schedule tasks to be run on the server.
+cron.schedule('* * * * *', function() {
+    treatStatuses()
+});
 
 
-treatStatuses()
+// treatStatuses()

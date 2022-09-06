@@ -50,7 +50,7 @@ const LevelCheck = (async(req, res, next) =>{
                 const status = 'ON';
 
                 const checkWithdrawals = await Withdrawal.findAll({
-                    where: {user_uid: userId, createdAt: {[Op.substring]: `${today}`}, 
+                    where: {user_uid: userId, createdAt: {[Op.substring]: `${timeService.serverTime().fullYear}`}, 
                     //createdAt: {[Op.lte]: `${today} 23:59:00`}
                 },
                     attributes: [
@@ -92,7 +92,7 @@ const LevelCheck = (async(req, res, next) =>{
             }else if (url == '/request/create') {
                     //createdAt: {[Op.lte]: `${today} 23:59:00`}
                 const checkRequests = await Request.findAll({
-                    where: {userUid: userId, createdAt: {[Op.substring]: `${today}`}, status: {[Op.ne]: 'EXPIRED'}, status: {[Op.ne]: 'CANCELLED'}
+                    where: {userUid: userId, createdAt: {[Op.substring]: `${timeService.serverTime().fullYear}`}, status: {[Op.ne]: 'EXPIRED'}, status: {[Op.ne]: 'CANCELLED'}
                 },
                     attributes: [
                         [sequelize.fn('SUM', sequelize.col('amount')), 'totalRequests'],

@@ -3,15 +3,16 @@ const { Request } = require("../models")
 const refundUser = require("./middlewares/refundUser")
 const {Op, logger } = config
 const {timeService} = require("../services").services
-let yesterday = timeService.serverTime().yesterday
 
-const treatRequests = async () => {
+var cron = require('node-cron');
+
+const treatRequests = async (yesterday = timeService.serverTime().yesterday) => {
     try{
         logger.info('clearing request ....')
         const requests = await Request.findAll({
             where: {updatedAt: {[Op.lte]: (yesterday)}, status: 'PENDING',}
         })
-
+        
         if (requests.length > 0){
             
             Request.update({status: 'CANCELLED', reasonForCancel: 'Abandoned Request'},{
@@ -40,8 +41,8 @@ const treatRequests = async () => {
 // ...
 
 // Schedule tasks to be run on the server.
-// cron.schedule('* * * * *', function() {
-//     treatStatuses()
-//   });
+cron.schedule('* * * * *', function() {
+    treatRequests()
+});
 
-treatRequests()
+// treatRequests()
