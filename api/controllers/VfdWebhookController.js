@@ -31,7 +31,7 @@ exports.webhook = (async (req, res) => {
                 // logger.info('Auth Token  not correct')
                 logger.info("Unauthorized request")
                 return res.status(403).json({
-                    message: 'invalid request, auth token not correct'
+                    message: 'invalid request, unauthorized caller'
                 })
             }
          }
