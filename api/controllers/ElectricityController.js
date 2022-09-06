@@ -8,7 +8,6 @@ const {
 const {Users, Bills, DoubleSpent} = require('../../models')
 const {logger} = require('../../config/').config
 const bcrypt = require('bcryptjs');
-let time = timeService.serverTime().timeToUse;
 
 exports.buyElect = ( async (req, res) => {
 
@@ -49,7 +48,7 @@ exports.buyElect = ( async (req, res) => {
         
             const reference = '8' + await idGenService(7);
             const creditReference = 'FTHR' + await idGenService(7)
-            const transId =  time + userId + walletBal;
+            const transId =  timeService.serverTime().timeToUse + userId + walletBal;
             const insert = await DoubleSpent.create({
                 transId,
                 username,

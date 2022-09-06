@@ -17,7 +17,6 @@ exports.buyAirtime = ( async (req, res) => {
 
     try{
 
-        let time = timeService.serverTime().timeToUse;
 
         const {walletBal, pin} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin']})
         const verifyPin = await bcrypt.compare(userPin, pin);
@@ -61,7 +60,7 @@ exports.buyAirtime = ( async (req, res) => {
 
             const reference = 3 + idGenService(10);
             const creditReference = 'FTH' + idGenService(10)
-            const transId =  time + userId + walletBal;
+            const transId =  timeService.serverTime().timeToUse + userId + walletBal;
             const insert = await DoubleSpent.create({
                 transId,
                 username,

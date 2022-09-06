@@ -55,5 +55,6 @@ exports.controller = {
     vfdwebhook: Controller.VfdWebhookController.webhook,
     upgradeUser: Controller.UpgradeController.upgradeUser,
     createCollectionAcc: Controller.CollectionController.createCollectionAccountNum,
-    confirmBvnCode: Controller.BvnCodeController.confirmBvnCode
+    confirmBvnCode: Controller.BvnCodeController.confirmBvnCode,
+    cronJob: Controller.CronController.CronController
 }

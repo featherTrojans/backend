@@ -5,8 +5,6 @@ const { validationResult } = require('express-validator');
 const {Users, DoubleSpent } = require("../../models");
 const bcrypt = require('bcryptjs');
 const {timeService} = services
-let time = timeService.serverTime().timeToUse;
-
 
 
 exports.transferFunds = ( async (req, res) => {
@@ -75,7 +73,7 @@ exports.transferFunds = ( async (req, res) => {
                 })
             } else {
                 //check double spent
-                const transId =  time + userId + walletBal;
+                const transId =  timeService.serverTime().timeToUse + userId + walletBal;
                 const reference = services.idGenService(10);
                 const creditReference = services.idGenService(10);
                 DoubleSpent.create({

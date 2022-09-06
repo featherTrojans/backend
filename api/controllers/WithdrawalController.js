@@ -3,7 +3,6 @@ const {withdrawFund, codeGenerator, debitService, creditService , timeService} =
 const { validationResult } = require('express-validator')
 const {logger} = config
 const { BankAccount, Users, DoubleSpent } = require('../../models/')
-let time = timeService.serverTime().timeToUse;;
 
 exports.withdrawFund = ( async (req, res) => {
 
@@ -49,7 +48,7 @@ exports.withdrawFund = ( async (req, res) => {
             const reference = codeGenerator(14);
             let debit;
                 //check double spent
-            const transId =  time + userId + walletBal;
+            const transId =  timeService.serverTime().timeToUse + userId + walletBal;
             // console.log(transId)
             const insert = await DoubleSpent.create({
                 transId,

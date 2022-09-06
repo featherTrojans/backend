@@ -3,7 +3,7 @@ const { DoubleSpent, Webhook, Users, VfdPayment } = require('../../models');
 const { services } = require('../../services');
 const {logger, environment} = config
 const { timeService} = services
-let time = timeService.serverTime().timeToUse
+
 // Using Express
 exports.webhook = (async (req, res) => {
     //validate event
@@ -88,7 +88,7 @@ exports.webhook = (async (req, res) => {
             logger.info("Account does not belong to any user")
             VfdPayment.create({
                 reference,
-                userUid: `${time}noUser${account_number}` ,
+                userUid: `${timeService.serverTime().timeToUse}noUser${account_number}` ,
                 amount,
                 account_number,
                 originator_account_number,

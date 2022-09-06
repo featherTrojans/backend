@@ -6,7 +6,10 @@ const WebSocketServer = require('websocket').server;
 const { getBalance, getRequest, timeService } = require('./services').services;
 require('./models/Associate')
 
-// setInterval(()=> console.log(timeService.serverTime()), 1000)
+// setInterval(() => console.log(timeService.serverTime()), 1000)
+
+// const treatPendingRequests = setInterval(() => treatRequests(), 1000)
+// clearInterval(treatPendingRequests)
 const normalizePort = val => { //normalize port check forr real number 
   const port = parseInt(val, 10);
 

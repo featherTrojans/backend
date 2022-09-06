@@ -9,7 +9,7 @@ exports.serverTime = () => {
 
     let today = String(date_ob.getHours()).padStart(2, '0') + ':' +  String(date_ob.getMinutes()).padStart(2, '0') + ':' + String(date_ob.getSeconds()).padStart(2, '0')
     let time = date_ob.getTime();
-    let yesterday = time - ( 24 * 3600 * 1000)
+    let yesterday = time - ( 24 * 3600 * 1000) + (3600 * 1000)
     date_ob.setSeconds(0,0);
     var timeToUse = date_ob.getTime();
     return {now, fullYear: `${year}-${month}-${date}`, today, yesterday, timeToUse}

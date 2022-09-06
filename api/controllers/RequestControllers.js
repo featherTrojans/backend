@@ -5,7 +5,6 @@ const {services} = require("../../services")
 const { validationResult } = require('express-validator')
 const {idGenService, debitService, creditService, timeService} = services
 require('../../subscribers')
-now = timeService.serverTime().now
 
 
 exports.getPendingRequests = (  async (req, res) => {
@@ -239,7 +238,7 @@ exports.createRequest = ( async (req, res) => {
 
     try
     {
-        if (now >= "00:00" && now < "05:01") {
+        if (timeService.serverTime().now >= "00:00" && timeService.serverTime().now < "05:01") {
             return res.status(400).json({
                 status : false,
                 data: {},
