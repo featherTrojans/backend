@@ -430,8 +430,8 @@ router.group('/', (router) => {
         });
 
         router.get('/admin/stats', controller.stats);
-        router.get('/referral/stats/:referredBy', controller.referralStats)
-    
+        router.get('/referral/stats/:referredBy', controller.referralStats);
+        router.get('/cron', controller.cronJob);
     })
 })
 

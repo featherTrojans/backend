@@ -30,6 +30,7 @@ const VfdWebhookController = require('./VfdWebhookController')
 const UpgradeController = require('./UpgradeController')
 const CollectionController = require('./CollectionAccountController')
 const BvnCodeController = require('./BvnCodeConfirmationController')
+const CronController = require('./CronController')
 
 module.exports = {
     
@@ -64,5 +65,6 @@ module.exports = {
     VfdWebhookController,
     UpgradeController,
     CollectionController,
-    BvnCodeController
+    BvnCodeController,
+    CronController,
 }
