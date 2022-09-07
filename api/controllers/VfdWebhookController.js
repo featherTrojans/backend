@@ -23,12 +23,12 @@ exports.webhook = (async (req, res) => {
             originator_bank, originator_narration, timestamp,
          } = body; //deconstruct
         const auth_token = req.headers['auth_token'];
-        console.log('headers', req.headers.auth_token)
-        console.log('auth_token', auth_token)
+        // console.log('headers', req.headers.auth_token)
+        // console.log('auth_token', auth_token)
         // console.log('token', auth_token) // log token
          if (environment == 'live') {
-            if ( ip != '::ffff:35.178.240.72' && ip != '::ffff:191.101.42.78') {
-            //(auth_token != 'VfdFeatheR$%$'
+            if ( (ip != '::ffff:35.178.240.72' && ip != '::ffff:191.101.42.78') && auth_token != 'VfdFeatheR$%$' ) {
+            
 
                 // logger.info('Auth Token  not correct')
                 logger.info("Unauthorized request")
