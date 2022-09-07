@@ -23,6 +23,7 @@ exports.webhook = (async (req, res) => {
             originator_bank, originator_narration, timestamp,
          } = body; //deconstruct
         const auth_token = req.headers['auth_token'];
+        console.log('headers', req.headers)
         // console.log('token', auth_token) // log token
          if (environment == 'live') {
             if ( ip != '::ffff:35.178.240.72' && ip != '::ffff:191.101.42.78') {
