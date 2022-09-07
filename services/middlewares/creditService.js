@@ -7,7 +7,7 @@ const { eventEmitter, logger, dollarUSLocale, firebaseDB, set, ref } = config
 const creditService = async (data) => {
     try {
         const { userUid, reference, amount } = data
-        const { walletBal, username, phoneNumber, email } = await Users.findOne({attributes: ['walletBal', 'phoneNumber', 'username', 'email'], where: {userUid}})
+        const { walletBal, username, phoneNumber, email, fullName } = await Users.findOne({attributes: ['walletBal', 'phoneNumber', 'username', 'email', 'fullName'], where: {userUid}})
         const finalBal = parseFloat(amount) + parseFloat(walletBal)
         //update
         //user wallet
@@ -44,7 +44,8 @@ const creditService = async (data) => {
         let firebasUpdate = await firebaseDB.doc(userUid).set(obj)
 
         // console.log(firebasUpdate)
-        const message = `Feather: @${username}, NGN${dollarUSLocale.format(amount)} just entered your account. Your new balance is: NGN${dollarUSLocale.format(finalBal)}`;
+        var firstname = (fullName.split(" "))[1]
+        const message = `Feather: Dear ${firstname}, NGN${dollarUSLocale.format(amount)} just entered your account. Your new balance is: NGN${dollarUSLocale.format(finalBal)}`;
     
         eventEmitter.emit('walletCredit', {email, message})
         eventEmitter.emit('send', {phoneNumber, message})
