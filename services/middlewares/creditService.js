@@ -44,7 +44,7 @@ const creditService = async (data) => {
         let firebasUpdate = await firebaseDB.doc(userUid).set(obj)
 
         // console.log(firebasUpdate)
-        const message = `@${username}, NGN${dollarUSLocale.format(amount)} just entered your account. Your new balance is: NGN${dollarUSLocale.format(finalBal)}`;
+        const message = `Feather: @${username}, NGN${dollarUSLocale.format(amount)} just entered your account. Your new balance is: NGN${dollarUSLocale.format(finalBal)}`;
     
         eventEmitter.emit('walletCredit', {email, message})
         eventEmitter.emit('send', {phoneNumber, message})
