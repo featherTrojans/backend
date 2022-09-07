@@ -87,7 +87,7 @@ exports.signup = ( async (req, res) => {
                     code,
                     referredBy,
                     password: pwd,
-                    pin: hashedPin,
+                    pin: hashedPin
                 }).then( () => {
 
                     const message = `Dear ${fullName}, your verification code is: ${code}. DO NOT DISCLOSE TO ANYONE`;
@@ -225,10 +225,6 @@ exports.confirmCode = ( async (req, res) => {
 
                 if ( data.code != null && data.code == code ) {
                     
-                    Users.update(
-                        { isVerified: true, userLevel: 1},
-                        {where: {userUid: userId}}
-                    )
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     
                     return res.status(200).json({
