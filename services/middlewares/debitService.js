@@ -11,6 +11,7 @@ const debitService = async (data) => {
     const { walletBal, username, phoneNumber, email, fullName, escrowBal } = await Users.findOne({attributes: ['walletBal', 'phoneNumber', 'username', 'email', 'fullName', 'escrowBal'], where: {userUid}})
     if (parseFloat(walletBal) >= parseFloat(amount)) {
         const finalBal = (parseFloat(walletBal)) - parseFloat(amount)
+        const balToShow = (parseFloat(escrowBal) + parseFloat(walletBal)) - parseFloat(amount)
         //update
         //user wallet
         await Users.update({walletBal: finalBal}, {where: {userUid}});
@@ -50,7 +51,7 @@ const debitService = async (data) => {
             let firebasUpdate = await firebaseDB.doc(userUid).set(obj)
             // console.log(firebasUpdate)
             var firstname = (fullName.split(" "))[1]
-            const message = `Feather: Dear ${fullName}, NGN${dollarUSLocale.format(amount)} has left your account. Your new balance is: NGN${finalBal}`;
+            const message = `Feather: Dear ${fullName}, NGN${dollarUSLocale.format(amount)} has left your account. Your new balance is: NGN${balToShow}`;
             eventEmitter.emit('walletCredit', {email, message})
             eventEmitter.emit('send', {phoneNumber, message})
             eventEmitter.emit('notification', {userUid, title: data?.title ?? 'funding', description: `Hey, NGN${dollarUSLocale.format(amount)} just left your primary wallet`})
