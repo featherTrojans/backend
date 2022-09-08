@@ -216,8 +216,8 @@ exports.confirmCode = ( async (req, res) => {
     {
 
         if (!errors.isEmpty()) {
-
-            return res.status(403).json({ errors: errors.array() });
+            logger.info({ errors: errors.array() })
+            return res.status(403).json({ message: "Hey padi something is wrong, kindly try again!" });
   
         } else {
             Users.findOne({attributes: ['code'], where: {userUid: userId, code}})

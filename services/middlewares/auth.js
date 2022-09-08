@@ -10,14 +10,14 @@ const Authenticate = ((req, res, next) =>{
     try
     {
         const token = req.headers['token']?? (req.headers['authorization']).substr(7, (req.headers['authorization']).length - 7);
-        // logger.info(token);
+        logger.info('token', token);
 
     if (!token){
 
         return res.status(403).json({
             status: false,
             data: {},
-            message: "Unauthorized request"
+            message: "Hey padi, this request is Unauthorized"
         })
     }
         const decoded = jwt.verify(token, config.jwt_secret)
@@ -25,11 +25,11 @@ const Authenticate = ((req, res, next) =>{
 
     } catch (err) {
 
-        logger.info(err)
+        logger.info('err', err)
         return res.status(401).json({
             status: false,
             data: err,
-            message: "Token not valid"
+            message: "Hey padi, you cannot do this at the moment, kindly try again or contact support"
         })
     }
     return next();
