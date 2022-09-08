@@ -25,7 +25,7 @@ exports.withdrawFund = ( async (req, res) => {
 
                 status: false,
                 data : {},
-                message: "Pin is Incorrect"
+                message: "Hey padi, your Pin is Incorrect"
     
             })
         }else if (!account_code || !amount ) {
