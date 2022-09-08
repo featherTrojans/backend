@@ -100,7 +100,8 @@ const LevelCheck = (async(req, res, next) =>{
                 })
                 const { totalRequests } = checkRequests[0].dataValues
                 console.log('totalRequests', totalRequests);
-                console.log('total amount',parseFloat(amount + totalRequests))
+                console.log('total amount',eval(amount + totalRequests))
+                console.log('total amount',(parseFloat(amount) + parseFloat(totalRequests)))
                 console.log('privilege', privilege.totalCashWithdrawal)
                 console.log(today)
 
