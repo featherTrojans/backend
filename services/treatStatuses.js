@@ -32,7 +32,7 @@ const treatStatuses = async (yesterday = timeService.serverTime().yesterday) => 
 // ...
 
 // // Schedule tasks to be run on the server.
-cron.schedule('* * * * *', function() {
+cron.schedule('30 * * * *', function() {
     treatStatuses()
 });
 
