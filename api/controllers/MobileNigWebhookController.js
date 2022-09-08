@@ -2,7 +2,7 @@ const { config } = require('../../config');
 const { DoubleSpent, Webhook, Bills } = require('../../models');
 const { services } = require('../../services');
 const {logger, environment} = config
-const { timeService} = services
+const { timeService } = services
 
 // Using Express
 exports.webhook = (async (req, res) => {
@@ -10,12 +10,12 @@ exports.webhook = (async (req, res) => {
     try{
         
         logger.info("mnig webhook called");
-        const body = req.body
+        const body = JSON.parse(req.body)
         // console.log(req.connection.remoteAddress)
         var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         Webhook.create({
             ip,
-            data: JSON.stringify(body)
+            data: (body)
         })
         const {amount, userUid, description} = Bills.findOne({
             where: {reference: trans_id},
