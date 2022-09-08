@@ -15,7 +15,7 @@ exports.sortCode = (bank) => {                               //for making paymen
     if(bank == 'FCMB'){bank_code = '214';}else if(bank == 'FIDELITY'){bank_code = '070';}else   if(bank == 'UBA'){bank_code = '033';}else   if(bank == 'UNION'){bank_code = '032';}
     if(bank == 'ECOBANK'){bank_code = '050';}else if(bank == 'HERITAGE'){bank_code = '030';}else   if(bank == 'UNITY'){bank_code = '215';}else   if(bank == 'STERLING'){bank_code = '232';}
     if(bank == 'JAIZ'){bank_code = '301';}else if(bank == 'KEYSTONE'){bank_code = '082';}else if (bank == 'KUDA') {bank_code = '50211';} else if (bank == 'POLARIS') { bank_code = '076'; }
-    else if (bank == 'PAYCOM') {bank_code = '999992';} else if (bank == 'PROVIDUS') { bank_code = '101';} else if (bank == 'TAJ') { bank_code = '302';}
+    else if (bank == 'PAYCOM') {bank_code = '999992';} else if (bank == 'PROVIDUS') { bank_code = '101';} else if (bank == 'TAJ') { bank_code = '302';} else if (bank == 'VFD') { bank_code = '566';}
     
     return bank_code;           
 }
