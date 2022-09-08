@@ -15,7 +15,7 @@ exports.webhook = (async (req, res) => {
         var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         Webhook.create({
             ip,
-            data: (body)
+            data: JSON.stringify(body)
         })
         const {amount, userUid, description} = Bills.findOne({
             where: {reference: trans_id},
@@ -27,7 +27,7 @@ exports.webhook = (async (req, res) => {
 
          } = body; //deconstruct
          if (environment == 'live') {
-            if ( type != 'live' ) {
+            if ( type != 'live' && ip != '::ffff:54.176.56.240') {
             
                 // logger.info('Auth Token  not correct')
                 logger.info("Unauthorized request")
@@ -38,12 +38,6 @@ exports.webhook = (async (req, res) => {
          }
          
         //get user_id with account_no
-        
-        const check = await DoubleSpent.create({
-            transId: trans_id,
-            amount,
-            username: userUid
-        })
 
         if (username.toLowerCase() == 'featherafrica') {
             
