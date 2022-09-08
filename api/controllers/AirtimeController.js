@@ -48,15 +48,17 @@ exports.buyAirtime = ( async (req, res) => {
                 message: "Oops Padi!!! You can not purchase airtime lower than NGN100. Kindly try with NGN100 or more"
     
             })
-        }else if (network.toLowerCase() == 'airtel' ) {
-            return res.status(400).json({
+        }
+        // else if (network.toLowerCase() == 'airtel' ) {
+        //     return res.status(400).json({
 
-                status: false,
-                data : {},
-                message: "Oops Padi!!! You can not purchase airtime for this network at the moment please try again later"
+        //         status: false,
+        //         data : {},
+        //         message: "Oops Padi!!! You can not purchase airtime for this network at the moment please try again later"
     
-            })
-        } else{
+        //     })
+        // } 
+        else{
 
             const reference = 3 + idGenService(10);
             const creditReference = 'FTH' + idGenService(10)
@@ -108,7 +110,7 @@ exports.buyAirtime = ( async (req, res) => {
                             })
                         } else {
                             //update bills table
-                            Bills.update({status: "SUCCESS", transId: buyAirtime.request_id}, {where: {reference}})
+                            Bills.update({status: "PENDING", transId: buyAirtime.request_id}, {where: {reference}})
                             return res.status(200).json({
                                 status: true,
                                 data: {
