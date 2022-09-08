@@ -7,8 +7,8 @@ const { eventEmitter, logger, dollarUSLocale, firebaseDB, set, ref } = config
 const creditService = async (data) => {
     try {
         const { userUid, reference, amount } = data
-        const { walletBal, username, phoneNumber, email, fullName } = await Users.findOne({attributes: ['walletBal', 'phoneNumber', 'username', 'email', 'fullName'], where: {userUid}})
-        const finalBal = parseFloat(amount) + parseFloat(walletBal)
+        const { walletBal, escrowBal, username, phoneNumber, email, fullName } = await Users.findOne({attributes: ['walletBal', 'phoneNumber', 'username', 'email', 'fullName', 'escrowBal'], where: {userUid}})
+        const finalBal = parseFloat(escrowBal) + parseFloat(amount) + parseFloat(walletBal)
         //update
         //user wallet
         await Users.update({walletBal: finalBal}, {where: {userUid}});
