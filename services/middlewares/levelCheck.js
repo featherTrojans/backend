@@ -80,7 +80,7 @@ const LevelCheck = (async(req, res, next) =>{
                             message: `Aww padi, You cannot withdraw amount greater than NGN${privilege.bankWithdrawal}`
                         });
 
-                    } else if ( eval(amount + totalWithdrawals) > privilege.totalBankWithdrawal) {
+                    } else if ( (parseFloat(amount) + parseFloat(totalWithdrawals)) > privilege.totalBankWithdrawal) {
                         return res.status(403).json({
                             status: false,
                             data: {},
@@ -113,7 +113,7 @@ const LevelCheck = (async(req, res, next) =>{
                         message: `Aww padi, You cannot withdraw cash amount greater than NGN${privilege.cashWithdrawal}`
                     });
 
-                } else if ( eval(amount + totalRequests) > privilege.totalCashWithdrawal) {
+                } else if ( (parseFloat(amount) + parseFloat(totalRequests)) > privilege.totalCashWithdrawal) {
                     return res.status(403).json({
                         status: false,
                         data: {},
