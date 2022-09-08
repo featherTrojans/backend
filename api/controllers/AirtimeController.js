@@ -78,7 +78,7 @@ exports.buyAirtime = ( async (req, res) => {
 
                 }).then(() => {
 
-                    Bills.create({
+                    await Bills.create({
                         userUid: userId,
                         amount,
                         beneficiary: phone,
