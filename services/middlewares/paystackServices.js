@@ -10,6 +10,7 @@ let APIKEY = paystack_secret_key;
 const paystack = new PayStack(APIKEY, environment)
 
 exports.sortCode = (bank) => {                               //for making payments into bank accounts, Bank Sort Code is needed. Pass in the bank e.g. GTB, FIRST, etc
+    //https://api.paystack.co/bank
     if(bank == 'GTB'){bank_code = '058';}else if(bank == 'FIRST'){bank_code = '011';}else   if(bank == 'ZENITH'){bank_code = '057';}else  if(bank == 'ACCESS'){bank_code = '044';}else
     if(bank == 'STANBIC'){bank_code = '221';}else if(bank == 'DIAMOND'){bank_code = '063';}else   if(bank == 'SKYE'){bank_code = '076';}else   if(bank == 'WEMA'){bank_code = '035';}else
     if(bank == 'FCMB'){bank_code = '214';}else if(bank == 'FIDELITY'){bank_code = '070';}else   if(bank == 'UBA'){bank_code = '033';}else   if(bank == 'UNION'){bank_code = '032';}
