@@ -3,22 +3,31 @@ const {withdrawFund, codeGenerator, debitService, creditService , timeService} =
 const { validationResult } = require('express-validator')
 const {logger} = config
 const { BankAccount, Users, DoubleSpent } = require('../../models/')
+const bcrypt = require('bcryptjs');
 
 exports.withdrawFund = ( async (req, res) => {
 
-    const { account_code, amount } = req.body
+    const { account_code, amount, userPin } = req.body
     const {userId, username } = req.user
     const errors = validationResult(req);
     try
     {
-        const { walletBal } = await Users.findOne({attributes: ['walletBal'], where: {userUid: userId}})
+        const { walletBal, pin } = await Users.findOne({attributes: ['walletBal', 'pin'], where: {userUid: userId}})
         let charges = amount <= 5000 ? 10 : amount <= 50000 ? 25 : 50
-
+        const verifyPin = await bcrypt.compare(userPin, pin);
     
         if (!errors.isEmpty()) {
 
             return res.status(403).json({ errors: errors.array() });
   
+        }else if (verifyPin != true ) {
+            return res.status(403).json({
+
+                status: false,
+                data : {},
+                message: "Hey padi, your Pin is Incorrect"
+    
+            })
         }else if (!account_code || !amount ) {
             
             return res.status(400).json({
