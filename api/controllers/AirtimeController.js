@@ -20,13 +20,7 @@ exports.buyAirtime = ( async (req, res) => {
 
         const {walletBal, pin} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin']})
         const verifyPin = await bcrypt.compare(userPin, pin);
-        return res.status(400).json({
 
-            status: false,
-            data : {},
-            message: "Oops Padi!!! You can not purchase airtime  at the moment please try again later"
-
-        })
         if ( amount > walletBal) {
             return res.status(400).json({
                 status: false,
