@@ -47,7 +47,7 @@ exports.upgradeUser = (async (req, res) => {
             // resend verification code
             phone = environment == 'live' ? check['phoneNumber'] : phoneNumber;
             codeToSend = check['codeToSend']
-            message = `Hi Padi, your verification code to ugrade your account to Odogwu level is: ${codeToSend}. DO NOT DISCLOSE TO ANYONE`;
+            message = `Hi Padi, your verification code to ugrade your account to Odogwu level is: ${codeToSend}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
             const sendCode = await eventEmitter.emit('sendMessage', {
                 phoneNumber: phone, message
             })

@@ -90,7 +90,7 @@ exports.signup = ( async (req, res) => {
                     pin: hashedPin,
                 }).then( () => {
 
-                    const message = `Dear ${fullName}, your verification code is: ${code}. DO NOT DISCLOSE TO ANYONE`;
+                    const message = `Dear ${fullName}, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
                     eventEmitter.emit('signup', {code, phoneNumber, email, message})
                     const token = TokenServices({userId, username, email, fullName}, '6h')
                     return res.status(201).json({
@@ -167,7 +167,7 @@ exports.resendCode = ( async (req, res) => {
 
                 logger.info(data);
 
-                const message = `Dear ${fullName}, your verification code is: ${code}. DO NOT DISCLOSE TO ANYONE`;
+                const message = `Dear ${fullName}, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
                 eventEmitter.emit('signup', {code, phoneNumber, email, message})
                 const token = TokenServices({userId, username, email, fullName}, '2h')
                 return res.status(201).json({

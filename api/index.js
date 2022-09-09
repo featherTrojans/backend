@@ -56,5 +56,6 @@ exports.controller = {
     upgradeUser: Controller.UpgradeController.upgradeUser,
     createCollectionAcc: Controller.CollectionController.createCollectionAccountNum,
     confirmBvnCode: Controller.BvnCodeController.confirmBvnCode,
-    cronJob: Controller.CronController.CronController
+    cronJob: Controller.CronController.CronController,
+    mnig_webhook: Controller.MNIGController.webhook
 }

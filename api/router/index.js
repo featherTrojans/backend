@@ -164,6 +164,9 @@ router.group('/', (router) => {
         router.post('/vfd/webhook',
             controller.vfdwebhook
         );
+        router.post('/paybills/webhook',
+            controller.mnig_webhook
+        );
         router.post('/transfer', [
             Authenticate,
             LevelCheck,

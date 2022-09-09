@@ -35,8 +35,9 @@ const fetchApiPost = async (data) => {
 }
 
 exports.sendSMS = async (data) => {
-
-    var url = `${termii_url}sms/send?to=${data.to}&from=Feather NG&sms=${data.message}&type=plain&channel=generic&api_key=${termii_key}`
+    var from = data.type == 'OTP' ? 'N-Alert' : 'Feather NG';
+    var channel = data.type == "OTP" ? 'dnd' : 'generic'
+    var url = `${termii_url}sms/send?to=${data.to}&from=${from}&sms=${data.message}&type=plain&channel=${channel}&api_key=${termii_key}`
 
 
     // console.log(body)
