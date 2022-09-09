@@ -10,7 +10,7 @@ exports.webhook = (async (req, res) => {
     try{
         
         logger.info("mnig webhook called");
-        const body = req.body
+        const body = (req.body)
         // console.log(req.connection.remoteAddress)
         var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         Webhook.create({
@@ -22,7 +22,8 @@ exports.webhook = (async (req, res) => {
 
             username, status, trans_id, type
 
-         } = body; //deconstruct
+         } = JSON.parse(req.body); //deconstruct
+         
          const {amount, userUid, description} = Bills.findOne({
             where: {reference: trans_id},
             attributes: ['amount', 'userUid', 'description']
