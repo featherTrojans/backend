@@ -85,7 +85,7 @@ exports.buyAirtime = ( async (req, res) => {
                         network,
                         description: `NGN${amount} ${network} airtime purchased on ${phone}`
                     }).then(()=> {
-                        
+
                         buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference}).then((buyAirtime) => {
                             console.log('buyAirtime', buyAirtime)
                             if ( buyAirtime == false) {
@@ -140,7 +140,11 @@ exports.buyAirtime = ( async (req, res) => {
 
                         })
                     })
-                    
+                    res.status(200).json({
+                        status: true,
+                        data: {},
+                        message: "Hey padi, your request is successful"
+                    })
                     
                     
                 }).catch(error => {
