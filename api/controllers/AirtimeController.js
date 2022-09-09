@@ -119,6 +119,14 @@ exports.buyAirtime = ( async (req, res) => {
                                 message: "Successfully purchased"
                             })
                         }
+                    }).catch(err => {
+                        logger.debug(err)
+                        return res.status(400).json({
+                            status: false,
+                            data : err,
+                            message: "Hi padi an error occurred"
+
+                        })
                     })
 
                     
