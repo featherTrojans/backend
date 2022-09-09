@@ -1,5 +1,5 @@
 const { config } = require('../../config');
-const { DoubleSpent, Webhook, Bills } = require('../../models');
+const { Webhook, Bills } = require('../../models');
 const { services } = require('../../services');
 const {logger, environment} = config
 const { timeService } = services

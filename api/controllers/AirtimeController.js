@@ -108,7 +108,7 @@ exports.buyAirtime = ( async (req, res) => {
                                 })
                             } else {
                                 //update bills table
-                                Bills.update({status: "PENDING", transId: buyAirtime.request_id}, {where: {reference}})
+                                Bills.update({status: "SUCCESS", transId: buyAirtime.request_id}, {where: {reference}})
                                 return res.status(200).json({
                                     status: true,
                                     data: {
