@@ -48,7 +48,7 @@ exports.buyAirtime = ( async (req, res) => {
                 message: "Oops Padi!!! You can not purchase airtime lower than NGN100. Kindly try with NGN100 or more"
     
             })
-        } else if (network.toLowerCase() == 'airtel' ) {
+        }else if (network.toLowerCase() == 'airtel' ) {
             return res.status(400).json({
 
                 status: false,
@@ -56,7 +56,7 @@ exports.buyAirtime = ( async (req, res) => {
                 message: "Oops Padi!!! You can not purchase airtime for this network at the moment please try again later"
     
             })
-        } else {
+        } else{
 
             const reference = 3 + idGenService(10);
             const creditReference = 'FTH' + idGenService(10)
@@ -76,7 +76,7 @@ exports.buyAirtime = ( async (req, res) => {
 
                 }).then(() => {
 
-                     Bills.create({
+                    Bills.create({
                         userUid: userId,
                         amount,
                         beneficiary: phone,
@@ -84,52 +84,42 @@ exports.buyAirtime = ( async (req, res) => {
                         transId: reference,
                         network,
                         description: `NGN${amount} ${network} airtime purchased on ${phone}`
-                    }).then(()=> {
-                        buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference}).then((buyAirtime) => {
-                            if ( buyAirtime == false) {
-    
-                                //return charged amount
-                                new Promise(function(resolve, reject) {
-                                    let reCredit = creditService({userUid: userId, reference: creditReference, amount, from: 'pay bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
-    
-                                    reCredit ? setTimeout(() => resolve("done"), 9000) : setTimeout(() => reject( new Error(`Cannot re credit`)));
-                                })
-                                //update bills status 
-                                Bills.update({status: "FAILED"}, {where: {reference}})
-                                return res.status(400).json({
-                                    status: false,
-                                    data : {
-                                        network,
-                                        phone,
-                                        amount
-                                    },
-                                    message: "Cannot purchase airtime at the moment please try again later"
-                    
-                                })
-                            } else {
-                                //update bills table
-                                Bills.update({status: "SUCCESS", transId: buyAirtime.request_id}, {where: {reference}})
-                                return res.status(200).json({
-                                    status: true,
-                                    data: {
-                                        network,
-                                        amount,
-                                        phone
-                                    },
-                                    message: "Successfully purchased"
-                                })
-                            }
-                        })
-                    }). catch ( err => {
-                        logger.debug(err)
-                        return res.status(400).json({
-                            status: false,
-                            data : err,
-                            message: "Cannot create transaction"
-
-                        })
                     })
-                    
+                    buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference}).then((buyAirtime) => {
+                        if ( buyAirtime == false) {
+
+                            //return charged amount
+                            new Promise(function(resolve, reject) {
+                                let reCredit = creditService({userUid: userId, reference: creditReference, amount, from: 'pay bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
+
+                                reCredit ? setTimeout(() => resolve("done"), 9000) : setTimeout(() => reject( new Error(`Cannot re credit`)));
+                            })
+                            //update bills status 
+                            Bills.update({status: "FAILED"}, {where: {reference}})
+                            return res.status(400).json({
+                                status: false,
+                                data : {
+                                    network,
+                                    phone,
+                                    amount
+                                },
+                                message: "Cannot purchase airtime at the moment please try again later"
+                
+                            })
+                        } else {
+                            //update bills table
+                            Bills.update({status: "SUCCESS", transId: buyAirtime.request_id}, {where: {reference}})
+                            return res.status(200).json({
+                                status: true,
+                                data: {
+                                    network,
+                                    amount,
+                                    phone
+                                },
+                                message: "Successfully purchased"
+                            })
+                        }
+                    })
 
                     
                     
