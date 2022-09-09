@@ -85,7 +85,9 @@ exports.buyAirtime = ( async (req, res) => {
                         network,
                         description: `NGN${amount} ${network} airtime purchased on ${phone}`
                     }).then(()=> {
+                        
                         buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference}).then((buyAirtime) => {
+                            console.log('buyAirtime', buyAirtime)
                             if ( buyAirtime == false) {
     
                                 //return charged amount
