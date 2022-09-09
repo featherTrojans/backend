@@ -13,7 +13,7 @@ exports.webhook = (async (req, res) => {
         const body = (req.body)
         console.log('body', body)
         console.log(typeof body);
-        console.log(typeof JSON.parse(body))
+        // console.log(typeof JSON.parse(body))
         var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         Webhook.create({
             ip,

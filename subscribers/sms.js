@@ -14,7 +14,7 @@ eventEmitter.on('signup', async (data) => {
     // const phone = data.phoneNumber.length == 11 ? "+234" + data.phoneNumber.substring(1) : "+" + data.phoneNumber;
     const phone = data.phoneNumber.length == 11 ? "234" + data.phoneNumber.substring(1) : data.phoneNumber;
     try {
-        sendSMS({to: phone, message})
+        sendSMS({to: phone, message, type: "OTP"})
         // twilio.messages
         // .create({
         // body: message,
@@ -41,7 +41,7 @@ eventEmitter.on('send', async (data) => {
     const message = data.message;
     const phone = data.phoneNumber.length == 11 ? "234" + data.phoneNumber.substring(1) : data.phoneNumber;
     try {
-        sendSMS({to: phone, message})
+        sendSMS({to: phone, message, type: "Transaction"})
     } catch (error) {
         logger.info(error)
     }
@@ -69,7 +69,7 @@ eventEmitter.on('sendMessage', async (data) => {
     const message = data.message;
     const phone = data.phoneNumber.length == 11 ? "234" + data.phoneNumber.substring(1) : data.phoneNumber;
     try {
-        sendSMS({to: phone, message})
+        sendSMS({to: phone, message, type: "Transaction"})
         console.log(`message ${message} sent to ${phone}`)
         return true
     } catch (error) {
