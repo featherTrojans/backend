@@ -108,7 +108,7 @@ exports.buyAirtime = ( async (req, res) => {
                                     message: "Cannot purchase airtime at the moment please try again later"
                     
                                 })
-                            } else {
+                            } else if (buyAirtime.message == '') {
                                 //update bills table
                                 Bills.update({status: "SUCCESS", transId: buyAirtime.request_id}, {where: {reference}})
                                 return res.status(200).json({
@@ -140,11 +140,11 @@ exports.buyAirtime = ( async (req, res) => {
 
                         })
                     })
-                    res.status(200).json({
-                        status: true,
-                        data: {},
-                        message: "Hey padi, your request is successful"
-                    })
+                    // res.status(200).json({
+                    //     status: true,
+                    //     data: {},
+                    //     message: "Hey padi, your request is successful"
+                    // })
                     
                     
                 }).catch(error => {
