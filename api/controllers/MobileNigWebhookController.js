@@ -11,7 +11,9 @@ exports.webhook = (async (req, res) => {
         
         logger.info("mnig webhook called");
         const body = (req.body)
-        // console.log(req.connection.remoteAddress)
+        console.log('body', body)
+        console.log(typeof body);
+        console.log(typeof JSON.parse(body))
         var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
         Webhook.create({
             ip,
