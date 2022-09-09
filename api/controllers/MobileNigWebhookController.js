@@ -23,11 +23,12 @@ exports.webhook = (async (req, res) => {
             username, status, trans_id, type
 
          } = JSON.parse(req.body); //deconstruct
-         
+
          const {amount, userUid, description} = Bills.findOne({
             where: {reference: trans_id},
             attributes: ['amount', 'userUid', 'description']
         })
+        
          if (environment == 'live') {
             if ( type != 'live' && ip != '::ffff:54.176.56.240') {
             
