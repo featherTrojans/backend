@@ -36,11 +36,8 @@ const BVN = db_con.define("bvns", {
         }
     },
     "middlename": {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
     },
     "gender": {
         allowNull: false,
