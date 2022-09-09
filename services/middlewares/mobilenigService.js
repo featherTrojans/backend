@@ -128,7 +128,7 @@ exports.buyAirtimeData = async ({phone, network, amount, type, trans_id}) =>{
         const body = JSON.stringify({
             "service_id": getServiceId(network),
             trans_id,
-            "service_type": "PREMIUM",
+            "service_type": "STANDARD",
             "phoneNumber": phone,
             amount
         })
