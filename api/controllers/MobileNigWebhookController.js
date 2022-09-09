@@ -17,15 +17,16 @@ exports.webhook = (async (req, res) => {
             ip,
             data: JSON.stringify(body)
         })
-        const {amount, userUid, description} = Bills.findOne({
-            where: {reference: trans_id},
-            attributes: ['amount', 'userUid', 'description']
-        })
+
         const {
 
             username, status, trans_id, type
 
          } = body; //deconstruct
+         const {amount, userUid, description} = Bills.findOne({
+            where: {reference: trans_id},
+            attributes: ['amount', 'userUid', 'description']
+        })
          if (environment == 'live') {
             if ( type != 'live' && ip != '::ffff:54.176.56.240') {
             
