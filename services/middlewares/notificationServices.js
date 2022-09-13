@@ -3,7 +3,7 @@ const {logger, Op, eventEmitter} = require("../../config").config
 require('../../subscribers')
 
 
-const notificationService = async({type, message, kind, subject}) => {
+exports.notificationService = async({type, message, kind, subject}) => {
     
     levelToUse = kind == 'all'  ? {[Op.gte]: 0} : kind == 'odogwu' ? 2 : kind == 'agent' ? 3 : kind == 'starter' ? 1 :  {[Op.gte]: 1}
     const users = await Users.findAll({
@@ -30,4 +30,4 @@ const notificationService = async({type, message, kind, subject}) => {
 
 }
 
-notificationService({type: 'email', message: "test message", kind: "conventional", subject: 'test test'})
+// notificationService({type: 'email', message: "test message", kind: "conventional", subject: 'test test'})
