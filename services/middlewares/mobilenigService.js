@@ -2,7 +2,8 @@ const {
     logger,
     mobilenig_pk_key,
     mobilenig_sk_key,
-    mobilenig_url
+    mobilenig_url,
+    environment
 } = require('../../config/').config
 
 const fetch = require('node-fetch');
@@ -128,7 +129,7 @@ exports.buyAirtimeData = async ({phone, network, amount, type, trans_id}) =>{
         const body = JSON.stringify({
             "service_id": getServiceId(network),
             trans_id,
-            "service_type": "STANDARD",
+            "service_type": environment == 'live' ? "STANDARD" : 'PREMIUM',
             "phoneNumber": phone,
             amount
         })
