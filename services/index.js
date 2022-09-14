@@ -20,6 +20,7 @@ const googleFileService = require('./middlewares/googleFileService')
 const cloudServices = require('./middlewares/cloudinaryServices')
 const vfdServices = require('./middlewares/vfdServices')
 const timeService = require('./middlewares/timeservice')
+const notifService = require('./middlewares/notificationServices')
 
 exports.services = {
     confirmAccount,
@@ -53,5 +54,6 @@ exports.services = {
     cloudServices: cloudServices.uploadFile,
     createCollectionAccount: vfdServices.createAccount,
     queryBvn: vfdServices.queryBvn,
-    timeService
+    timeService,
+    notifService: notifService.notificationService
 }
