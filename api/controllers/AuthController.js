@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const { config } = require("../../config")
-const {logger, Op, eventEmitter} = config
+const {logger, Op, eventEmitter, environment} = config
 const {services} = require("../../services")
 const { UserLevels, Users } = require('../../models')
 const {TokenServices} = services
@@ -519,7 +519,7 @@ exports.signIn = async (req, res) => {
                         data: {},
                         message: "Incorrect password provided"
                     })
-                }else if ((parseFloat(walletBal)) > JSON.parse(privilege).wallet){
+                }else if (environment == 'live' && (parseFloat(walletBal)) > JSON.parse(privilege).wallet){
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(403).json({
                         status: false,
