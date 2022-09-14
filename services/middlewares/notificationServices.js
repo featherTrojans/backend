@@ -10,7 +10,7 @@ exports.notificationService = async({type, message, kind, subject}) => {
        attributes: ['email', 'messageToken', 'phoneNumber'],
        where: {userLevel: levelToUse}
     })
-    logger.info(users)
+    // logger.info(users)
     for (const [key, value] of Object.entries(users)){
         const data = value.dataValues
         if (type == 'email') {
@@ -30,4 +30,4 @@ exports.notificationService = async({type, message, kind, subject}) => {
 
 }
 
-// notificationService({type: 'email', message: "test message", kind: "conventional", subject: 'test test'})
+// notificationService({type: 'sms', message: "test message", kind: "conventional", subject: 'test test'})
