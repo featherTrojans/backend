@@ -524,7 +524,7 @@ exports.signIn = async (req, res) => {
                     return res.status(403).json({
                         status: false,
                         data: {token},
-                        message: `Hi Padi, your account has been suspended, kindly upgrade to continue enjoying our services`
+                        message: `Hi Padi, your account has been suspended, kindly upgrade to continue enjoying our services or contact support`
                     })
                 }else {
                     
