@@ -23,7 +23,7 @@ exports.notificationService = async({type, message, kind, subject}) => {
             eventEmitter.emit('extraSms', {phoneNumber, message})
         } else if ( type == 'push') {
             var messageToken = data.messageToken
-            // console.log(token)
+            // console.log(messageToken)
             eventEmitter.emit('extraNotif', {messageToken, title: subject, description: message})
         }
     }

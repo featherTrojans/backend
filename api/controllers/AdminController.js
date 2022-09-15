@@ -1,5 +1,5 @@
 const { config } = require("../../config")
-const { Users, Payments, Request, Bills, Withdrawal, Transactions, Status } = require("../../models")
+const { Users, Payments, Request, Bills, Withdrawal, Transactions, Status, VfdPayment } = require("../../models")
 const {logger} = config
 const sequelize = require('sequelize')
 
@@ -18,7 +18,16 @@ exports.stats = ( async (req, res) => {
             where: {isUsed: true},
             attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalFunding'], [sequelize.fn('COUNT', sequelize.col('id')), 'totalFundingCount']]
         })
+        const vfdPayments = await VfdPayment.findAll({
+            where: {isUsed: true},
+            attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalCollectFunding'], [sequelize.fn('COUNT', sequelize.col('id')), 'totalCollectFundingCount']]
+        })
+
+        const {totalCollectFunding, totalCollectFundingCount} = vfdPayments
         const {totalFunding, totalFundingCount} = payments[0].dataValues
+        const allFunds = parseFloat(totalFunding) + parseFloat(totalCollectFunding)
+        const allFundsCount = parseFloat(totalFundingCount) + parseFloat(totalCollectFundingCount)
+
 
         const withdrawals = await Withdrawal.findAll({
             where: {status: 'SUCCESS'},
@@ -27,7 +36,7 @@ exports.stats = ( async (req, res) => {
         const {totalWithdrawal, totalWithdrawalCount} = withdrawals[0].dataValues
 
         const bills = await Bills.findAll({
-            where: {status: 'SUCCESS'},
+            where: {status: ['SUCCESS', 'PROCESSING']},
             attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalBills'], [sequelize.fn('COUNT', sequelize.col('id')), 'totalBillsCount']]
         })
         const {totalBills, totalBillsCount} = bills[0].dataValues
@@ -64,8 +73,8 @@ exports.stats = ( async (req, res) => {
                     totalWalletBal)
                 },
                 Funding: { 
-                    value: totalFunding ?? 0,
-                    count: totalFundingCount
+                    value: allFunds ?? 0,
+                    count: allFundsCount
                 },
                 Withdrawal: { 
                     value:totalWithdrawal ?? 0,
