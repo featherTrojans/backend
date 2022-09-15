@@ -22,9 +22,9 @@ exports.stats = ( async (req, res) => {
             attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalCollectFunding'], [sequelize.fn('COUNT', sequelize.col('id')), 'totalCollectFundingCount']]
         })
 
-        const {totalCollectFunding, totalCollectFundingCount} = vfdPayments
+        const {totalCollectFunding, totalCollectFundingCount} = vfdPayments[0].dataValues
         const {totalFunding, totalFundingCount} = payments[0].dataValues
-        const allFunds = parseFloat(totalFunding) + parseFloat(totalCollectFunding)
+        const allFunds = ( totalFunding != null ? parseFloat(totalFunding): 0) + (totalCollectFunding != null ? parseFloat(totalCollectFunding) : 0)
         const allFundsCount = parseFloat(totalFundingCount) + parseFloat(totalCollectFundingCount)
 
 
@@ -72,8 +72,18 @@ exports.stats = ( async (req, res) => {
                     totalWalletBal)
                 },
                 Funding: { 
-                    value: allFunds ?? 0,
-                    count: allFundsCount
+                    vfd: {
+                        value: totalCollectFunding ?? 0,
+                        count: totalCollectFundingCount
+                    },
+                    paystack: {
+                        value: totalFunding ?? 0,
+                        count: totalFundingCount
+                    },
+                    total : {
+                        value: allFunds ?? 0,
+                        count: allFundsCount
+                    }
                 },
                 Withdrawal: { 
                     value:totalWithdrawal ?? 0,
