@@ -72,8 +72,18 @@ exports.stats = ( async (req, res) => {
                     totalWalletBal)
                 },
                 Funding: { 
-                    value: allFunds ?? 0,
-                    count: allFundsCount
+                    vfd: {
+                        value: totalCollectFunding ?? 0,
+                        count: totalCollectFundingCount
+                    },
+                    paystack: {
+                        value: totalFunding ?? 0,
+                        count: totalFundingCount
+                    },
+                    total : {
+                        value: allFunds ?? 0,
+                        count: allFundsCount
+                    }
                 },
                 Withdrawal: { 
                     value:totalWithdrawal ?? 0,
