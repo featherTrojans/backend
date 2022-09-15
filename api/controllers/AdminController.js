@@ -19,7 +19,6 @@ exports.stats = ( async (req, res) => {
             attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalFunding'], [sequelize.fn('COUNT', sequelize.col('id')), 'totalFundingCount']]
         })
         const vfdPayments = await VfdPayment.findAll({
-            where: {isUsed: true},
             attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalCollectFunding'], [sequelize.fn('COUNT', sequelize.col('id')), 'totalCollectFundingCount']]
         })
 
