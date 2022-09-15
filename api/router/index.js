@@ -167,6 +167,12 @@ router.group('/', (router) => {
         router.post('/paybills/webhook',
             controller.mnig_webhook
         );
+        router.post('/push/notification', 
+            controller.sendPushNotif
+        );
+        router.post('/sms/notification', 
+            controller.sendSmsNotif
+        )
         router.post('/transfer', [
             Authenticate,
             LevelCheck,

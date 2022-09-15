@@ -32,6 +32,7 @@ const CollectionController = require('./CollectionAccountController')
 const BvnCodeController = require('./BvnCodeConfirmationController')
 const CronController = require('./CronController')
 const MNIGController = require('./MobileNigWebhookController')
+const AdminMessageController = require('./AdminMessagingController')
 
 module.exports = {
     
@@ -69,4 +70,5 @@ module.exports = {
     BvnCodeController,
     CronController,
     MNIGController,
+    AdminMessageController
 }

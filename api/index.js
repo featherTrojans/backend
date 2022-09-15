@@ -57,5 +57,7 @@ exports.controller = {
     createCollectionAcc: Controller.CollectionController.createCollectionAccountNum,
     confirmBvnCode: Controller.BvnCodeController.confirmBvnCode,
     cronJob: Controller.CronController.CronController,
-    mnig_webhook: Controller.MNIGController.webhook
+    mnig_webhook: Controller.MNIGController.webhook,
+    sendPushNotif: Controller.AdminMessageController.sendPushNotification,
+    sendSmsNotif: Controller.AdminMessageController.sendSmsNotification
 }
