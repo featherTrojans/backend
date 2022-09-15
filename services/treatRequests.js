@@ -10,7 +10,7 @@ const treatRequests = async (yesterday = timeService.serverTime().yesterday) => 
     try{
         logger.info('clearing request ....')
         const requests = await Request.findAll({
-            where: {updatedAt: {[Op.lte]: (yesterday)}, status: 'PENDING',}
+            where: {updatedAt: {[Op.lte]: (yesterday)}, status: ['ACCEPTED', 'PENDING'],}
         })
         
         if (requests.length > 0){

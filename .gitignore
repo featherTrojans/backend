@@ -4,6 +4,7 @@ node_modules/
 t.env.development
 .env.live
 output.log
+db.out.log
 cert.pem
 key.pem
 subcribers/tester.js
