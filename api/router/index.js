@@ -172,7 +172,10 @@ router.group('/', (router) => {
         );
         router.post('/sms/notification', 
             controller.sendSmsNotif
-        )
+        );
+        router.post('/email/notification', 
+        controller.sendEmailNotif
+    )
         router.post('/transfer', [
             Authenticate,
             LevelCheck,

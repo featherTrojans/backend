@@ -59,5 +59,6 @@ exports.controller = {
     cronJob: Controller.CronController.CronController,
     mnig_webhook: Controller.MNIGController.webhook,
     sendPushNotif: Controller.AdminMessageController.sendPushNotification,
-    sendSmsNotif: Controller.AdminMessageController.sendSmsNotification
+    sendSmsNotif: Controller.AdminMessageController.sendSmsNotification,
+    sendEmailNotif: Controller.AdminMessageController.sendEmailNotification,
 }
