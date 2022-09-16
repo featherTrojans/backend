@@ -1,6 +1,6 @@
 const { config } = require('../../config');
 const { Users, UserLevels, Withdrawal, Request } = require('../../models');
-const {logger, Op } = config
+const {logger, Op, environment } = config
 const timeService = require('./timeservice')
 const sequelize = require('sequelize')
 const today = timeService.serverTime().fullYear
@@ -72,7 +72,14 @@ const LevelCheck = (async(req, res, next) =>{
                     });
 
                 } else {
-                    if (amount > privilege.bankWithdrawal){
+
+                    if (environment == 'live' && (parseFloat(walletBal)) > (privilege).wallet){
+                        return res.status(403).json({
+                            status: false,
+                            data: {},
+                            message: `Hi Padi, your account has been suspended, kindly upgrade to continue enjoying our services or contact support`
+                        })
+                    } else if (amount > privilege.bankWithdrawal){
 
                         return res.status(403).json({
                             status: false,
@@ -124,7 +131,13 @@ const LevelCheck = (async(req, res, next) =>{
                 
                 return next()
             } else if ( url == '/transfer'){
-                if (amount > privilege.transfer){
+                if (environment == 'live' && (parseFloat(walletBal)) > (privilege).wallet){
+                    return res.status(403).json({
+                        status: false,
+                        data: {},
+                        message: `Hi Padi, your account has been suspended, kindly upgrade to continue enjoying our services or contact support`
+                    })
+                } else if (amount > privilege.transfer){
                     return res.status(403).json({
                         status: false,
                         data: {},
