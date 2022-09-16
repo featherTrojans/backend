@@ -1,9 +1,9 @@
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const { config } = require("../../config")
-const {logger, Op, eventEmitter, environment} = config
+const {logger, Op, eventEmitter} = config
 const {services} = require("../../services")
-const { UserLevels, Users } = require('../../models')
+const { Users } = require('../../models')
 const {TokenServices} = services
 require('../../subscribers')
 
@@ -506,11 +506,6 @@ exports.signIn = async (req, res) => {
                 const username = (checkUsername.username).toLowerCase()
                 const email = checkUsername.email;
                 const fullName = checkUsername.fullName
-                const walletBal = checkUsername.walletBal
-                const userLevel = checkUsername.userLevel
-
-                // get level details
-                let {privilege} = await UserLevels.findOne({where: {level: userLevel}})
                 // console.log(parseFloat(walletBal))
                 // console.log(JSON.parse(privilege).wallet)
                 if (!verifyPassword ) {
@@ -518,13 +513,6 @@ exports.signIn = async (req, res) => {
                         status : false,
                         data: {},
                         message: "Incorrect password provided"
-                    })
-                }else if (environment == 'live' && (parseFloat(walletBal)) > JSON.parse(privilege).wallet){
-                    const token = TokenServices({userId, username, email, fullName}, '2h')
-                    return res.status(403).json({
-                        status: false,
-                        data: {token},
-                        message: `Hi Padi, your account has been suspended, kindly upgrade to continue enjoying our services or contact support`
                     })
                 }else {
                     

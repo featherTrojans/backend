@@ -5,8 +5,8 @@ const {
     idGenService,
     timeService
 } = require('../../services').services
-const {Users, Bills, DoubleSpent} = require('../../models')
-const {logger} = require('../../config/').config
+const {Users, Bills, DoubleSpent, UserLevels} = require('../../models')
+const {logger, environment} = require('../../config/').config
 const bcrypt = require('bcryptjs');
 
 exports.buyAirtime = ( async (req, res) => {
@@ -18,10 +18,21 @@ exports.buyAirtime = ( async (req, res) => {
     try{
 
 
-        const {walletBal, pin} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin']})
+        const {walletBal, pin, userLevel} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin', 'userLevel']})
         const verifyPin = await bcrypt.compare(userPin, pin);
 
-        if ( amount > walletBal) {
+        // get level details
+        let {privilege} = await UserLevels.findOne({where: {level: userLevel}})
+
+        if (verifyPin != true ) {
+            return res.status(403).json({
+
+                status: false,
+                data : {},
+                message: "Pin is Incorrect"
+    
+            })
+        }else if ( amount > walletBal) {
             return res.status(400).json({
                 status: false,
                 data : {
@@ -32,13 +43,11 @@ exports.buyAirtime = ( async (req, res) => {
                 message: "Cannot purchase airtime at the moment because your balance is not enough "
 
             })
-        }else if (verifyPin != true ) {
+        }else if (environment == 'live' && (parseFloat(walletBal)) > JSON.parse(privilege).wallet){
             return res.status(403).json({
-
                 status: false,
-                data : {},
-                message: "Pin is Incorrect"
-    
+                data: {},
+                message: `Hi Padi, your account has been suspended, kindly upgrade to continue enjoying our services or contact support`
             })
         }else if (amount < 100 ) {
             return res.status(400).json({
