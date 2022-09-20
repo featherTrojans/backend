@@ -115,3 +115,15 @@ eventEmitter.addListener('extraEmail', async (data) => {
   await sendEmail({email, subject, message})
   
 })
+
+eventEmitter.addListener('message', async (data) => {
+
+  //send email
+  let email, subject, message;
+  email = data.email;
+  message = data.message;
+  subject = data.subject;
+
+  await sendEmail({email, subject, message})
+  
+})

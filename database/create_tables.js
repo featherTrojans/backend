@@ -4,7 +4,8 @@ const {
     UserLevels, Payments, Location, 
     LocationHistory, Request, Status, BankAccount, Withdrawal,
     Bills, Rating, Notification, BVN, Webhook, CollectionAccounts,
-    VfdPayment
+    VfdPayment,
+    Agent
 } = require('../models/')
 
 const create_users_table = ()=>{
@@ -166,9 +167,17 @@ const create_vfd_payments_table = ()=>{
         config.logger.debug(err)
     })
 }
+const create_agents_table = ()=>{
+    Agent.sync({force: true}).then(()=>{
+    
+    config.logger.info('agents table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
 
 // create_users_table();
-create_user_levels_table();
+// create_user_levels_table();
 // create_transactions_table();
 // create_double_spent_table();
 // create_payments_table();
@@ -185,3 +194,4 @@ create_user_levels_table();
 // create_webhooks_table()
 // create_collections_table()
 // create_vfd_payments_table()
+create_agents_table()
