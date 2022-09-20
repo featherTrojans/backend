@@ -48,6 +48,8 @@ exports.transactions = ( async (req, res) => {
             }else if (bankDetails != null){
                 value.dataValues.bankDetails = bankDetails
                 results.push(value.dataValues)
+                //set bankDetails to null
+                bankDetails = null
             } else {
                 results.push(value.dataValues)
             }

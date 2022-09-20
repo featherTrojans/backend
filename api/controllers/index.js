@@ -33,6 +33,7 @@ const BvnCodeController = require('./BvnCodeConfirmationController')
 const CronController = require('./CronController')
 const MNIGController = require('./MobileNigWebhookController')
 const AdminMessageController = require('./AdminMessagingController')
+const AgentController = require('./AgentController')
 
 module.exports = {
     
@@ -70,5 +71,6 @@ module.exports = {
     BvnCodeController,
     CronController,
     MNIGController,
-    AdminMessageController
+    AdminMessageController,
+    AgentController
 }

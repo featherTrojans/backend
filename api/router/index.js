@@ -13,7 +13,17 @@ router.group('/', (router) => {
     router.group('/api/v1/', (router) => {
         router.get('/home', controller.home)
 
+        router.group('/agent', (router) => {
+            router.post('/signup', [
+                Authenticate,
+                body('phone_number').isNumeric(),
+                body('phone_number').isLength({ max: 11, min: 11 })
+            ],
+            controller.createAgent
+            );
 
+            router.post('/approve', controller.approveAgent)
+        })
         router.group('/auth', (router) => {
 
             router.post('/signup', 
