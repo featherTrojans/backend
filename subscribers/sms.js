@@ -91,3 +91,18 @@ eventEmitter.on('extraSms', async (data) => {
         return false
     }
 });
+
+
+eventEmitter.on('message', async (data) => {
+    //send sms
+    const message = data.message;
+    const phone = data.phoneNumber.length == 11 ? "234" + data.phoneNumber.substring(1) : data.phoneNumber;
+    try {
+        sendSMS({to: phone, message, type: "Transaction"})
+        console.log(`message ${message} sent to ${phone}`)
+        return true
+    } catch (error) {
+        logger.info(error)
+        return false
+    }
+});

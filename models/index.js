@@ -16,6 +16,7 @@ const BVN = require('./BVN')
 const Webhook = require('./Webhook')
 const CollectionAccounts = require('./CollectionAccount')
 const VfdPayment = require('./VfdPayment')
+const Agent = require('./Agent')
 
 const models = {
     Users,
@@ -35,7 +36,8 @@ const models = {
     BVN,
     Webhook,
     CollectionAccounts,
-    VfdPayment
+    VfdPayment,
+    Agent,
 }
 
 module.exports = models
