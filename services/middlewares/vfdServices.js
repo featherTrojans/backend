@@ -149,7 +149,7 @@ exports.createAccount = async(data) => {
     }
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
     // console.log(queryString)
-    const url = vfdUrl + `/wallet2/client/create?${queryString}`
+    const url = vfdUrl + `/client/create?${queryString}`
     const res = await fetchApiPost({url, key: vfdTestKey, userId: data.userId})
     return res
 }
@@ -161,7 +161,7 @@ exports.queryBvn = async(data) => {
         "wallet-credentials": vfdWalletCreden,
     }
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
-    const url = vfdUrl + `/wallet2/client?${queryString}`
+    const url = vfdUrl + `/client?${queryString}`
     // console.log(url)
     const res = await fetchApi({url, key: vfdTestKey, userId: data.userId, bvn: data.bvn, phoneNumber: data.phoneNumber})
     return res
