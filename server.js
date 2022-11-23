@@ -48,7 +48,7 @@ const options = config.environment == 'development'  ? {
   cert: fs.readFileSync('../../../etc/letsencrypt/live/feather.com.ng/fullchain.pem')
 }: config.environment == 'live' ? {
   key: fs.readFileSync('../../../etc/letsencrypt/live/featherafrica.co-0002/privkey.pem'),
-  cert: fs.readFileSync('../../../etc/letsencrypt/live/featherafrica.co-0002/cert.pem')}: {
+  cert: fs.readFileSync('../../../etc/letsencrypt/live/featherafrica.co-0002/fullchain.pem')}: {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem')
 } ;
