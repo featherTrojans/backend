@@ -454,6 +454,10 @@ router.group('/', (router) => {
         router.get('/admin/stats', controller.stats);
         router.get('/referral/stats/:referredBy', controller.referralStats);
         router.get('/cron', controller.cronJob);
+        router.group('/admin', (router) => {
+            router.post('/marketer/make', controller.makeMarketer)
+            router.get('/marketer/get', controller.getMarketer)
+        });
     })
 })
 
