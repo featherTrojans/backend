@@ -182,5 +182,11 @@ const Users = db_con.define("users", {
            notEmpty: true
         }
     },
+    "isMarketer": {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+
+    },
 })
 module.exports = Users

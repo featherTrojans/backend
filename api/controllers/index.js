@@ -34,6 +34,7 @@ const CronController = require('./CronController')
 const MNIGController = require('./MobileNigWebhookController')
 const AdminMessageController = require('./AdminMessagingController')
 const AgentController = require('./AgentController')
+const MarketingController = require('./MarketingController')
 
 module.exports = {
     
@@ -72,5 +73,6 @@ module.exports = {
     CronController,
     MNIGController,
     AdminMessageController,
-    AgentController
+    AgentController,
+    MarketingController
 }
