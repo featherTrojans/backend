@@ -62,5 +62,7 @@ exports.controller = {
     sendSmsNotif: Controller.AdminMessageController.sendSmsNotification,
     sendEmailNotif: Controller.AdminMessageController.sendEmailNotification,
     createAgent: Controller.AgentController.signup,
-    approveAgent: Controller.AgentController.approve
+    approveAgent: Controller.AgentController.approve,
+    makeMarketer: Controller.MarketingController.makeMarketer,
+    getMarketer: Controller.MarketingController.getMarketer
 }

@@ -1,0 +1,4 @@
+No env file present for the current environment:  undefined 
+ Falling back to .env config
+(node:10880) Warning: Accessing non-existent property 'createCollectionAccount' of module exports inside circular dependency
+(Use `node --trace-warnings ...` to show where the warning was created)
