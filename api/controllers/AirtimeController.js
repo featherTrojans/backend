@@ -6,7 +6,7 @@ const {
     timeService
 } = require('../../services').services
 const {Users, NewBills, DoubleSpent, UserLevels} = require('../../models')
-const {logger, environment} = require('../../config/').config
+const {logger, environment, fn, col} = require('../../config/').config
 const bcrypt = require('bcryptjs');
 
 exports.buyAirtime = ( async (req, res) => {
@@ -119,7 +119,7 @@ exports.buyAirtime = ( async (req, res) => {
                                     message: "Cannot purchase airtime at the moment please try again later"
                     
                                 })
-                            } else if (buyAirtime.message == '') {
+                            } else if (buyAirtime.message == 'success') {
                                 //update NewBills table
                                 NewBills.update({
                                     status: "SUCCESS", transId: buyAirtime.request_id,
@@ -191,3 +191,21 @@ exports.buyAirtime = ( async (req, res) => {
         })
     }
 })
+
+// const tester = async () => {
+//     const id = await Users.findAll({
+//         attributes: [[
+//             fn('max', col('id')), 'id'
+//         ]]
+//         }
+//     )
+//     console.log(id[0])
+//     const data = await Users.findOne({
+//         where: {
+//             id: id[0].dataValues.id
+//         }
+//     })
+//     console.log(data.username)
+// }
+
+// tester()

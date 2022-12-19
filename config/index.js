@@ -12,7 +12,7 @@ let time = d.getTime();
 let yesterday = time - ( 24 * 3600 * 1000)
 const logger = pino({level: process.env.LOG_LEVEL || 'info'})
 const expressLogger = expressPino({logger})
-const {Op} = require('sequelize');
+const {Op, fn, col} = require('sequelize');
 let dollarUSLocale = Intl.NumberFormat('en-US');
 var dd = String(d.getDate()).padStart(2, '0');
 var mm = String(d.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -85,6 +85,8 @@ exports.config = {
     vfdTestKey: process.env.V_TEST_API_KEY,
     vfdUrl: process.env.V_URL,
     sendgrid_api_key: process.env.SENDGRID_API_KEY,
+    fn,
+    col,
     
 
 }
