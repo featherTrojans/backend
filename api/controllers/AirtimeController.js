@@ -6,7 +6,7 @@ const {
     timeService
 } = require('../../services').services
 const {Users, NewBills, DoubleSpent, UserLevels} = require('../../models')
-const {logger, environment} = require('../../config/').config
+const {logger, environment, fn, col} = require('../../config/').config
 const bcrypt = require('bcryptjs');
 
 exports.buyAirtime = ( async (req, res) => {
@@ -57,15 +57,17 @@ exports.buyAirtime = ( async (req, res) => {
                 message: "Oops Padi!!! You can not purchase airtime lower than NGN100. Kindly try with NGN100 or more"
     
             })
-        }else if (network.toLowerCase() == 'airtel' ) {
-            return res.status(400).json({
+        }
+        // else if (network.toLowerCase() == 'airtel' ) {
+        //     return res.status(400).json({
 
-                status: false,
-                data : {},
-                message: "Oops Padi!!! You can not purchase airtime for this network at the moment please try again later"
+        //         status: false,
+        //         data : {},
+        //         message: "Oops Padi!!! You can not purchase airtime for this network at the moment please try again later"
     
-            })
-        } else{
+        //     })
+        // } 
+        else{
 
             const reference = 3 + idGenService(10);
             const creditReference = 'FTH' + idGenService(10)
@@ -117,7 +119,7 @@ exports.buyAirtime = ( async (req, res) => {
                                     message: "Cannot purchase airtime at the moment please try again later"
                     
                                 })
-                            } else if (buyAirtime.message == '') {
+                            } else if (buyAirtime.message == 'success' || buyAirtime.message == '') {
                                 //update NewBills table
                                 NewBills.update({
                                     status: "SUCCESS", transId: buyAirtime.request_id,
@@ -189,3 +191,21 @@ exports.buyAirtime = ( async (req, res) => {
         })
     }
 })
+
+// const tester = async () => {
+//     const id = await Users.findAll({
+//         attributes: [[
+//             fn('max', col('id')), 'id'
+//         ]]
+//         }
+//     )
+//     console.log(id[0])
+//     const data = await Users.findOne({
+//         where: {
+//             id: id[0].dataValues.id
+//         }
+//     })
+//     console.log(data.username)
+// }
+
+// tester()
