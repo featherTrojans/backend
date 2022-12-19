@@ -39,6 +39,7 @@ const models = {
     CollectionAccounts,
     VfdPayment,
     Agent,
+    NewBills
 }
 
 module.exports = models
