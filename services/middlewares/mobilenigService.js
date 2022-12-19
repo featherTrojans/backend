@@ -99,7 +99,7 @@ exports.getBalance = async () => {
     }control/balance`
 
     const data = await fetchApiPost({url, key: mobilenig_pk_key})
-
+    logger.info(data);
     if (data !== false){
         return data
     }else{
@@ -219,4 +219,4 @@ exports.buyCable = async({phone, service, smartcard_number, variation}) => {
 // this.buyAirtimeData({phone: "07068006837", network: "mtn", amount: "100", type: "airtime", trans_id: "FTH-BILLs-09898766"})
 // this.buyLight({phone: "07068006837", service: "ibadan-electric", amount: "500", variation: "prepaid", meter_number: "7867766660"})
 
-// this.getBalance()
+this.getBalance()

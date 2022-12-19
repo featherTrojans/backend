@@ -2,7 +2,7 @@ const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
 
-const Bills = db_con.define("bills", {
+const NewBills = db_con.define("n_bills", {
     
     "userUid": {
         allowNull: false,
@@ -84,4 +84,4 @@ const Bills = db_con.define("bills", {
     
 })
 
-module.exports = Bills
+module.exports = NewBills
