@@ -129,7 +129,7 @@ exports.buyAirtimeData = async ({phone, network, amount, type, trans_id}) =>{
         const body = JSON.stringify({
             "service_id": getServiceId(network),
             trans_id,
-            "service_type": environment == 'live' ? "STANDARD" : 'PREMIUM',
+            "service_type": network == 'airtel' ? "STANDARD" : 'PREMIUM',
             "phoneNumber": phone,
             amount
         })
@@ -219,4 +219,4 @@ exports.buyCable = async({phone, service, smartcard_number, variation}) => {
 // this.buyAirtimeData({phone: "07068006837", network: "mtn", amount: "100", type: "airtime", trans_id: "FTH-BILLs-09898766"})
 // this.buyLight({phone: "07068006837", service: "ibadan-electric", amount: "500", variation: "prepaid", meter_number: "7867766660"})
 
-this.getBalance()
+// this.getBalance()
