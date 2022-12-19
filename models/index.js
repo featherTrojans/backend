@@ -17,6 +17,7 @@ const Webhook = require('./Webhook')
 const CollectionAccounts = require('./CollectionAccount')
 const VfdPayment = require('./VfdPayment')
 const Agent = require('./Agent')
+const NewBills = require('./NewBills')
 
 const models = {
     Users,

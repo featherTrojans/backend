@@ -99,7 +99,7 @@ exports.getBalance = async () => {
     }control/balance`
 
     const data = await fetchApiPost({url, key: mobilenig_pk_key})
-
+    logger.info(data);
     if (data !== false){
         return data
     }else{
@@ -129,7 +129,7 @@ exports.buyAirtimeData = async ({phone, network, amount, type, trans_id}) =>{
         const body = JSON.stringify({
             "service_id": getServiceId(network),
             trans_id,
-            "service_type": environment == 'live' ? "STANDARD" : 'PREMIUM',
+            "service_type": network == 'airtel' ? "STANDARD" : 'PREMIUM',
             "phoneNumber": phone,
             amount
         })

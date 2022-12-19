@@ -5,7 +5,7 @@ const {
     idGenService,
     timeService
 } = require('../../services').services
-const {Users, Bills, DoubleSpent, UserLevels} = require('../../models')
+const {Users, NewBills, DoubleSpent, UserLevels} = require('../../models')
 const {logger, environment} = require('../../config/').config
 const bcrypt = require('bcryptjs');
 
@@ -85,7 +85,7 @@ exports.buyAirtime = ( async (req, res) => {
 
                 }).then(() => {
 
-                    Bills.create({
+                    NewBills.create({
                         userUid: userId,
                         amount,
                         beneficiary: phone,
@@ -101,12 +101,12 @@ exports.buyAirtime = ( async (req, res) => {
     
                                 //return charged amount
                                 new Promise(function(resolve, reject) {
-                                    let reCredit = creditService({userUid: userId, reference: creditReference, amount, from: 'pay bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
+                                    let reCredit = creditService({userUid: userId, reference: creditReference, amount, from: 'pay Bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
     
                                     reCredit ? setTimeout(() => resolve("done"), 9000) : setTimeout(() => reject( new Error(`Cannot re credit`)));
                                 })
-                                //update bills status 
-                                Bills.update({status: "FAILED"}, {where: {reference}})
+                                //update NewBills status 
+                                NewBills.update({status: "FAILED"}, {where: {reference}})
                                 return res.status(400).json({
                                     status: false,
                                     data : {
@@ -118,8 +118,11 @@ exports.buyAirtime = ( async (req, res) => {
                     
                                 })
                             } else if (buyAirtime.message == '') {
-                                //update bills table
-                                Bills.update({status: "SUCCESS", transId: buyAirtime.request_id}, {where: {reference}})
+                                //update NewBills table
+                                NewBills.update({
+                                    status: "SUCCESS", transId: buyAirtime.request_id,
+                                    
+                                }, {where: {reference}})
                                 return res.status(200).json({
                                     status: true,
                                     data: {
