@@ -119,7 +119,7 @@ exports.buyAirtime = ( async (req, res) => {
                                     message: "Cannot purchase airtime at the moment please try again later"
                     
                                 })
-                            } else if (buyAirtime.message == 'success') {
+                            } else if (buyAirtime.message == 'success' || buyAirtime.message == '') {
                                 //update NewBills table
                                 NewBills.update({
                                     status: "SUCCESS", transId: buyAirtime.request_id,
