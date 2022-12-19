@@ -7,6 +7,7 @@ const {
     VfdPayment,
     Agent
 } = require('../models/')
+const NewBills = require('../models/NewBills')
 
 const create_users_table = ()=>{
     Users.sync({force: true}).then(()=>{
@@ -176,6 +177,15 @@ const create_agents_table = ()=>{
     })
 }
 
+const create_n_bills_table = ()=>{
+    NewBills.sync({force: true}).then(()=>{
+    
+    config.logger.info('n_bills table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
+
 // create_users_table();
 // create_user_levels_table();
 // create_transactions_table();
@@ -195,3 +205,4 @@ const create_agents_table = ()=>{
 // create_collections_table()
 // create_vfd_payments_table()
 create_agents_table()
+create_n_bills_table()

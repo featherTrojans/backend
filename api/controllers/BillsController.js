@@ -1,16 +1,23 @@
 const { logger } = require("../../config").config;
-const { Bills } = require("../../models");
+const { Bills, NewBills } = require("../../models");
 
 exports.allBills = ( async (req, res) => {
 
     const { userId } = req.user
     try
     {
-        const transactions = await Bills.findAll({
+        const oldBills = await Bills.findAll({
             attributes: ['transId', 'network', 'amount', 'status', 'description', 'createdAt'],
             where: {userUid: userId},
             order: [['createdAt', 'DESC']],
         })
+        const newBills = await NewBills.findAll({
+            attributes: ['transId', 'network', 'amount', 'status', 'description', 'createdAt'],
+            where: {userUid: userId},
+            order: [['createdAt', 'DESC']],
+        })
+
+        const transactions = oldBills.concat(newBills)
         return res.status(200).json({
             status: true,
             data : {
