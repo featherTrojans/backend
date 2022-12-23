@@ -77,6 +77,12 @@ exports.upgradeUser = (async (req, res) => {
                     message: "Hi Padi, error occur could not verify you at the moment. Kindly try again"
                 })
             }
+        }else if (check != null ) {
+            return res.status(400).json({
+                status: false,
+                data: {},
+                message: "Hi Padi, you can't verify again. You have previously tried to verify"
+            })
         }   else {
             // const first_name = (fullName.split(" "))[1];
             // const last_name = (fullName.split(" "))[0]
