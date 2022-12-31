@@ -104,20 +104,31 @@ const fetchApiPost = async (data) => {
         console.log('response', response)
         if (response.status == '00') {
             logger.info(response)
-                Users.update({accountNo: response.data.accountNo}, {where: {userUid: data.userId}})
-                await CollectionAccounts.create({
-                    userUid: data.userId,
-                    firstname: response.data.firstname,
-                    middlename: response.data.middlename ?? null,
-                    lastname: response.data.lastname,
-                    bvn: response.data.bvn,
-                    phone: response.data.phone,
-                    dob: response.data.dob,
-                    accountNo: response.data.accountNo
+                let check = Users.findOne({
+                    where: {accountNo: response.data.accountNo}
                 })
+
+                if (check != null) {
+
+                    Users.update({accountNo: response.data.accountNo}, {where: {userUid: data.userId}})
+
+                    await CollectionAccounts.create({
+                        userUid: data.userId,
+                        firstname: response.data.firstname,
+                        middlename: response.data.middlename ?? null,
+                        lastname: response.data.lastname,
+                        bvn: response.data.bvn,
+                        phone: response.data.phone,
+                        dob: response.data.dob,
+                        accountNo: response.data.accountNo
+                    })
             
 
-            return true
+                    return true
+                } else {
+                    return false
+                }
+                
         } else {
             logger.info(response)
             return response.message
