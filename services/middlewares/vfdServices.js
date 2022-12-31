@@ -109,7 +109,8 @@ const fetchApiPost = async (data) => {
                 })
 
                 if (check != null) {
-
+                    return false
+                } else {
                     Users.update({accountNo: response.data.accountNo}, {where: {userUid: data.userId}})
 
                     await CollectionAccounts.create({
@@ -125,8 +126,6 @@ const fetchApiPost = async (data) => {
             
 
                     return true
-                } else {
-                    return false
                 }
                 
         } else {
