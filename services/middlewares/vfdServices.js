@@ -105,7 +105,7 @@ const fetchApiPost = async (data) => {
         if (response.status == '00') {
             logger.info(response)
             let check = await Users.findOne({
-                where: {accountNo: response.data.accountNo}
+                where: {accountNo: response.data.accountNo, attributes: ['username']}
             })
             
             if (check != null) {
