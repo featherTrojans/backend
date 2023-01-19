@@ -58,15 +58,15 @@ exports.buyAirtime = ( async (req, res) => {
     
             })
         }
-        // else if (network.toLowerCase() == 'airtel' ) {
-        //     return res.status(400).json({
+        else if (network === null || network === '' ) {
+            return res.status(400).json({
 
-        //         status: false,
-        //         data : {},
-        //         message: "Oops Padi!!! You can not purchase airtime for this network at the moment please try again later"
+                status: false,
+                data : {},
+                message: "Oops Padi!!! You can not purchase airtime at the moment please contact support!!!"
     
-        //     })
-        // } 
+            })
+        } 
         else{
 
             const reference = 3 + idGenService(10);
