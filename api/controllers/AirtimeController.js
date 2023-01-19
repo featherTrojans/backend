@@ -58,15 +58,39 @@ exports.buyAirtime = ( async (req, res) => {
     
             })
         }
-        // else if (network.toLowerCase() == 'airtel' ) {
-        //     return res.status(400).json({
+        else if (network === null || network === '' ) {
+            return res.status(400).json({
 
-        //         status: false,
-        //         data : {},
-        //         message: "Oops Padi!!! You can not purchase airtime for this network at the moment please try again later"
+                status: false,
+                data : {},
+                message: "Oops Padi!!! You can not purchase airtime at the moment please contact support!!!"
     
-        //     })
-        // } 
+            })
+        } else if (amount === null || amount === '' ) {
+            return res.status(400).json({
+
+                status: false,
+                data : {},
+                message: "Oops Padi!!! You can not purchase airtime!!! Amount is required"
+    
+            })
+        } else if (phone === null || phone === '' ) {
+            return res.status(400).json({
+
+                status: false,
+                data : {},
+                message: "Oops Padi!!! Phone Number is required to proceed!!!"
+    
+            })
+        } else if (userPin === null || userPin === '' ) {
+            return res.status(400).json({
+
+                status: false,
+                data : {},
+                message: "Oops Padi!!! You have forgot to input your pin!!!"
+    
+            })
+        }  
         else{
 
             const reference = 3 + idGenService(10);
