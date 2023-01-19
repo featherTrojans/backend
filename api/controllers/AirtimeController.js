@@ -66,7 +66,31 @@ exports.buyAirtime = ( async (req, res) => {
                 message: "Oops Padi!!! You can not purchase airtime at the moment please contact support!!!"
     
             })
-        } 
+        } else if (amount === null || amount === '' ) {
+            return res.status(400).json({
+
+                status: false,
+                data : {},
+                message: "Oops Padi!!! You can not purchase airtime!!! Amount is required"
+    
+            })
+        } else if (phone === null || phone === '' ) {
+            return res.status(400).json({
+
+                status: false,
+                data : {},
+                message: "Oops Padi!!! Phone Number is required to proceed!!!"
+    
+            })
+        } else if (userPin === null || userPin === '' ) {
+            return res.status(400).json({
+
+                status: false,
+                data : {},
+                message: "Oops Padi!!! You have forgot to input your pin!!!"
+    
+            })
+        }  
         else{
 
             const reference = 3 + idGenService(10);
