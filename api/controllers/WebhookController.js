@@ -76,10 +76,12 @@ exports.webhook = (async (req, res) => {
                         status: ['processing', 'pending']
                     }
                 })
-                const charges = amount <= 5000 ? 10 : amount <= 50000 ? 25 : 50;
+                
+                const amountToCredit = amount / 100;
+                const charges = 0; //amountToCredit <= 5000 ? 10 : amountToCredit <= 50000 ? 25 : 50;
 
-                await creditService({userUid: user_uid, reference: 'R' + reference, amount: amount + charges, description: `#${amount + charges } withdrawal reversal`, title: 'reversal'})
-
+                await creditService({userUid: user_uid, reference: 'R' + reference, amount: amountToCredit + charges, description: `#${amountToCredit + charges } withdrawal reversal`, title: 'reversal'})
+         
                 return res.sendStatus(200);
 
             } else {
