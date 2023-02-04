@@ -78,7 +78,7 @@ exports.webhook = (async (req, res) => {
                 })
                 
                 const amountToCredit = amount / 100;
-                const charges = 0; //amountToCredit <= 5000 ? 10 : amountToCredit <= 50000 ? 25 : 50;
+                const charges = amountToCredit <= 5000 ? 10 : amountToCredit <= 50000 ? 25 : 50;
 
                 await creditService({userUid: user_uid, reference: 'R' + reference, amount: amountToCredit + charges, description: `#${amountToCredit + charges } withdrawal reversal`, title: 'reversal'})
          
