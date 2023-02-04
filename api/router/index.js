@@ -115,12 +115,19 @@ router.group('/', (router) => {
             router.post('/signin',
             [   
                 body('username').toLowerCase(),
-                // body('password').isLength({ min: 4 }),
+                body('password').isLength({ min: 4 }),
                 
             ], 
             controller.signIn
             );
 
+            router.post('/signin/v2',
+            [   
+                body('username').toLowerCase()
+                
+            ], 
+            controller.signInTwo
+            );
             router.post('/signin/confirm',
             [   
                 body('code')

@@ -469,8 +469,82 @@ exports.setUsername = (async (req, res) => {
     }
 });
 
-
 exports.signIn = async (req, res) => {
+    const { username, password} = req.body
+    const errors = validationResult(req);
+
+    try{
+        if (!errors.isEmpty()) {
+
+            return res.status(403).json({ errors: errors.array() });
+  
+        }else if (!(username && password)){
+
+            return res.status(400).json({
+                status : false,
+                data: {},
+                message: "All input are required"
+            })
+
+        } else{
+            const checkUsername = await Users.findOne({where: {
+                [Op.or]: {
+                    username,
+                    phoneNumber: username
+                }
+            }})
+            if ( checkUsername == null) {
+                return res.status(404).json({
+                    status : false,
+                    data: {},
+                    message: "Incorrect feather tag/ username"
+                })
+            } else {
+                let {userUid, username, email, fullName, isLoggedIn} = checkUsername
+                const verifyPassword = await bcrypt.compare(password, checkUsername.password)
+                username = username.toLowerCase()
+
+                // console.log(parseFloat(walletBal))
+                // console.log(JSON.parse(privilege).wallet)
+                if (isLoggedIn) {
+                    return res.status(400).json({
+                        status : false,
+                        data: {},
+                        message: "Aww padi! You are logged in on another device"
+                    })
+                } else if (!verifyPassword ) {
+                    return res.status(400).json({
+                        status : false,
+                        data: {},
+                        message: "Incorrect password provided"
+                    })
+                }else {
+
+                    const token = TokenServices({userId: userUid, username, email, fullName}, '2h')
+                    return res.status(200).json({
+                        status: true,
+                        data: {
+                            userId: userUid,
+                            username,
+                            token
+                        },
+                        message: "User signed in successfully"
+                    })
+                }
+            }
+        }
+    } catch (error) {
+
+        logger.info(error)
+        return res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        })
+    }
+}
+
+exports.signInTwo = async (req, res) => {
     const { username } = req.body
     const errors = validationResult(req);
 
@@ -501,15 +575,8 @@ exports.signIn = async (req, res) => {
                     message: "Aww padi! Incorrect feather tag/ phone number"
                 })
             } else {
-                console.log(checkUsername.isLoggedIn)
-                const isLoggedIn = checkUsername.isLoggedIn
-                
-                const userId = checkUsername.userUid;
-                // const username = (checkUsername.username).toLowerCase()
-                const phoneNumber = checkUsername.phoneNumber;
-                const fullName = checkUsername.fullName
-                // console.log(parseFloat(walletBal))
-                // console.log(JSON.parse(privilege).wallet)
+
+                const {isLoggedIn, phoneNumber, fullName, userUid} = checkUsername
 
                 if (isLoggedIn) {
                     return res.status(400).json({
@@ -520,7 +587,7 @@ exports.signIn = async (req, res) => {
                 } else {
                     code = services.codeGenerator(6)
                     //update code
-                    Users.update({code}, {where: {userUid: userId}})
+                    Users.update({code}, {where: {userUid}})
                     const message = `Dear ${fullName}, your login verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
                     eventEmitter.emit('signin', {code, phoneNumber, message})
                     res.status(200).json({
@@ -546,7 +613,6 @@ exports.confirmLoginCode =  async ( req, res) => {
 
     try {
         const {code} = req.body
-        
         
         if (code === null || code === '') {
             return res.status(400).json({
