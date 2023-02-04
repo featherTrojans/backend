@@ -120,6 +120,21 @@ router.group('/', (router) => {
             ], 
             controller.signIn
             );
+
+            router.post('/signin/v2',
+            [   
+                body('username').toLowerCase()
+                
+            ], 
+            controller.signInTwo
+            );
+            router.post('/signin/confirm',
+            [   
+                body('code')
+                
+            ], 
+            controller.confirmLoginCode
+            );
         })
 
         router.get('/dashboard',

@@ -188,5 +188,39 @@ const Users = db_con.define("users", {
         defaultValue: false
 
     },
+    "isLoggedIn": {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+
+    },
+    "SecQue1": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "SecAns1": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "SecQue2": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "SecAns2": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
 })
 module.exports = Users
