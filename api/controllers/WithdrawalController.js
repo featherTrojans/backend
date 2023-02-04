@@ -41,7 +41,7 @@ exports.withdrawFund = ( async (req, res) => {
             return res.status(400).json({
                 status: false,
                 data: {},
-                message: `You cannot withdraw NGN${charges}. Try NGN100 or more`
+                message: `You cannot withdraw NGN${amount}. Try NGN100 or more`
             })
 
         }else if ( walletBal < (parseFloat(amount) + charges )) {
