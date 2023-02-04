@@ -15,19 +15,6 @@ eventEmitter.on('signup', async (data) => {
     const phone = data.phoneNumber.length == 11 ? "234" + data.phoneNumber.substring(1) : data.phoneNumber;
     try {
         sendSMS({to: phone, message, type: "OTP"})
-        // twilio.messages
-        // .create({
-        // body: message,
-        // from: config.twilio_sender_number,
-        // to: phone
-        // })
-        // .then(response => {
-        //     logger.info(response.sid);
-        //     logger.info(response.message)
-        //     logger.info(message);
-        // }).catch(err => {
-        //     logger.info(`Error: ${err}`)
-        // });
 
     } catch (error) {
         logger.info(error)
@@ -106,3 +93,17 @@ eventEmitter.on('message', async (data) => {
         return false
     }
 });
+
+eventEmitter.on('signin', async (data) => {
+    //send sms
+    const message = data.message;
+    const phone = data.phoneNumber.length == 11 ? "234" + data.phoneNumber.substring(1) : data.phoneNumber;
+    try {
+        sendSMS({to: phone, message, type: "OTP"})
+
+    } catch (error) {
+        logger.info(error)
+    }
+
+
+})

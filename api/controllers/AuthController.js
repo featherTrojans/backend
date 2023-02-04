@@ -90,7 +90,7 @@ exports.signup = ( async (req, res) => {
 
                     // const message = `Dear ${fullName}, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
                     // eventEmitter.emit('signup', {code, phoneNumber, email, message})
-                    const token = TokenServices({userId, username, email, fullName}, '6h')
+                    const token = TokenServices({userId, username, email, fullName}, '262800h')
                     return res.status(201).json({
                         status : true,
                         data: {
@@ -471,7 +471,7 @@ exports.setUsername = (async (req, res) => {
 
 
 exports.signIn = async (req, res) => {
-    const { username, password} = req.body
+    const { username } = req.body
     const errors = validationResult(req);
 
     try{
@@ -479,12 +479,12 @@ exports.signIn = async (req, res) => {
 
             return res.status(403).json({ errors: errors.array() });
   
-        }else if (!(username && password)){
+        }else if (!(username)){
 
             return res.status(400).json({
                 status : false,
                 data: {},
-                message: "All input are required"
+                message: "Aww padi! Kindly Input your phone number or feather tag to login"
             })
 
         } else{
@@ -492,39 +492,41 @@ exports.signIn = async (req, res) => {
                 [Op.or]: {
                     username,
                     phoneNumber: username
-                }
+                },
             }})
             if ( checkUsername == null) {
                 return res.status(404).json({
                     status : false,
                     data: {},
-                    message: "Incorrect feather tag/ username"
+                    message: "Aww padi! Incorrect feather tag/ phone number"
                 })
             } else {
-                const verifyPassword = await bcrypt.compare(password, checkUsername.password)
+                console.log(checkUsername.isLoggedIn)
+                const isLoggedIn = checkUsername.isLoggedIn
+                
                 const userId = checkUsername.userUid;
-                const username = (checkUsername.username).toLowerCase()
-                const email = checkUsername.email;
+                // const username = (checkUsername.username).toLowerCase()
+                const phoneNumber = checkUsername.phoneNumber;
                 const fullName = checkUsername.fullName
                 // console.log(parseFloat(walletBal))
                 // console.log(JSON.parse(privilege).wallet)
-                if (!verifyPassword ) {
+
+                if (isLoggedIn) {
                     return res.status(400).json({
                         status : false,
                         data: {},
-                        message: "Incorrect password provided"
+                        message: "Aww padi! You are logged in on another device"
                     })
-                }else {
-                    
-                    const token = TokenServices({userId, username, email, fullName}, '2h')
-                    return res.status(200).json({
+                } else {
+                    code = services.codeGenerator(6)
+                    //update code
+                    Users.update({code}, {where: {userUid: userId}})
+                    const message = `Dear ${fullName}, your login verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
+                    eventEmitter.emit('signin', {code, phoneNumber, message})
+                    res.status(200).json({
                         status: true,
-                        data: {
-                            userId,
-                            username,
-                            token
-                        },
-                        message: "User signed in successfully"
+                        data: {},
+                        message: "Hello padi, your OTP has been sent successfully"
                     })
                 }
             }
@@ -538,4 +540,61 @@ exports.signIn = async (req, res) => {
             message: "error occur"
         })
     }
+}
+
+exports.confirmLoginCode =  async ( req, res) => {
+
+    try {
+        const {code} = req.body
+        
+        
+        if (code === null || code === '') {
+            return res.status(400).json({
+                status: false,
+                data: {},
+                message: 'Aww padi, code cannot be empty'
+            })
+        } else  {
+            const checkUser = await Users.findOne({
+                where: {code}
+            })
+            console.log (checkUser)
+
+            if (checkUser === null) {
+                return res.status(404).json({
+                    status: false,
+                    data: {},
+                    message: 'Aww padi, the code you entered is invalid, please retry'
+                })
+            } else{
+                const {userUid, username, email, fullName} = checkUser;  
+                const token = TokenServices({userId: userUid, username, email, fullName}, '4380d') // set token to 12 years
+                // set isLoggedIn to true
+                Users.update(
+                {
+                    isLoggedIn: true
+                },
+                {where: {userUid}})
+                return res.status(200).json({
+                    status: true,
+                    data: {
+                        userId: userUid,
+                        username,
+                        token
+                    },
+                    message: "User signed in successfully"
+                })
+            }
+            
+        }
+    }catch ( error) {
+        logger.info('error', error)
+        return res.status(409).json({
+            status: false,
+            data: {},
+            message: "Aww padi,An error occured. Contact support"
+        })
+    }
+
+
 }

@@ -8,6 +8,7 @@ exports.controller = {
     setPin: Controller.AuthController.setPin,
     setUsername: Controller.AuthController.setUsername,
     signIn: Controller.AuthController.signIn,
+    confirmLoginCode: Controller.AuthController.confirmLoginCode,
     dashboard: Controller.DashboardController.dashboard,
     makePayment: Controller.FundsController.makePayment,
     verifyPayment: Controller.FundsController.verifyTransaction,
