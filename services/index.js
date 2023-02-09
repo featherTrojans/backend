@@ -21,6 +21,7 @@ const cloudServices = require('./middlewares/cloudinaryServices')
 const vfdServices = require('./middlewares/vfdServices')
 const timeService = require('./middlewares/timeservice')
 const notifService = require('./middlewares/notificationServices')
+const requestService = require('./middlewares/requestServices')
 
 exports.services = {
     confirmAccount,
@@ -55,5 +56,6 @@ exports.services = {
     createCollectionAccount: vfdServices.createAccount,
     queryBvn: vfdServices.queryBvn,
     timeService,
-    notifService: notifService.notificationService
+    notifService: notifService.notificationService,
+    createRequest: requestService.createRequest
 }
