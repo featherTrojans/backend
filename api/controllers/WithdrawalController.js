@@ -81,7 +81,7 @@ exports.withdrawFund = ( async (req, res) => {
 
                     const data = await withdrawFund({account_code, amount, user_uid: userId, reference, account_name, account_number, bank_name, narration: description, charges});
 
-                    if (data != false ){
+                    if (data != false  ){
                         return res.status(200).json({
                             status: true,
                             data: {
@@ -93,14 +93,20 @@ exports.withdrawFund = ( async (req, res) => {
                             },
                             message: "success"
                         })
-                    } else {
+                    } else if (data == false) {
                         //refund
-                        creditService({userUid: userId, reference: "FTHRVRSL" + reference, amount: amount + charges, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from: 'primary wallet', to: bank_name })
+                        // creditService({userUid: userId, reference: "FTHRVRSL" + reference, amount: amount + charges, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from: 'primary wallet', to: bank_name })
 
                         return res.status(404).json({
                             status: false,
                             data: {},
                             message: "Oops!! An error occur! withdrawal can not be made. Kindly try again later"
+                        })
+                    } else {
+                        return res.status(404).json({
+                            status: false,
+                            data: {},
+                            message: "Oops!! An error occur! Kindly contact support"
                         })
                     }
 

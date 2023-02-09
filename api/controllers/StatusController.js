@@ -284,6 +284,12 @@ exports.findStatus = async (req, res) => {
                         message: "No qualified status found"
                     })
                 } else {
+
+                    // create request here.
+                    // const dataToSend = { userUid: userId, username, email, amount, charges, agent: data.fullName, agentUsername: data.username, statusId: data.reference, meetupPoint: data.locationText, negotiatedFee  }
+                    // const cashRequest = await createRequest(dataToSend);
+                    // console.log(cashRequest)
+                    // return cashRequest
                     return res.status(200).json({
                         status: true,
                         data,

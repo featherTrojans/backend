@@ -121,8 +121,8 @@ exports.returnLocation = async (data) => {
                     return aValue - bValue;
                 });
                 // console.log(results);
-                // console.log(newData);
-                return  sortByDuration
+                // console.log(sortByDuration[0]);
+                return  sortByDuration[0]
             }
 
 
