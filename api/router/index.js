@@ -324,6 +324,13 @@ router.group('/', (router) => {
         ], 
         controller.findStatus
         );
+        router.post('/v2/status/find',
+        [   
+            Authenticate,
+            LevelCheck
+        ], 
+        controller.findStatusV2
+        );
         router.group('/user', (router) => {
             router.get('/:username',
                 [   
