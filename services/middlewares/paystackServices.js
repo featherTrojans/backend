@@ -181,25 +181,23 @@ exports.withdrawFund = async (payload) => {
             reference: payload.reference
 
           })
-        
+          await Withdrawal.create({
+            user_uid: payload.user_uid,
+            account_code: payload.account_code,
+            account_name: payload.account_name,
+            account_number: payload.account_number,
+            amount: payload.amount,
+            reference: payload.reference,
+            bank_name: payload.bank_name,
+            charges: payload.charges,
+            transfer_code: data.transfer_code ?? data.reference,
+        })
           if(status == false){
               logger.info(message)
               return false;
           }else{
               // insert into db
               logger.info(data)
-              await Withdrawal.create({
-                  user_uid: payload.user_uid,
-                  account_code: payload.account_code,
-                  account_name: payload.account_name,
-                  account_number: payload.account_number,
-                  amount: payload.amount,
-                  reference: payload.reference,
-                  bank_name: payload.bank_name,
-                  charges: payload.charges,
-                  transfer_code: data.transfer_code,
-                  reference: payload.reference
-              })
               return data;
           }
     }catch(ex){
