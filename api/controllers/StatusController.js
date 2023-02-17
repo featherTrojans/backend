@@ -3,7 +3,7 @@ const { Status, Users, Request } = require("../../models");
 const logger = config.logger
 const services = require("../../services").services
 const { validationResult } = require('express-validator')
-const {returnLocation, createRequest} = services
+const {returnLocation} = services
 const sequelize = require('sequelize')
 
 exports.createStatus = ( async (req, res) => {
@@ -272,69 +272,7 @@ exports.findStatus = async (req, res) => {
 
             //check user balance before creating request
 
-            const {walletBal, email} = await Users.findOne({where: {userUid: userId}});
-            const amountToUse = parseFloat(amount) + parseFloat(charges)
-            if (amountToUse <= walletBal) {
-                const data = await returnLocation({amount, location, username})
-                if (data === false ) {
-
-                    return res.status(404).json({
-                        status: false,
-                        data: {},
-                        message: "No qualified status found"
-                    })
-                } else {
-
-                    return res.status(200).json({
-                        status: true,
-                        data,
-                        charges,
-                        message: 'statuses found successfully'
-                    })
-                }
-                
-            } else {
-                return res.status(403).json({
-                    status: false,
-                    data: {},
-                    message: "Insufficient balance"
-                })
-            }
-            
-        }
-        
-    } catch (error) {
-        logger.info(error)
-        return res.status(409).json({
-            status: false,
-            data : error,
-            message: "error occur"
-        })
-    }
-}
-
-exports.findStatusV2 = async (req, res) => {
-    const {amount, location} = req.body
-    const { userId, username } = req.user
-    const errors = validationResult(req);
-    try
-    {
-        const charges = Math.ceil(amount / 5000) * 50 //50 per 5000
-        if (!errors.isEmpty()) {
-
-            return res.status(403).json({ errors: errors.array() });
-  
-        }else if (!(amount || location)) {
-            return res.status(400).json({
-                status : false,
-                data: {},
-                message: "All fields are required"
-            })
-        } else {
-
-            //check user balance before creating request
-
-            const {walletBal, email} = await Users.findOne({where: {userUid: userId}});
+            const {walletBal} = await Users.findOne({where: {userUid: userId}});
             const amountToUse = parseFloat(amount) + parseFloat(charges)
             if (amountToUse <= walletBal) {
                 const data = await returnLocation({amount, location, username})
@@ -348,10 +286,16 @@ exports.findStatusV2 = async (req, res) => {
                 } else {
 
                     // create request here.
-                    const dataToSend = { userUid: userId, username, email, amount, charges, agent: data.fullName, agentUsername: data.username, statusId: data.reference, meetupPoint: data.locationText, negotiatedFee: 0  }
-                    const cashRequest = await createRequest(dataToSend);
-
-                    return res.status(cashRequest.code).json(cashRequest.body)
+                    // const dataToSend = { userUid: userId, username, email, amount, charges, agent: data.fullName, agentUsername: data.username, statusId: data.reference, meetupPoint: data.locationText, negotiatedFee  }
+                    // const cashRequest = await createRequest(dataToSend);
+                    // console.log(cashRequest)
+                    // return cashRequest
+                    return res.status(200).json({
+                        status: true,
+                        data,
+                        charges,
+                        message: 'statuses found successfully'
+                    })
                 }
                 
             } else {
