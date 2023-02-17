@@ -1,11 +1,8 @@
 let PayStack = require('paystack-node');
 const { config } = require('../../config');
-const { BankAccount, Withdrawal, Users, BVN } = require('../../models');
+const { BankAccount, Withdrawal, Users, BVN, Transactions } = require('../../models');
 const {logger, paystack_secret_key, environment, Op} = config
 const fetch = require('node-fetch');
-const timeService = require("./timeservice")
-const Transactions = require('../../models/Transaction');
-const yesterday = timeService.serverTime().yesterday
 
 let APIKEY = paystack_secret_key;
 const paystack = new PayStack(APIKEY, environment)
@@ -273,7 +270,8 @@ exports.queryWithdrawals = async () => {
         where: {description:
             {[Op.endsWith]: 'withdrawal'},
             // description: {[Op.substring]: '%withdrawal reversal%'},
-            createdAt: {[Op.lte]: (yesterday)}
+            order: [['createdAt', 'DESC']],
+            limit: 50
         }
     })
 
@@ -283,7 +281,8 @@ exports.queryWithdrawals = async () => {
             // console.log(value.reference);
             // check reference in withdrawal table
             check = await Withdrawal.findOne({
-                where: {reference: value.reference}
+                where: {reference: value.reference},
+                
             })
 
             // logger.info(check)
