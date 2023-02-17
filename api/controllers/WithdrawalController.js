@@ -94,8 +94,6 @@ exports.withdrawFund = ( async (req, res) => {
                             message: "success"
                         })
                     } else if (data == false) {
-                        //refund
-                        // creditService({userUid: userId, reference: "FTHRVRSL" + reference, amount: amount + charges, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from: 'primary wallet', to: bank_name })
 
                         return res.status(404).json({
                             status: false,
