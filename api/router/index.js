@@ -41,6 +41,15 @@ router.group('/', (router) => {
             controller.signup
             );
 
+            router.post('/signup/v2', 
+            [
+                body('phoneNumber').isNumeric(),
+                body('phoneNumber').isLength({ max: 11, min: 11 }),
+
+            ], 
+            controller.signUpTwo
+            );
+
             router.post('/resend/code',
                 controller.resendCode
             );
