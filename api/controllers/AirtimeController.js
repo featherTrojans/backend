@@ -24,7 +24,7 @@ exports.buyAirtime = ( async (req, res) => {
         // get level details
         let {privilege} = await UserLevels.findOne({where: {level: userLevel}})
 
-        if (verifyPin !== true ) {
+        if (verifyPin != true ) {
             return res.status(403).json({
 
                 status: false,

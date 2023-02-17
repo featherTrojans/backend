@@ -1,13 +1,12 @@
 let PayStack = require('paystack-node');
 const { config } = require('../../config');
 const { BankAccount, Withdrawal, Users, BVN } = require('../../models');
-const {logger, paystack_secret_key, environment, Op} = config
+const {logger, paystack_secret_key, environment} = config
 const fetch = require('node-fetch');
-const timeService = require("./timeService")
-const Transactions = require('../../models/Transaction');
-const yesterday = timeService.serverTime().yesterday
+const {createCollectionAccount} = require('../../services')
 
 let APIKEY = paystack_secret_key;
+
 const paystack = new PayStack(APIKEY, environment)
 
 exports.sortCode = (bank) => {                               //for making payments into bank accounts, Bank Sort Code is needed. Pass in the bank e.g. GTB, FIRST, etc
@@ -182,23 +181,25 @@ exports.withdrawFund = async (payload) => {
             reference: payload.reference
 
           })
-          await Withdrawal.create({
-            user_uid: payload.user_uid,
-            account_code: payload.account_code,
-            account_name: payload.account_name,
-            account_number: payload.account_number,
-            amount: payload.amount,
-            reference: payload.reference,
-            bank_name: payload.bank_name,
-            charges: payload.charges,
-            transfer_code: data.transfer_code ?? data.reference,
-        })
+        
           if(status == false){
               logger.info(message)
               return false;
           }else{
               // insert into db
               logger.info(data)
+              await Withdrawal.create({
+                  user_uid: payload.user_uid,
+                  account_code: payload.account_code,
+                  account_name: payload.account_name,
+                  account_number: payload.account_number,
+                  amount: payload.amount,
+                  reference: payload.reference,
+                  bank_name: payload.bank_name,
+                  charges: payload.charges,
+                  transfer_code: data.transfer_code,
+                  reference: payload.reference
+              })
               return data;
           }
     }catch(ex){
@@ -267,45 +268,5 @@ exports.resolveBvn = async (payload) => {
         
 }
 
-exports.queryWithdrawals = async () => {
-    //search withdrawals in the last 10 minutes
-    let transactions = await Transactions.findAll({
-        where: {description:
-            {[Op.endsWith]: 'withdrawal'},
-            // description: {[Op.substring]: '%withdrawal reversal%'},
-            createdAt: {[Op.lte]: (yesterday)}
-        }
-    })
-
-    if ( transactions.length > 0 ) {
-        // logger.info(allStatuses)
-        for (const [key, value] of Object.entries(transactions)){
-            // console.log(value.reference);
-            // check reference in withdrawal table
-            check = await Withdrawal.findOne({
-                where: {reference: value.reference}
-            })
-
-            // logger.info(check)
-            query = await fetch(`https://api.paystack.co/transaction/verify/${value.reference}`, {
-                // method: 'GET',
-                headers: {Authorization: `Bearer ${APIKEY}`,
-                          "Content-Type": "application/json"
-                        },
-                // body
-            })
-            if (check === null ) {
-                //refund user
-            } else {
-                //query withdrawal
-            }
-            console.log(query)
-        }
-    }
-
-    
-}
-
 // this.resolveBvn({bvn: '22222222223', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi", userId})
 
-this.queryWithdrawals()

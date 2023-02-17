@@ -3,7 +3,6 @@ const Controller = require('./controllers')
 exports.controller = {
     home: Controller.HomeController.home,
     signup: Controller.AuthController.signup,
-    signUpTwo: Controller.AuthController.signUpTwo,
     confirmCode: Controller.AuthController.confirmCode,
     setPassword: Controller.AuthController.setPassword,
     setPin: Controller.AuthController.setPin,
@@ -23,7 +22,6 @@ exports.controller = {
     markRequest: Controller.RequestController.markRequests,
     createStatus: Controller.StatusController.createStatus,
     findStatus: Controller.StatusController.findStatus,
-    findStatusV2: Controller.StatusController.findStatusV2,
     resendCode: Controller.AuthController.resendCode,
     getTransactions: Controller.TransactionsController.transactions,
     docs: Controller.HomeController.docs,

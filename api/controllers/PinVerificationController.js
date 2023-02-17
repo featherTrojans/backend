@@ -33,7 +33,7 @@ exports.verifyPin = ( async (req, res) => {
 
             pin_verified = await bcrypt.compare(user_pin, pin);
 
-            if (pin_verified === true) {
+            if (pin_verified) {
 
                 return res.status(200).json({
                     status: true,
