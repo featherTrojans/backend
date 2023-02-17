@@ -1,9 +1,8 @@
 const { config } = require("../../config");
 const { Request, Users } = require("../../models");
-const {logger, eventEmitter, dollarUSLocale } = config
-// const {idGenService, timeService} = require("/services").services
-const { validationResult } = require('express-validator')
-
+const {logger, eventEmitter} = config
+const idGenService = require("../generateId");
+const timeService = require("./timeService")
 require('../../subscribers')
 
 
@@ -12,33 +11,38 @@ require('../../subscribers')
     const { userUid, username, email, amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee  } = data
     
     const transId = idGenService(10);
-    const errors = validationResult(req);
-
-    logger.info(req.body)
 
     try
     {
         if (timeService.serverTime().now >= "00:00" && timeService.serverTime().now < "05:01") {
-            return res.status(400).json({
-                status : false,
-                data: {},
-                message: "Aw Padi!! Cash requests are not available during this period, try again later!!!"
-            })
-        } else if (!errors.isEmpty()) {
+            return {
+                code: 400,
+                body: {
 
-            return res.status(403).json({ errors: errors.array() });
-  
-        }else if (!(amount || charges || agent || agentUsername || statusId || meetupPoint)) {
-            return res.status(400).json({
-                status : false,
-                data: {},
-                message: "Aww padi! Something occurred; please try again later"
+                    status : false,
+                    data: {},
+                    message: "Aw Padi!! Cash requests are not available during this period, try again later!!!"
+                }
+            }
+        } else if (!(amount || charges || agent || agentUsername || statusId || meetupPoint)) {
+            return ({
+                code: 400,
+                body:{
+                    status : false,
+                    data: {amount, charges, agent, agentUsername,statusId, meetupPoint },
+                    message: "Aww padi! Something occurred; please try again later"
+                }
+
             })
         } else if (amount < 200 ) {
-            return res.status(400).json({
-                status : false,
-                data: {},
-                message: "Invalid request amount. Make a request of NGN200 and above"
+            return ({
+                code: 400,
+                body: {
+
+                    status : false,
+                    data: {},
+                    message: "Invalid request amount. Make a request of NGN200 and above"
+                }
             })
         } else {
 
@@ -51,10 +55,14 @@ require('../../subscribers')
             })
 
             if (activeRequests.length >= 3 ) {
-                return res.status(400).json({
-                    status: false,
-                    data: {},
-                    message: "Sorry Padi, you cannot have more than 3 active requests at a time!!!!"
+                return ({
+                    code: 400,
+                    body:{
+                        status: false,
+                        data: {},
+                        message: "Sorry Padi, you cannot have more than 3 active requests at a time!!!!"
+                    }
+
                 })
             } else {
                 //check user balance before creating request
@@ -80,7 +88,7 @@ require('../../subscribers')
                         where: {username: agentUsername},
                         attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid']
                     })
-                    Request.create({
+                   const requestTable = await Request.create({
 
                         userUid,
                         amount,
@@ -94,7 +102,9 @@ require('../../subscribers')
                         meetupPoint,
                         negotiatedFee: negotiatedFee ? negotiatedFee : 0
         
-                    }).then (() => {
+                    })
+                    console.log('requestTable', requestTable)
+                    if ( requestTable !== false ) {
 
                         const message = `Dear @${username}, you have a new cash withdrawal`;
                         eventEmitter.emit('createRequest', {email, message})
@@ -106,29 +116,39 @@ require('../../subscribers')
                         eventEmitter.emit('createRequest', {email: agentData.email, message: agentMessage})
 
         
-                        return res.status(201).json({
-                            status: true,
-                            data: {
-                                amount,
-                                agent,
-                                "message": "Hey padi, Cash request created successfully"
-                            },
-                            message: "success"
-                        }) 
+                        return {code: 201,
+                            body: {
+                                status: true,
+                                data: {
+                                    amount,
+                                    agent,
+                                    "message": "Hey padi, Cash request created successfully"
+                                },
+                                message: "success"
+                            }
+
+                        }
                             
-                    }).catch((error) => {
+                    } else {
                         logger.info(error)
-                        return res.status(404).json({
-                            status: false,
-                            data : error,
-                            message: "Aww padi, Cannot create data"
+                        return ({
+                            code: 404,
+                            body:{
+
+                                status: false,
+                                data : error,
+                                message: "Aww padi, Cannot create data"
+                            }
                         })
-                    })
+                    }
                 } else {
-                    return res.status(403).json({
-                        status: false,
-                        data: {},
-                        message: "Aww padi, your balance is not enough for this transaction"
+                    return ({
+                        code: 403,
+                        body: {
+                            status: false,
+                            data: {},
+                            message: "Aww padi, your balance is not enough for this transaction"
+                        }
                     })
                 }
             }
@@ -136,10 +156,14 @@ require('../../subscribers')
         
     } catch (error) {
         logger.info(error)
-        return res.status(409).json({
-            status: false,
-            data : error,
-            message: "error occur"
+        return ({
+            code: 409,
+            body: {
+                status: false,
+                data : error,
+                message: "error occur"
+            }
+            
         })
     }
 });
