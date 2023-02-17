@@ -22,9 +22,11 @@ const Users = db_con.define("users", {
 
     },
     "fullName": {
-        allowNull: true,
+        allowNull: false,
         type: Sequelize.STRING,
-        defaultValue: null
+        validate : {
+           notEmpty: true
+        }
 
     },
     "phoneNumber": {
@@ -37,10 +39,12 @@ const Users = db_con.define("users", {
 
     },
     "email": {
-        allowNull: true,
+        allowNull: false,
         unique: true,
         type: Sequelize.STRING,
-        defaultValue: null
+        validate : {
+           notEmpty: true
+        }
 
     },
     "isVerified": {
