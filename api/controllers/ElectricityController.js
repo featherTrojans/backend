@@ -29,7 +29,7 @@ exports.buyElect = ( async (req, res) => {
                 message: "Cannot purchase electricity at the moment because your balance is not enough "
 
             })
-        }else if (verifyPin !== true ) {
+        }else if (verifyPin != true ) {
             return res.status(403).json({
 
                 status: false,

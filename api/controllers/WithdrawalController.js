@@ -20,7 +20,7 @@ exports.withdrawFund = ( async (req, res) => {
 
             return res.status(403).json({ errors: errors.array() });
   
-        }else if (verifyPin !== true ) {
+        }else if (verifyPin != true ) {
             return res.status(403).json({
 
                 status: false,

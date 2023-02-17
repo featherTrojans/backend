@@ -1,10 +1,13 @@
 let PayStack = require('paystack-node');
 const { config } = require('../../config');
+
 const { BankAccount, Withdrawal, Users, BVN, Transactions } = require('../../models');
 const {logger, paystack_secret_key, environment, Op} = config
 const fetch = require('node-fetch');
 
+
 let APIKEY = paystack_secret_key;
+
 const paystack = new PayStack(APIKEY, environment)
 
 exports.sortCode = (bank) => {                               //for making payments into bank accounts, Bank Sort Code is needed. Pass in the bank e.g. GTB, FIRST, etc
@@ -179,23 +182,25 @@ exports.withdrawFund = async (payload) => {
             reference: payload.reference
 
           })
-          await Withdrawal.create({
-            user_uid: payload.user_uid,
-            account_code: payload.account_code,
-            account_name: payload.account_name,
-            account_number: payload.account_number,
-            amount: payload.amount,
-            reference: payload.reference,
-            bank_name: payload.bank_name,
-            charges: payload.charges,
-            transfer_code: data.transfer_code ?? data.reference,
-        })
+        
           if(status == false){
               logger.info(message)
               return false;
           }else{
               // insert into db
               logger.info(data)
+              await Withdrawal.create({
+                  user_uid: payload.user_uid,
+                  account_code: payload.account_code,
+                  account_name: payload.account_name,
+                  account_number: payload.account_number,
+                  amount: payload.amount,
+                  reference: payload.reference,
+                  bank_name: payload.bank_name,
+                  charges: payload.charges,
+                  transfer_code: data.transfer_code,
+                  reference: payload.reference
+              })
               return data;
           }
     }catch(ex){
@@ -270,9 +275,9 @@ exports.queryWithdrawals = async () => {
         where: {description:
             {[Op.endsWith]: 'withdrawal'},
             // description: {[Op.substring]: '%withdrawal reversal%'},
-            order: [['createdAt', 'DESC']],
-            limit: 50
-        }
+            },
+        order: [['updatedAt', 'DESC']],
+        limit: 50
     })
 
     if ( transactions.length > 0 ) {
@@ -306,5 +311,4 @@ exports.queryWithdrawals = async () => {
 }
 
 // this.resolveBvn({bvn: '22222222223', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi", userId})
-
 this.queryWithdrawals()
