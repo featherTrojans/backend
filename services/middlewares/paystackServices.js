@@ -1,12 +1,9 @@
 let PayStack = require('paystack-node');
 const { config } = require('../../config');
-const { BankAccount, Withdrawal, Users, BVN } = require('../../models');
-const {logger, paystack_secret_key, environment} = config
-const fetch = require('node-fetch');
 
-const timeService = require("./timeservice")
-const Transactions = require('../../models/Transaction');
-const yesterday = timeService.serverTime().yesterday
+const { BankAccount, Withdrawal, Users, BVN, Transactions } = require('../../models');
+const {logger, paystack_secret_key, environment, Op} = config
+const fetch = require('node-fetch');
 
 
 let APIKEY = paystack_secret_key;
@@ -270,6 +267,47 @@ exports.resolveBvn = async (payload) => {
     }
 
         
+}
+
+exports.queryWithdrawals = async () => {
+    //search withdrawals in the last 10 minutes
+    let transactions = await Transactions.findAll({
+        where: {description:
+            {[Op.endsWith]: 'withdrawal'},
+            // description: {[Op.substring]: '%withdrawal reversal%'},
+            order: [['createdAt', 'DESC']],
+            limit: 50
+        }
+    })
+
+    if ( transactions.length > 0 ) {
+        // logger.info(allStatuses)
+        for (const [key, value] of Object.entries(transactions)){
+            // console.log(value.reference);
+            // check reference in withdrawal table
+            check = await Withdrawal.findOne({
+                where: {reference: value.reference},
+                
+            })
+
+            // logger.info(check)
+            query = await fetch(`https://api.paystack.co/transaction/verify/${value.reference}`, {
+                // method: 'GET',
+                headers: {Authorization: `Bearer ${APIKEY}`,
+                          "Content-Type": "application/json"
+                        },
+                // body
+            })
+            if (check === null ) {
+                //refund user
+            } else {
+                //query withdrawal
+            }
+            console.log(query)
+        }
+    }
+
+    
 }
 
 // this.resolveBvn({bvn: '22222222223', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi", userId})
