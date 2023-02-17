@@ -2,7 +2,7 @@ const { config } = require("../../config");
 const { Request, Users } = require("../../models");
 const {logger, eventEmitter} = config
 const idGenService = require("../generateId");
-const timeService = require("./timeService")
+const timeService = require("./timeservice")
 require('../../subscribers')
 
 
