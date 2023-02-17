@@ -4,6 +4,9 @@ const { config } = require('../../config');
 const { BankAccount, Withdrawal, Users, BVN, Transactions } = require('../../models');
 const {logger, paystack_secret_key, environment, Op} = config
 const fetch = require('node-fetch');
+let timeService = require("./timeservice");
+const creditService = require('./creditService');
+const {fifteen_mins_ago, yesterday} = timeService.serverTime()
 
 
 let APIKEY = paystack_secret_key;
@@ -274,14 +277,15 @@ exports.queryWithdrawals = async () => {
     let transactions = await Transactions.findAll({
         where: {description:
             {[Op.endsWith]: 'withdrawal'},
-            // description: {[Op.substring]: '%withdrawal reversal%'},
+            updatedAt: {[Op.gte]: '2023-02-10'},//fifteen_mins_ago},
+            isQueried: false
             },
         order: [['updatedAt', 'DESC']],
         limit: 50
     })
-
+    
     if ( transactions.length > 0 ) {
-        // logger.info(allStatuses)
+        logger.info(transactions.length)
         for (const [key, value] of Object.entries(transactions)){
             // console.log(value.reference);
             // check reference in withdrawal table
@@ -291,20 +295,28 @@ exports.queryWithdrawals = async () => {
             })
 
             // logger.info(check)
-            query = await fetch(`https://api.paystack.co/transaction/verify/${value.reference}`, {
+            query = await fetch(`https://api.paystack.co/transfer/verify/${value.reference}`, {
                 // method: 'GET',
                 headers: {Authorization: `Bearer ${APIKEY}`,
                           "Content-Type": "application/json"
                         },
                 // body
             })
-            if (check === null ) {
-                //refund user
+            // console.log(value.reference, query.status)
+            let {amount, userUid, reference, from, to, isQueried} = value
+            if (query.status === 404 && isQueried === false) {
+                // console.log(`${amount}`)
+                //refund
+                await creditService({userUid, reference: "FTHRVRSL" + reference, amount, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from, to })
+                console.log(reference, 'updated successfully')
             } else {
-                //query withdrawal
+                //continue
             }
-            console.log(query)
+            // update
+            await Transactions.update({isQueried: true}, {where: {reference}})
         }
+    } else {
+        console.log('Nothing to query')
     }
 
     

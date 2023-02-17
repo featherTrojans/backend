@@ -102,6 +102,12 @@ const Transactions = db_con.define("transactions", {
            notEmpty: true
         }
     },
+    "isQueried": {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+
+    },
     
 })
 module.exports = Transactions
