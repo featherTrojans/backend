@@ -94,7 +94,7 @@ exports.approveRequest = ( async (req, res) => {
                 await Users.update({pin_attempts}, {where: {userUid}});
                 let bonusTransId = 'FTHBS' + idGenService(8)
                 let bonusId = 'FTHBS' + idGenService(8)
-                if ( pin_verified ) {
+                if ( pin_verified === true) {
                     const agentData = await confirmData({type: 'username', data: agentUsername}) 
                     if (agentData != null ) {
                         var agentId = agentData.userUid;

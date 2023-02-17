@@ -41,6 +41,15 @@ router.group('/', (router) => {
             controller.signup
             );
 
+            router.post('/signup/v2', 
+            [
+                body('phoneNumber').isNumeric(),
+                body('phoneNumber').isLength({ max: 11, min: 11 }),
+
+            ], 
+            controller.signUpTwo
+            );
+
             router.post('/resend/code',
                 controller.resendCode
             );
@@ -323,6 +332,13 @@ router.group('/', (router) => {
             LevelCheck
         ], 
         controller.findStatus
+        );
+        router.post('/v2/status/find',
+        [   
+            Authenticate,
+            LevelCheck
+        ], 
+        controller.findStatusV2
         );
         router.group('/user', (router) => {
             router.get('/:username',
