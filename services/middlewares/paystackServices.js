@@ -3,7 +3,11 @@ const { config } = require('../../config');
 const { BankAccount, Withdrawal, Users, BVN } = require('../../models');
 const {logger, paystack_secret_key, environment} = config
 const fetch = require('node-fetch');
-const {createCollectionAccount} = require('../../services')
+
+const timeService = require("./timeservice")
+const Transactions = require('../../models/Transaction');
+const yesterday = timeService.serverTime().yesterday
+
 
 let APIKEY = paystack_secret_key;
 
