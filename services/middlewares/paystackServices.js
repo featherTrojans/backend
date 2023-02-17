@@ -1,6 +1,6 @@
 let PayStack = require('paystack-node');
 const { config } = require('../../config');
-
+const cron = require('node-cron');
 const { BankAccount, Withdrawal, Users, BVN, Transactions } = require('../../models');
 const {logger, paystack_secret_key, environment, Op} = config
 const fetch = require('node-fetch');
@@ -272,12 +272,12 @@ exports.resolveBvn = async (payload) => {
         
 }
 
-exports.queryWithdrawals = async () => {
+const queryWithdrawals = async () => {
     //search withdrawals in the last 10 minutes
     let transactions = await Transactions.findAll({
         where: {description:
             {[Op.endsWith]: 'withdrawal'},
-            updatedAt: {[Op.gte]: '2023-02-10'},//fifteen_mins_ago},
+            updatedAt: {[Op.gte]: fifteen_mins_ago},
             isQueried: false
             },
         order: [['updatedAt', 'DESC']],
@@ -316,11 +316,15 @@ exports.queryWithdrawals = async () => {
             await Transactions.update({isQueried: true}, {where: {reference}})
         }
     } else {
-        console.log('Nothing to query')
+        console.log('No withdrawal to query')
     }
 
     
 }
 
 // this.resolveBvn({bvn: '22222222223', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi", userId})
-this.queryWithdrawals()
+// this.queryWithdrawals()
+// Schedule tasks to be run on the server.
+cron.schedule('* * * * *', function() {
+    queryWithdrawals()
+});

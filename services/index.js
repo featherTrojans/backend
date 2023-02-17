@@ -57,5 +57,6 @@ exports.services = {
     queryBvn: vfdServices.queryBvn,
     timeService,
     notifService: notifService.notificationService,
-    createRequest: requestService.createRequest
+    createRequest: requestService.createRequest,
+    queryWithdrawals: PaystackServices.queryWithdrawals
 }
