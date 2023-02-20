@@ -277,7 +277,7 @@ const queryWithdrawals = async () => {
     let transactions = await Transactions.findAll({
         where: {description:
             {[Op.endsWith]: 'withdrawal'},
-            updatedAt: {[Op.gte]: '2023-02-10'},//fifteen_mins_ago},
+            updatedAt: {[Op.gte]: fifteen_mins_ago},
             isQueried: false
             },
         order: [['updatedAt', 'DESC']],
