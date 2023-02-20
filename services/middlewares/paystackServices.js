@@ -277,7 +277,7 @@ const queryWithdrawals = async () => {
     let transactions = await Transactions.findAll({
         where: {description:
             {[Op.endsWith]: 'withdrawal'},
-            updatedAt: {[Op.gte]: fifteen_mins_ago},
+            updatedAt: {[Op.gte]: '2023-02-10'},//fifteen_mins_ago},
             isQueried: false
             },
         order: [['updatedAt', 'DESC']],
@@ -308,7 +308,7 @@ const queryWithdrawals = async () => {
                 // console.log(`${amount}`)
                 //refund
                 await creditService({userUid, reference: "FTHRVRSL" + reference, amount, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from, to })
-                console.log(reference, 'updated successfully')
+                console.log(userUid, 'updated successfully and refunded successfully')
             } else {
                 //continue
             }
