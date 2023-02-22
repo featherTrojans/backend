@@ -277,13 +277,14 @@ const queryWithdrawals = async () => {
     let transactions = await Transactions.findAll({
         where: {description:
             {[Op.endsWith]: 'withdrawal'},
-            updatedAt: {[Op.lte]: fifteen_mins_ago},
+            createdAt: {[Op.lt]: fifteen_mins_ago},
+            createdAt: {[Op.gt]: '2023-02-21'},
             isQueried: false
             },
         order: [['updatedAt', 'DESC']],
-        limit: 50
+        limit: 10
     })
-    
+    console.log(transactions)
     if ( transactions.length > 0 ) {
         logger.info(transactions.length)
         for (const [key, value] of Object.entries(transactions)){
@@ -304,10 +305,10 @@ const queryWithdrawals = async () => {
             })
             // console.log(value.reference, query.status)
             let {amount, userUid, reference, from, to, isQueried} = value
-            if (query.status === 404 && isQueried === false && check == null) {
+            if (query.status === 404 && isQueried === false && check.length > 0 ) {
                 // console.log(`${amount}`)
                 // //refund
-                // await creditService({userUid, reference: "FTHRVRSL" + reference, amount, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from, to })
+                await creditService({userUid, reference: "FTHRVRSL" + reference, amount, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from, to })
                 console.log(userUid, 'status', query.status, 'updated successfully and refunded successfully')
             } else {
                 //continue
@@ -326,5 +327,5 @@ const queryWithdrawals = async () => {
 // this.queryWithdrawals()
 // Schedule tasks to be run on the server.
 cron.schedule('* * * * *', function() {
-    // queryWithdrawals()
+    queryWithdrawals()
 });
