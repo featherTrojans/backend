@@ -277,7 +277,7 @@ const queryWithdrawals = async () => {
     let transactions = await Transactions.findAll({
         where: {description:
             {[Op.endsWith]: 'withdrawal'},
-            updatedAt: {[Op.gte]: fifteen_mins_ago},
+            updatedAt: {[Op.lte]: fifteen_mins_ago},
             isQueried: false
             },
         order: [['updatedAt', 'DESC']],
@@ -294,7 +294,7 @@ const queryWithdrawals = async () => {
                 
             })
 
-            // logger.info(check)
+            logger.info(check);
             query = await fetch(`https://api.paystack.co/transfer/verify/${value.reference}`, {
                 // method: 'GET',
                 headers: {Authorization: `Bearer ${APIKEY}`,
@@ -304,11 +304,11 @@ const queryWithdrawals = async () => {
             })
             // console.log(value.reference, query.status)
             let {amount, userUid, reference, from, to, isQueried} = value
-            if (query.status === 404 && isQueried === false) {
+            if (query.status === 404 && isQueried === false && check == null) {
                 // console.log(`${amount}`)
                 //refund
                 await creditService({userUid, reference: "FTHRVRSL" + reference, amount, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from, to })
-                console.log(userUid, 'updated successfully and refunded successfully')
+                console.log(userUid, 'status', query.status, 'updated successfully and refunded successfully')
             } else {
                 //continue
             }
