@@ -282,7 +282,7 @@ const queryWithdrawals = async () => {
             isQueried: false
             },
         order: [['updatedAt', 'DESC']],
-        limit: 50
+        limit: 10
     })
     console.log(transactions)
     if ( transactions.length > 0 ) {
