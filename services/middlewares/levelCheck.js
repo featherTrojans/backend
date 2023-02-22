@@ -17,7 +17,12 @@ const LevelCheck = (async(req, res, next) =>{
     {
       //get user level
         const {userLevel, walletBal } = await Users.findOne({where: {userUid: userId}})
-
+        return res.status(400).json({
+            status: false,
+            data: {},
+            message: "Hi padi, Service unvailable at the moment. Try again later!!"
+        });
+        
         if (userLevel < 1) {
             return res.status(403).json({
                 status: false,
