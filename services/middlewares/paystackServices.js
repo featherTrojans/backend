@@ -306,8 +306,8 @@ const queryWithdrawals = async () => {
             let {amount, userUid, reference, from, to, isQueried} = value
             if (query.status === 404 && isQueried === false && check == null) {
                 // console.log(`${amount}`)
-                //refund
-                await creditService({userUid, reference: "FTHRVRSL" + reference, amount, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from, to })
+                // //refund
+                // await creditService({userUid, reference: "FTHRVRSL" + reference, amount, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from, to })
                 console.log(userUid, 'status', query.status, 'updated successfully and refunded successfully')
             } else {
                 //continue
