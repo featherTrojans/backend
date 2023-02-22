@@ -326,5 +326,5 @@ const queryWithdrawals = async () => {
 // this.queryWithdrawals()
 // Schedule tasks to be run on the server.
 cron.schedule('* * * * *', function() {
-    queryWithdrawals()
+    // queryWithdrawals()
 });
