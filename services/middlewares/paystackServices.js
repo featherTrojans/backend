@@ -281,7 +281,7 @@ const queryWithdrawals = async (fifteen_mins_ago = timeService.serverTime().fift
             createdAt: {[Op.lt]: fifteen_mins_ago},
             isQueried: false,
             },
-        order: [['updatedAt', 'DESC']],
+        order: [['createdAt', 'DESC']],
         limit: 10
     })
     console.log(transactions)
@@ -307,8 +307,8 @@ const queryWithdrawals = async (fifteen_mins_ago = timeService.serverTime().fift
             let {amount, userUid, reference, from, to, isQueried} = value
             if (query.status === 404 && isQueried === false && check == null) {
                 // console.log(`${amount}`)
-                // //refund
-                // await creditService({userUid, reference: "FTHRVRSL" + reference, amount, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from, to })
+                //refund
+                await creditService({userUid, reference: "FTHRVRSL" + reference, amount, description: `NGN${amount} withdrawal reversal`, title: 'withdrawal', from, to })
                 console.log(userUid, 'status', query.status, 'updated successfully and refunded successfully')
             } else {
                 //continue
@@ -319,7 +319,7 @@ const queryWithdrawals = async (fifteen_mins_ago = timeService.serverTime().fift
     } else {
         console.log('No withdrawal to query')
     }
-
+    
     
 }
 
