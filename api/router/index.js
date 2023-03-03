@@ -55,6 +55,18 @@ router.group('/', (router) => {
             controller.confirmCode
             );
 
+            router.post('/security/question/set',
+            [   
+                Authenticate,
+                body('secQue1').isLength({min: 4}),
+                body('secQue2').isLength({min: 4}),
+                body('secAns1').isLength({min: 4}),
+                body('secAns2').isLength({min: 4}),
+                
+            ], 
+            controller.createSecurityQuestion
+            );
+
             router.put('/password/set',
             [   
                 Authenticate,

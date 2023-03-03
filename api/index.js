@@ -66,5 +66,6 @@ exports.controller = {
     createAgent: Controller.AgentController.signup,
     approveAgent: Controller.AgentController.approve,
     makeMarketer: Controller.MarketingController.makeMarketer,
-    getMarketer: Controller.MarketingController.getMarketer
+    getMarketer: Controller.MarketingController.getMarketer,
+    createSecurityQuestion: Controller.SecurityQuestionController.createSecurityQuestions
 }

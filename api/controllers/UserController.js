@@ -247,7 +247,7 @@ exports.getMultipleUser = ( async (req, res) => {
     {
         let result = [];
         for (let i = 0; i < numbers.length; i++){
-            username = numbers[i].length > 11 ? '0' + numbers[i].substr(3, 12) : numbers[i]
+            username = numbers[i].length > 11 ? '0' + numbers[i].substr(numbers[i].length - 10) : numbers[i]
 
             let users = await  Users.findOne({where: {
                 [Op.or]: {

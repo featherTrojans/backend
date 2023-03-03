@@ -35,6 +35,7 @@ const MNIGController = require('./MobileNigWebhookController')
 const AdminMessageController = require('./AdminMessagingController')
 const AgentController = require('./AgentController')
 const MarketingController = require('./MarketingController')
+const SecurityQuestionController = require('./SecurityQuestionController')
 
 module.exports = {
     
@@ -74,5 +75,6 @@ module.exports = {
     MNIGController,
     AdminMessageController,
     AgentController,
-    MarketingController
+    MarketingController,
+    SecurityQuestionController,
 }
