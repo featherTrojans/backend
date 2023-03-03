@@ -6,7 +6,6 @@ const {logger, paystack_secret_key, environment, Op} = config
 const fetch = require('node-fetch');
 let timeService = require("./timeservice");
 const creditService = require('./creditService');
-const {fifteen_mins_ago, yesterday} = timeService.serverTime()
 
 
 let APIKEY = paystack_secret_key;
@@ -272,14 +271,15 @@ exports.resolveBvn = async (payload) => {
         
 }
 
-const queryWithdrawals = async () => {
-    //search withdrawals in the last 10 minutes
+const queryWithdrawals = async (fifteen_mins_ago = timeService.serverTime().fifteen_mins_ago) => {
+    //search withdrawals in the last 15 minutes
+    console.log('fifteen_mins_ago', fifteen_mins_ago)
+
     let transactions = await Transactions.findAll({
         where: {description:
             {[Op.endsWith]: 'withdrawal'},
             createdAt: {[Op.lt]: fifteen_mins_ago},
-            createdAt: {[Op.gt]: '2023-02-21'},
-            isQueried: false
+            isQueried: false,
             },
         order: [['updatedAt', 'DESC']],
         limit: 10

@@ -194,28 +194,28 @@ const Users = db_con.define("users", {
         defaultValue: false
 
     },
-    "SecQue1": {
+    "SecQueOne": {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "SecAns1": {
+    "SecAnsOne": {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "SecQue2": {
+    "SecQueTwo": {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "SecAns2": {
+    "SecAnsTwo": {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
