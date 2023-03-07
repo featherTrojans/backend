@@ -483,7 +483,7 @@ router.group('/', (router) => {
         router.get('/cron', controller.cronJob);
         router.group('/admin', (router) => {
             router.post('/marketer/make', controller.makeMarketer)
-            router.get('/marketer/get', controller.getMarketer)
+            router.get('/users/email', controller.userEmailControllers)
         });
     })
 })
