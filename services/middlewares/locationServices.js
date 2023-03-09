@@ -122,7 +122,7 @@ exports.returnLocation = async (data) => {
                 });
                 // console.log(results);
                 // console.log(sortByDuration[0]);
-                return  data.old ? results : sortByDuration[0]
+                return  data.old ? sortByDuration : sortByDuration[0]
             }
 
 
