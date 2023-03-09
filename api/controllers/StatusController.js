@@ -275,7 +275,7 @@ exports.findStatus = async (req, res) => {
             const {walletBal} = await Users.findOne({where: {userUid: userId}});
             const amountToUse = parseFloat(amount) + parseFloat(charges)
             if (amountToUse <= walletBal) {
-                const data = await returnLocation({amount, location, username})
+                const data = await returnLocation({amount, location, username, old: true})
                 if (data === false ) {
 
                     return res.status(404).json({
