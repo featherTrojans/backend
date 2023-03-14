@@ -87,6 +87,9 @@ exports.config = {
     sendgrid_api_key: process.env.SENDGRID_API_KEY,
     fn,
     col,
+    bc_url: process.env.B_URL,
+    bc_akey: process.env.A_URL,
+    bc_skey: process.env.S_URL,
     
 
 }
