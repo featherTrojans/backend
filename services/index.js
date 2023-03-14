@@ -22,6 +22,7 @@ const vfdServices = require('./middlewares/vfdServices')
 const timeService = require('./middlewares/timeservice')
 const notifService = require('./middlewares/notificationServices')
 const requestService = require('./middlewares/requestServices')
+const cardService = require('./middlewares/cardServices')
 
 exports.services = {
     confirmAccount,
