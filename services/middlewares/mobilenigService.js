@@ -101,9 +101,9 @@ exports.getBalance = async () => {
     const data = await fetchApiPost({url, key: mobilenig_pk_key})
     logger.info(data);
     if (data !== false){
-        return data
+        return data.message == 'success' && data.statusCode == 200 ? data.details.balance : 0
     }else{
-        return false
+        return 0;
     }
 }
 
