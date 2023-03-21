@@ -2,6 +2,7 @@ const { config } = require("../../config")
 const { Users, Payments, Request, Bills, Withdrawal, Transactions, Status, VfdPayment } = require("../../models")
 const {logger} = config
 const sequelize = require('sequelize')
+const {getPayStackBalance, getMobileBal } = require("../../services").services
 
 
 exports.stats = ( async (req, res) => {
@@ -12,6 +13,9 @@ exports.stats = ( async (req, res) => {
             where:{isVerified: true},
             attributes: [[sequelize.fn('SUM', sequelize.col('walletBal')), 'totalWalletBal'], [sequelize.fn('SUM', sequelize.col('escrowBal')), 'totalEscrowBal'], [sequelize.fn('COUNT', sequelize.col('userUid')), 'totalUsers']]
         })
+        console.log('awww', await getPayStackBalance());
+        paystackBal = await getPayStackBalance() ?? 0
+        mobilenigBal = await getMobileBal() ?? 0
         const { totalWalletBal, totalEscrowBal, totalUsers } = users[0].dataValues;
 
         const payments = await Payments.findAll({
@@ -70,6 +74,16 @@ exports.stats = ( async (req, res) => {
                 totalUsers,
                 totalWalletBal: parseFloat(totalEscrowBal + 
                     totalWalletBal)
+                },
+                Balances: {
+                    Paystack: paystackBal,
+                    billsPlatform: mobilenigBal,
+                    total: parseFloat(paystackBal + mobilenigBal),
+
+                },
+                Worth: {
+                    worth: parseFloat(paystackBal + mobilenigBal) - (parseFloat(totalEscrowBal + 
+                        totalWalletBal))
                 },
                 Funding: { 
                     vfd: {

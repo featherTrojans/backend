@@ -323,8 +323,33 @@ const queryWithdrawals = async (fifteen_mins_ago = timeService.serverTime().fift
     
 }
 
+exports.getBalance = async () => {
+    data = await fetch(`https://api.paystack.co/balance`, {
+                method: 'GET',
+                headers: {Authorization: `Bearer ${APIKEY}`,
+                          "Content-Type": "application/json"
+                        },
+                // body
+    })
+    newdata = await data.json()
+    let balance = newdata.data[0].balance/100
+    console.log(balance)
+    return balance
+    // .then( res => res.json())
+    // .then((data) => {
+    //     let balance = data.data[0].balance/100
+    //     console.log(balance)
+    //     return balance
+    // }).catch(err => {
+    //     console.log('err', err)
+    //     return '0';
+    // })
+
+}
+
 // this.resolveBvn({bvn: '22222222223', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi", userId})
 // this.queryWithdrawals()
+this.getBalance()
 // Schedule tasks to be run on the server.
 cron.schedule('* * * * *', function() {
     queryWithdrawals()
