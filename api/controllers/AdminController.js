@@ -83,7 +83,8 @@ exports.stats = ( async (req, res) => {
                 },
                 Worth: {
                     worth: parseFloat(paystackBal + mobilenigBal) - (parseFloat(totalEscrowBal + 
-                        totalWalletBal))
+                        totalWalletBal)),
+                    explanation: "positive mean excess, negative means deficit"
                 },
                 Funding: { 
                     vfd: {
