@@ -75,16 +75,17 @@ exports.stats = ( async (req, res) => {
                 totalWalletBal: parseFloat(totalEscrowBal + 
                     totalWalletBal)
                 },
-                Balances: {
-                    Paystack: paystackBal,
-                    billsPlatform: mobilenigBal,
-                    total: parseFloat(paystackBal + mobilenigBal),
+                // Balances: {
+                //     Paystack: paystackBal,
+                //     billsPlatform: mobilenigBal,
+                //     total: parseFloat(paystackBal + mobilenigBal),
 
-                },
-                Worth: {
-                    worth: parseFloat(paystackBal + mobilenigBal) - (parseFloat(totalEscrowBal + 
-                        totalWalletBal))
-                },
+                // },
+                // Worth: {
+                //     worth: parseFloat(paystackBal + mobilenigBal) - (parseFloat(totalEscrowBal + 
+                //         totalWalletBal)),
+                //     explanation: "positive mean excess, negative means deficit"
+                // },
                 Funding: { 
                     vfd: {
                         value: totalCollectFunding ?? 0,
