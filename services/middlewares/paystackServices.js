@@ -349,7 +349,7 @@ exports.getBalance = async () => {
 
 // this.resolveBvn({bvn: '22222222223', bank_name: "FIRST", acc_num: "3063857057", first_name: 'Ezekiel', last_name: "Adejobi", userId})
 // this.queryWithdrawals()
-this.getBalance()
+// this.getBalance()
 // Schedule tasks to be run on the server.
 cron.schedule('* * * * *', function() {
     queryWithdrawals()
