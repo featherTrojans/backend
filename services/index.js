@@ -23,6 +23,7 @@ const timeService = require('./middlewares/timeservice')
 const notifService = require('./middlewares/notificationServices')
 const requestService = require('./middlewares/requestServices')
 const cardService = require('./middlewares/cardServices')
+const mobilenigService = require('./middlewares/mobilenigService')
 
 exports.services = {
     confirmAccount,
@@ -59,5 +60,7 @@ exports.services = {
     timeService,
     notifService: notifService.notificationService,
     createRequest: requestService.createRequest,
-    queryWithdrawals: PaystackServices.queryWithdrawals
+    queryWithdrawals: PaystackServices.queryWithdrawals,
+    getPayStackBalance: PaystackServices.getBalance,
+    getMobileBal: mobilenigService.getBalance,
 }
