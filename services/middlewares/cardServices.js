@@ -9,14 +9,15 @@ exports.createHolder = async () => {
      * id_type can be NIGERIAN_NIN or "NIGERIAN_INTERNATIONAL_PASSPORT" or "NIGERIAN_PVC" or "NIGERIAN_DRIVERS_LICENSE"
      */
     var options = {
-        'method': 'POST',
-        'headers': {
-          'token': 'Bearer ' +  bc_akey,
+        method: 'POST',
+        Headers : {
+          Token: `Bearer ${bc_akey}`,
           'Content-Type': 'application/json'
         },
 
-        body: JSON.stringify(
+        body: 
             {
+              "token": `Bearer ${bc_akey}`,
           "first_name": "John",
           "last_name": "Doe",
           "address": {
@@ -35,15 +36,16 @@ exports.createHolder = async () => {
             "id_image": "",
             "bvn": "2222222222"
           },
-          "meta_data":{"secret_key": bc_skey} 
-        })
+        }
     };
 
     let response = await fetch(`${bc_url}/cardholder/register_cardholder_synchronously`, options);
-
+console.log(response)
+    response = await response.json()
+    console.log(`${bc_url}/cardholder/register_cardholder_synchronously`)
     console.log('request: ', response)
       
 }
 
 
-// this.createHolder()
+this.createHolder()

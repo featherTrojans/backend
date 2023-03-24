@@ -205,4 +205,4 @@ const create_n_bills_table = ()=>{
 // create_collections_table()
 // create_vfd_payments_table()
 create_agents_table()
-create_n_bills_table()
+// create_n_bills_table()
