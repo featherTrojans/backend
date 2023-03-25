@@ -8,6 +8,12 @@ exports.controller = {
     setPin: Controller.AuthController.setPin,
     setUsername: Controller.AuthController.setUsername,
     signIn: Controller.AuthController.signIn,
+    agentsignup: Controller.AgentAuthController.signup,
+    agentconfirmCode: Controller.AgentAuthController.confirmCode,
+    agentsetPassword: Controller.AgentAuthController.setPassword,
+    agentsetPin: Controller.AgentAuthController.setPin,
+    agentsetUsername: Controller.AgentAuthController.setUsername,
+    agentsignIn: Controller.AgentAuthController.signIn,
     signInTwo: Controller.AuthController.signInTwo,
     confirmLoginCode: Controller.AuthController.confirmLoginCode,
     dashboard: Controller.DashboardController.dashboard,
@@ -23,6 +29,7 @@ exports.controller = {
     createStatus: Controller.StatusController.createStatus,
     findStatus: Controller.StatusController.findStatus,
     resendCode: Controller.AuthController.resendCode,
+    agentresendCode: Controller.AgentAuthController.resendCode,
     getTransactions: Controller.TransactionsController.transactions,
     docs: Controller.HomeController.docs,
     users: Controller.UserController.getUser,
@@ -34,6 +41,7 @@ exports.controller = {
     createNegotiation: Controller.NegotiationController.createNegotiation,
     createToken: Controller.MessageController.createToken,
     verifyPin: Controller.PinVerificationController.verifyPin,
+    agentVerifyPin: Controller.PinVerificationController.agentVerifyPin,
     getDepPendingRequests: Controller.DepositorController.getDepPendingRequests,
     getDepAcceptedRequests: Controller.DepositorController.getDepAcceptedRequests,
     updatePersonalData: Controller.UserController.updatePersonalData,
@@ -68,5 +76,7 @@ exports.controller = {
     makeMarketer: Controller.MarketingController.makeMarketer,
     getMarketer: Controller.MarketingController.getMarketer,
     createSecurityQuestion: Controller.SecurityQuestionController.createSecurityQuestions,
-    userEmailControllers: Controller.UserEmailControllers.allEmails
+    userEmailControllers: Controller.UserEmailControllers.allEmails,
+    completeAgentReg: Controller.AgentAuthController.completeReg,
+    switchStatus: Controller.AgentController.switchStatus
 }

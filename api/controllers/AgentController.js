@@ -1,4 +1,4 @@
-const { Agent, Users } = require("../../models");
+const { Agents, Users } = require("../../models");
 const {logger, eventEmitter} = require("../../config").config
 const { validationResult } = require('express-validator')
 const {services} = require("../../services")
@@ -30,7 +30,7 @@ exports.signup = ( async (req, res) => {
 
             } else  {
 
-                Agent.create({
+                Agents.create({
                     userUid: userId,
                     business_name,
                     daily_transaction,
@@ -78,7 +78,7 @@ exports.signup = ( async (req, res) => {
 exports.approve = (async (req, res) => {
     try{
         const {agentId} = req.body
-        const check = Agent.findOne({
+        const check = Agents.findOne({
             where: {agentId},
             attributes: ['userUid', 'status', 'phone_number']
         })
@@ -103,7 +103,7 @@ exports.approve = (async (req, res) => {
             })
         } else {
             // update agent
-            Agent.update({status: "APPROVED"}, {where: {agentId}})
+            Agents.update({status: "APPROVED"}, {where: {agentId}})
             const {email, messageToken, phoneNumber} = Users.findOne({where: {userUid}})
             //update userlevel
             Users.update({userLevel: 3}, {where: {userUid: check.userUid}})
@@ -115,6 +115,49 @@ exports.approve = (async (req, res) => {
                 status: true,
                 data: {},
                 message: "Request approved successfully"
+            });
+        }
+
+    } catch (error) {
+
+        logger.info(error);
+        res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        });
+    }
+}) 
+
+
+exports.switchStatus = (async (req, res) => {
+    try{
+        const {userId } = req.user
+        let {status} = req.body
+        const check = await Agents.findOne({
+            where: {userUid: userId},
+            attributes: ['phoneNumber', 'email', 'messageToken']
+        })
+
+        if (!check || check == null ) {
+            return res.status(404).json({
+                status: false,
+                data: {},
+                message: "Hey padi, the agent does not exist"
+            })
+        } else {
+            // update agent
+            Agents.update({status}, {where: {useruid: userId}})
+            const {messageToken, phoneNumber, email} = check
+            
+            message = status == 'OFF' ? "Hey padi, your status is OFF, you can switch on to continue enjoying our merchant benefits!!!" : "Hey padi, your status is now ON 😉.!!!";
+
+            eventEmitter.emit('statusmessage', {description: message, messageToken, title: "Status Switched!", redirectTo: 'Notifications'});
+
+            return res.status(202).json({
+                status: true,
+                data: {},
+                message: "Status switched successfully"
             });
         }
 
