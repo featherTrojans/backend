@@ -23,6 +23,11 @@ router.group('/', (router) => {
             );
 
             router.post('/approve', controller.approveAgent)
+
+            router.put('/data/update', [Authenticate], controller.completeAgentReg)
+
+            router.put('/status/update', [Authenticate], controller.switchStatus)
+            
         })
         router.group('/auth', (router) => {
 
@@ -147,6 +152,107 @@ router.group('/', (router) => {
             ], 
             controller.confirmLoginCode
             );
+
+
+            router.group('/agent', (router) => {
+
+                router.post('/signup', 
+                [
+                    body('firstName').toUpperCase(),
+                    body('email').isEmail(),
+                    body('firstName').isLength({ min: 2 }),
+                    body('lastName').isLength({ min: 2 }),
+                    body('lastName').toUpperCase(),
+                    body('phoneNumber').isNumeric(),
+                    body('phoneNumber').isLength({ max: 11, min: 11 }),
+                    body('email').toUpperCase(),
+    
+                ], 
+                controller.agentsignup
+                );
+    
+                router.post('/resend/code',
+                    controller.agentresendCode
+                );
+                
+                router.post('/verify/code',
+                [   
+                    Authenticate,
+                    body('code').isNumeric(),
+                    body('code').isLength({ min: 6, max: 6 }),
+                    
+                ], 
+                controller.agentconfirmCode
+                );
+    
+                router.put('/password/set',
+                [   
+                    Authenticate,
+                    // body('password').isAlphanumeric(),
+                    body('password').isLength({ min: 6 }),
+                    
+                ], 
+                controller.agentsetPassword
+                );
+    
+                router.put('/pin/set',
+                [   
+                    Authenticate,
+                    body('pin').isNumeric(),
+                    body('pin').isLength({ min: 4, max: 4 }),
+                    
+                ], 
+                controller.agentsetPin
+                );
+    
+                router.post('/pin/verify',
+                [   
+                    Authenticate,
+                    body('user_pin').isNumeric(),
+                    body('user_pin').isLength({ min: 4, max: 4 }),
+                    
+                ], 
+                controller.agentVerifyPin
+                );
+    
+                // router.post('/token/create',
+                // [   
+                //     Authenticate
+                // ], 
+                // controller.agentcreateToken
+                // );
+    
+                router.put('/username/set',
+                [   
+                    Authenticate,
+                    body('newUsername').isLength({ min: 3 }),
+                    body('newUsername').toUpperCase()
+                    
+                ], 
+                controller.agentsetUsername
+                );
+    
+                // router.put('/password/changepassword',
+                // [   
+                //     Authenticate,
+                //     body('newpassword').isLength({ min: 6 }),
+                    
+                // ], 
+                // controller.agentchangePassword
+                // );
+    
+                router.post('/signin',
+                [   
+                    body('username').toLowerCase(),
+                    body('password').isLength({ min: 4 }),
+                    
+                ], 
+                controller.agentsignIn
+                );
+    
+                
+            })
+    
         })
 
         router.get('/dashboard',

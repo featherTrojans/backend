@@ -1,5 +1,6 @@
 const idGenService = require('./generateId')
 const confirmData = require('./confirmData')
+const confirmAgentData = require('./confirmAgentData')
 const codeGenerator = require('./generateCode')
 const Authenticate = require('./middlewares/auth')
 const TokenServices = require('./middlewares/tokenservices')
@@ -31,6 +32,7 @@ exports.services = {
     debitService,
     idGenService,
     confirmData,
+    confirmAgentData,
     codeGenerator,
     Authenticate,
     TokenServices,

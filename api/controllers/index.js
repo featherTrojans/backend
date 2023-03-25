@@ -34,6 +34,7 @@ const CronController = require('./CronController')
 const MNIGController = require('./MobileNigWebhookController')
 const AdminMessageController = require('./AdminMessagingController')
 const AgentController = require('./AgentController')
+const AgentAuthController = require('./AgentAuthController')
 const MarketingController = require('./MarketingController')
 const SecurityQuestionController = require('./SecurityQuestionController')
 const UserEmailControllers = require('./UserEmailControllers')
@@ -79,4 +80,5 @@ module.exports = {
     MarketingController,
     SecurityQuestionController,
     UserEmailControllers,
+    AgentAuthController,
 }

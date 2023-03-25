@@ -5,7 +5,7 @@ const {
     LocationHistory, Request, Status, BankAccount, Withdrawal,
     Bills, Rating, Notification, BVN, Webhook, CollectionAccounts,
     VfdPayment,
-    Agent
+    Agents
 } = require('../models/')
 const NewBills = require('../models/NewBills')
 
@@ -169,7 +169,7 @@ const create_vfd_payments_table = ()=>{
     })
 }
 const create_agents_table = ()=>{
-    Agent.sync({force: true}).then(()=>{
+    Agents.sync({force: true}).then(()=>{
     
     config.logger.info('agents table created')
     }).catch(err=>{
@@ -205,4 +205,4 @@ const create_n_bills_table = ()=>{
 // create_collections_table()
 // create_vfd_payments_table()
 create_agents_table()
-create_n_bills_table()
+// create_n_bills_table()
