@@ -171,3 +171,41 @@ exports.switchStatus = (async (req, res) => {
         });
     }
 }) 
+
+
+exports.updateLocation = (async (req, res) => {
+    try{
+        const {userId } = req.user
+        let {longitude, latitude, locationText} = req.body
+        const check = await Agents.findOne({
+            where: {userUid: userId},
+            attributes: ['phoneNumber']
+        })
+
+        if (!check || check == null ) {
+            return res.status(404).json({
+                status: false,
+                data: {},
+                message: "Hey padi, the agent does not exist"
+            })
+        } else {
+            // update agent
+            Agents.update({longitude, latitude, locationText}, {where: {useruid: userId}})
+        
+            return res.status(202).json({
+                status: true,
+                data: {},
+                message: "Location updated successfully"
+            });
+        }
+
+    } catch (error) {
+
+        logger.info(error);
+        res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        });
+    }
+}) 

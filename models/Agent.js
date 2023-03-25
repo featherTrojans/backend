@@ -177,6 +177,13 @@ const Agents = db_con.define("agents", {
            notEmpty: true
         }
     },
+    "imageUrl": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
     "pin_attempts": {
         allowNull: false,
         type: Sequelize.INTEGER,

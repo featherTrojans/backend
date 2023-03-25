@@ -78,5 +78,7 @@ exports.controller = {
     createSecurityQuestion: Controller.SecurityQuestionController.createSecurityQuestions,
     userEmailControllers: Controller.UserEmailControllers.allEmails,
     completeAgentReg: Controller.AgentAuthController.completeReg,
-    switchStatus: Controller.AgentController.switchStatus
+    switchStatus: Controller.AgentController.switchStatus,
+    updateLocation: Controller.AgentController.updateLocation,
+    agentDashboard: Controller.AgentDashController.dashboard
 }
