@@ -27,7 +27,11 @@ router.group('/', (router) => {
             router.put('/data/update', [Authenticate], controller.completeAgentReg)
 
             router.put('/status/update', [Authenticate], controller.switchStatus)
-            
+
+            router.put('/location/update', [Authenticate], controller.updateLocation)
+
+            router.get('/dashboard', [Authenticate], controller.agentDashboard)
+
         })
         router.group('/auth', (router) => {
 
