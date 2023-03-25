@@ -16,7 +16,7 @@ const BVN = require('./BVN')
 const Webhook = require('./Webhook')
 const CollectionAccounts = require('./CollectionAccount')
 const VfdPayment = require('./VfdPayment')
-const Agent = require('./Agent')
+const Agents = require('./Agent')
 const NewBills = require('./NewBills')
 
 const models = {
@@ -38,7 +38,7 @@ const models = {
     Webhook,
     CollectionAccounts,
     VfdPayment,
-    Agent,
+    Agents,
     NewBills
 }
 

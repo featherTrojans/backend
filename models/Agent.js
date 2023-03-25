@@ -104,6 +104,22 @@ const Agents = db_con.define("agents", {
         }
 
     },
+    "accountNo": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+
+    },
+    "bvn": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+
+    },
     "business_name": {
         allowNull: true,
         unique: true,
@@ -169,6 +185,28 @@ const Agents = db_con.define("agents", {
            notEmpty: true
         }
 
+    },
+    "longitude": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+
+    },
+    "latitude": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    "locationText": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
     },
     "charges_cat_one": {
         allowNull: false,

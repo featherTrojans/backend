@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const { config } = require("../../config")
 const {logger, Op, eventEmitter} = config
 const {services} = require("../../services")
-const { Users } = require('../../models')
+const { Agents } = require('../../models')
 const {TokenServices} = services
 require('../../subscribers')
 
@@ -13,29 +13,27 @@ exports.signup = ( async (req, res) => {
     try
     {
         const {...data} = req.body
-        const userId = services.idGenService(10)
-        const refId = services.idGenService(7)
+        const userId = 'FGT' + services.idGenService(7)
         const errors = validationResult(req);
         const username = "feather" + services.codeGenerator(5);
-        const referredBy = !data.referredBy ? 'SETH' : data.referredBy;
-
+        let {email, phoneNumber, firstName, lastName, password} = data
         if (!errors.isEmpty()) {
 
           return res.status(403).json({ errors: errors.array() });
 
         } else {
 
-            const checkUsername = await services.confirmData({data: username, type: 'username'});
-            const checkEmail = await services.confirmData({data: data.email, type: 'email'});
-            const checkPhoneNumber = await services.confirmData({data: data.phoneNumber, type: 'phoneNumber'});
+            const checkUsername = await services.confirmAgentData({data: username, type: 'username'});
+            const checkEmail = await services.confirmAgentData({data: email, type: 'email'});
+            const checkPhoneNumber = await services.confirmAgentData({data: phoneNumber, type: 'phoneNumber'});
 
 
-            if (!(data.firstName && data.phoneNumber && data.email && data.lastName && data.password)){
+            if (!(firstName && phoneNumber && email && lastName && password)){
 
                 return res.status(400).json({
                     status : false,
                     data: {},
-                    message: "All input are required"
+                    message: "Aww padi 🥲,All inputs are required"
                 })
 
             } else if ( checkUsername != null ){
@@ -45,7 +43,7 @@ exports.signup = ( async (req, res) => {
                     data: {
                         isVerified
                     },
-                    message: "Username already exist"
+                    message: "Aww padi 🥲!! Username already exist"
                 }) 
             } else if (checkPhoneNumber != null ) {
                 const isVerified = checkPhoneNumber.isVerified
@@ -54,7 +52,7 @@ exports.signup = ( async (req, res) => {
                     data: {
                         isVerified
                     },
-                    message: "Phone Number already exist"
+                    message: "Aww padi 🥲; Phone Number already exist"
                 }) 
             }else if ( checkEmail != null ) {
                 const isVerified = checkEmail.isVerified
@@ -63,33 +61,30 @@ exports.signup = ( async (req, res) => {
                     data: {
                         isVerified
                     },
-                    message: "Email already exist"
+                    message: "Aww padi 🥲; Email already exist"
                 }) 
             }
             else if ( checkUsername == null && checkEmail == null && checkPhoneNumber == null ) {
 
                 code = services.codeGenerator(6)
-                const phoneNumber = data.phoneNumber
-                const fullName = data.lastName + " " + data.firstName
-                const email = data.email
+                const fullName = lastName + " " + firstName
                 const pwd = await bcrypt.hash(data.password, 10);
                 const hashedPin = await bcrypt.hash("0000", 10);
-
-                Users.create({
+                agentId = phoneNumber.substr(phoneNumber.length - 10)
+                Agents.create({
                     userUid: userId,
+                    agentId,
                     username,
                     fullName,
                     phoneNumber,
                     email,
-                    refId,
                     code,
-                    referredBy,
                     password: pwd,
                     pin: hashedPin,
                 }).then( () => {
 
-                    // const message = `Dear ${fullName}, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
-                    // eventEmitter.emit('signup', {code, phoneNumber, email, message})
+                    const message = `Dear ${fullName}, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
+                    eventEmitter.emit('signup', {code, phoneNumber, email, message})
                     const token = TokenServices({userId, username, email, fullName}, '262800h')
                     return res.status(201).json({
                         status : true,
@@ -101,7 +96,7 @@ exports.signup = ( async (req, res) => {
                             phoneNumber,
                             token
                         },
-                        message: "Signed up Successfully"
+                        message: "Signed up Successfully 👍"
                     })
 
                 }).catch((error) => {
@@ -110,7 +105,7 @@ exports.signup = ( async (req, res) => {
                     return res.status(400).json({
                         status : false,
                         data: error,
-                        message: "Cannot sign up"
+                        message: "Cannot sign up 🥲"
                     })
 
                 })
@@ -120,7 +115,7 @@ exports.signup = ( async (req, res) => {
                 return res.status(404).json({
                     status : false,
                     data: {},
-                    message: "Invalid data provided"
+                    message: "Invalid data provided 🥲"
                 }) 
             }
 
@@ -133,7 +128,7 @@ exports.signup = ( async (req, res) => {
         res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occur 🥲"
         })
     }
 
@@ -153,13 +148,13 @@ exports.resendCode = ( async (req, res) => {
                 data: {
                     
                 },
-                message: "Email is required"
+                message: "Aww padi 🥲; Email is required"
             }) 
         }else {
             code = await services.codeGenerator(6)
-            const {fullName, phoneNumber, userUid, username} = await Users.findOne({where: {email}})
+            const {fullName, phoneNumber, userUid, username} = await Agents.findOne({where: {email}})
             const userId = userUid
-            Users.update({
+            Agents.update({
                 code
             }, {where: {email}}).then( (data) => {
 
@@ -167,7 +162,7 @@ exports.resendCode = ( async (req, res) => {
 
                 const message = `Dear ${fullName}, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
                 eventEmitter.emit('signup', {code, phoneNumber, email, message})
-                const token = TokenServices({userId, username, email, fullName}, '2h')
+                const token = TokenServices({userId, username, email, fullName}, '262800h')
                 return res.status(201).json({
                     status : true,
                     data: {
@@ -178,7 +173,7 @@ exports.resendCode = ( async (req, res) => {
                         phoneNumber,
                         token
                     },
-                    message: "Code resent Successfully"
+                    message: "Code resent Successfully 👍"
                 })
 
             }).catch((error) => {
@@ -210,6 +205,7 @@ exports.confirmCode = ( async (req, res) => {
     const {code} = req.body
     const { userId, username, email, fullName } = req.user
     const errors = validationResult(req);
+
     try
     {
 
@@ -218,16 +214,16 @@ exports.confirmCode = ( async (req, res) => {
             return res.status(403).json({ message: "Hey padi something is wrong, kindly try again!" });
   
         } else {
-            Users.findOne({attributes: ['code'], where: {userUid: userId, code}})
+            Agents.findOne({attributes: ['code'], where: {userUid: userId, code}})
             .then((data) => {
 
                 if ( data.code != null && data.code == code ) {
                     
-                    Users.update(
-                        { isVerified: true, userLevel: 1},
+                    Agents.update(
+                        { isVerified: true},
                         {where: {userUid: userId}}
                     )
-                    const token = TokenServices({userId, username, email, fullName}, '2h')
+                    const token = TokenServices({userId, username, email, fullName}, '262800h')
                     
                     return res.status(200).json({
                         status: true,
@@ -236,7 +232,7 @@ exports.confirmCode = ( async (req, res) => {
                             code,
                             token
                         },
-                        message: "Code validated successfully"
+                        message: "Your Phone number has been verified successfully 👍"
                     })
 
                 } else {
@@ -269,6 +265,118 @@ exports.confirmCode = ( async (req, res) => {
 
 })
 
+exports.completeReg = ( async (req, res) => {
+
+    try
+    {
+        const {...data} = req.body
+        const { userId, username, email, fullName } = req.user
+        const errors = validationResult(req);
+        let { 
+            business_name,
+            daily_transaction,
+            business_category,
+            full_address,
+            bus_phone_number,
+            charges_cat_one,
+            charges_cat_two,
+            charges_cat_three,
+            charges_cat_four,
+            messageToken
+    
+        } = data
+        if (!errors.isEmpty()) {
+
+          return res.status(403).json({ errors: errors.array() });
+
+        } else {
+
+            const checkbname = await services.confirmAgentData({data: business_name, type: 'bus_name'});
+            const checkPhoneNumber = await services.confirmAgentData({data: bus_phone_number, type: 'b_phoneNumber'});
+
+
+            if (!(business_name && daily_transaction && business_category && full_address && bus_phone_number && charges_cat_one && charges_cat_two && charges_cat_three && charges_cat_four)){
+
+                return res.status(400).json({
+                    status : false,
+                    data: {},
+                    message: "Aww padi 🥲,All inputs are required"
+                })
+
+            } else if ( checkbname != null ){
+                const isVerified = checkUsername.isVerified
+                return res.status(400).json({
+                    status : false,
+                    data: {
+                        isVerified
+                    },
+                    message: "Aww padi 🥲!! Business has been taken"
+                }) 
+            } else if (checkPhoneNumber != null ) {
+                const isVerified = checkPhoneNumber.isVerified
+                return res.status(400).json({
+                    status : false,
+                    data: {
+                        isVerified
+                    },
+                    message: "Aww padi 🥲; Phone Number cannot be reused"
+                }) 
+            } else if ( checkbname == null  && checkPhoneNumber == null ) {
+
+                await Agents.update({
+                    business_name,
+                    daily_transaction,
+                    business_category,
+                    full_address,
+                    bus_phone_number,
+                    charges_cat_one,
+                    charges_cat_two,
+                    charges_cat_three,
+                    charges_cat_four,
+                    userLevel: 1,
+                    messageToken
+                }, {where: {userUid: userId}})
+                const token = TokenServices({userId, username, email, fullName}, '262800h')
+                    return res.status(202).json({
+                        status : true,
+                        data: {
+                            userId,
+                            fullName,
+                            username,
+                            email,
+                            business_name,
+                            daily_transaction,
+                            business_category,
+                            full_address,
+                            bus_phone_number,
+                            token
+                        },
+                        message: "Business Data updated Successfully 👍"
+                    })
+
+            } else {
+
+                return res.status(404).json({
+                    status : false,
+                    data: {},
+                    message: "Invalid data provided 🥲"
+                }) 
+            }
+
+        }
+
+    }
+    catch (error) {
+
+        logger.info(error)
+        res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur 🥲"
+        })
+    }
+
+})
 
 
 exports.setPassword = (async (req, res) => {
@@ -284,7 +392,7 @@ exports.setPassword = (async (req, res) => {
             return res.status(403).json({ errors: errors.array() });
   
         } else {
-            const checkUsername = await services.confirmData({data: username, type: 'username'})
+            const checkUsername = await services.confirmAgentData({data: username, type: 'username'})
             logger.info(checkUsername);
             const pwd = await bcrypt.hash(password, 10);
             
@@ -298,7 +406,7 @@ exports.setPassword = (async (req, res) => {
             } else {
                 //set password in database
                 const hashedPin = await bcrypt.hash("0000", 10);
-                Users.update(
+                Agents.update(
                     {password: pwd, isVerified: true, userLevel: 1, pin: hashedPin},
                     {where: {userUid: userId}}
                 ).then(()=>{
@@ -306,7 +414,7 @@ exports.setPassword = (async (req, res) => {
                     Get cash easily without stress. Your username/tag is @${username}, you can change it to your desired one on the app. Welcome once again`
 
                     eventEmitter.emit('signupSuccess', {fullName, email, message}, fullName);
-                    const token = TokenServices({userId, username, email, fullName}, '2h')
+                    const token = TokenServices({userId, username, email, fullName}, '262800h')
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -314,7 +422,7 @@ exports.setPassword = (async (req, res) => {
                             username,
                             token
                         },
-                        message: "Password set successfully"
+                        message: "Password set successfully 👍"
                     })
                 }).catch((err) => {
                     logger.info(err)
@@ -352,7 +460,7 @@ exports.setPin = (async (req, res) => {
             return res.status(403).json({ errors: errors.array() });
   
         } else {
-            const checkUsername = await services.confirmData({data: username, type: 'username'})
+            const checkUsername = await services.confirmAgentData({data: username, type: 'username'})
             logger.info(checkUsername);
             const hashedPin = await bcrypt.hash(pin, 10);
             
@@ -365,11 +473,11 @@ exports.setPin = (async (req, res) => {
                 })
             } else {
                 //set password in database
-                Users.update(
+                Agents.update(
                    { pin: hashedPin},
                     {where: {userUid: userId}}
                 ).then(()=>{
-                    const token = TokenServices({userId, username, email, fullName}, '2h')
+                    const token = TokenServices({userId, username, email, fullName}, '262800h')
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -377,7 +485,7 @@ exports.setPin = (async (req, res) => {
                             username,
                             token
                         },
-                        message: "Pin set successfully"
+                        message: "Pin set successfully 👍"
                     })
                 }).catch((err) => {
                     res.status(400).json({
@@ -413,8 +521,8 @@ exports.setUsername = (async (req, res) => {
             return res.status(403).json({ errors: errors.array() });
   
         } else {
-            const checkUsername = await services.confirmData({data: username, type: 'username'})
-            const checkNewUsername = await services.confirmData({data: newUsername, type: 'username'})
+            const checkUsername = await services.confirmAgentData({data: username, type: 'username'})
+            const checkNewUsername = await services.confirmAgentData({data: newUsername, type: 'username'})
 
             if ( checkUsername == null) {
 
@@ -434,12 +542,12 @@ exports.setUsername = (async (req, res) => {
 
             } else {
                 //set password in database
-                Users.update(
+                Agents.update(
                    { username: newUsername},
                     {where: {userUid: userId}}
                 ).then(()=>{
                     username = newUsername
-                    const token = TokenServices({userId, username, email, fullName}, '2h')
+                    const token = TokenServices({userId, username, email, fullName}, '262800h')
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -447,7 +555,7 @@ exports.setUsername = (async (req, res) => {
                             username,
                             token
                         },
-                        message: "Username set successfully"
+                        message: "Username set successfully 👍"
                     })
                 }).catch((err) => {
                     res.status(400).json({
@@ -483,14 +591,15 @@ exports.signIn = async (req, res) => {
             return res.status(400).json({
                 status : false,
                 data: {},
-                message: "All input are required"
+                message: "All inputs are required"
             })
 
         } else{
-            const checkUsername = await Users.findOne({where: {
+            const checkUsername = await Agents.findOne({where: {
                 [Op.or]: {
                     username,
-                    phoneNumber: username
+                    phoneNumber: username,
+                    agentId: username
                 }
             }})
             if ( checkUsername == null) {
@@ -520,7 +629,7 @@ exports.signIn = async (req, res) => {
                     })
                 }else {
 
-                    const token = TokenServices({userId: userUid, username, email, fullName}, '2h')
+                    const token = TokenServices({userId: userUid, username, email, fullName}, '262800h')
                     return res.status(200).json({
                         status: true,
                         data: {
@@ -542,125 +651,4 @@ exports.signIn = async (req, res) => {
             message: "error occur"
         })
     }
-}
-
-exports.signInTwo = async (req, res) => {
-    const { username } = req.body
-    const errors = validationResult(req);
-
-    try{
-        if (!errors.isEmpty()) {
-
-            return res.status(403).json({ errors: errors.array() });
-  
-        }else if (!(username)){
-
-            return res.status(400).json({
-                status : false,
-                data: {},
-                message: "Aww padi! Kindly Input your phone number or feather tag to login"
-            })
-
-        } else{
-            const checkUsername = await Users.findOne({where: {
-                [Op.or]: {
-                    username,
-                    phoneNumber: username
-                },
-            }})
-            if ( checkUsername == null) {
-                return res.status(404).json({
-                    status : false,
-                    data: {},
-                    message: "Aww padi! Incorrect feather tag/ phone number"
-                })
-            } else {
-
-                const {isLoggedIn, phoneNumber, fullName, userUid} = checkUsername
-
-                if (isLoggedIn) {
-                    return res.status(400).json({
-                        status : false,
-                        data: {},
-                        message: "Aww padi! You are logged in on another device"
-                    })
-                } else {
-                    code = services.codeGenerator(6)
-                    //update code
-                    Users.update({code}, {where: {userUid}})
-                    const message = `Dear ${fullName}, your login verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
-                    eventEmitter.emit('signin', {code, phoneNumber, message})
-                    res.status(200).json({
-                        status: true,
-                        data: {},
-                        message: "Hello padi, your OTP has been sent successfully"
-                    })
-                }
-            }
-        }
-    } catch (error) {
-
-        logger.info(error)
-        return res.status(409).json({
-            status: false,
-            data : error,
-            message: "error occur"
-        })
-    }
-}
-
-exports.confirmLoginCode =  async ( req, res) => {
-
-    try {
-        const {code} = req.body
-        
-        if (code === null || code === '') {
-            return res.status(400).json({
-                status: false,
-                data: {},
-                message: 'Aww padi, code cannot be empty'
-            })
-        } else  {
-            const checkUser = await Users.findOne({
-                where: {code}
-            })
-            console.log (checkUser)
-
-            if (checkUser === null) {
-                return res.status(404).json({
-                    status: false,
-                    data: {},
-                    message: 'Aww padi, the code you entered is invalid, please retry'
-                })
-            } else{
-                const {userUid, username, email, fullName} = checkUser;  
-                const token = TokenServices({userId: userUid, username, email, fullName}, '4380d') // set token to 12 years
-                // set isLoggedIn to true
-                Users.update(
-                {
-                    isLoggedIn: true
-                },
-                {where: {userUid}})
-                return res.status(200).json({
-                    status: true,
-                    data: {
-                        userId: userUid,
-                        username,
-                        token
-                    },
-                    message: "User signed in successfully"
-                })
-            }
-            
-        }
-    }catch ( error) {
-        logger.info('error', error)
-        return res.status(409).json({
-            status: false,
-            data: {},
-            message: "Aww padi,An error occured. Contact support"
-        })
-    }
-
-
 }

@@ -1,0 +1,13 @@
+const Agents = require("../models/Agent");
+
+const confirmAgentData = async (data) => {
+    
+    switch(data.type) {
+        case "email" : return await Agents.findOne({attributes: ['email', 'isVerified'], where: {email: data.data}});
+        case "username" : return await Agents.findOne({where: {username: data.data}});
+        case "phoneNumber" : return await Agents.findOne({attributes: ['phoneNumber', 'isVerified'], where: {phoneNumber: data.data}}); 
+        default: return null;
+    }
+}
+
+module.exports = confirmAgentData
