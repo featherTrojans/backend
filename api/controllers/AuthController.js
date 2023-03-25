@@ -17,7 +17,8 @@ exports.signup = ( async (req, res) => {
         const refId = services.idGenService(7)
         const errors = validationResult(req);
         const username = "feather" + services.codeGenerator(5);
-        const referredBy = !data.referredBy ? 'SETH' : data.referredBy;
+        let {referredBy, email, phoneNumber, password, firstName, lastName,} = data
+        const referredBy = !referredBy ? 'SETH' : referredBy;
 
         if (!errors.isEmpty()) {
 
@@ -26,11 +27,11 @@ exports.signup = ( async (req, res) => {
         } else {
 
             const checkUsername = await services.confirmData({data: username, type: 'username'});
-            const checkEmail = await services.confirmData({data: data.email, type: 'email'});
-            const checkPhoneNumber = await services.confirmData({data: data.phoneNumber, type: 'phoneNumber'});
+            const checkEmail = await services.confirmData({data: email, type: 'email'});
+            const checkPhoneNumber = await services.confirmData({data: phoneNumber, type: 'phoneNumber'});
 
 
-            if (!(data.firstName && data.phoneNumber && data.email && data.lastName && data.password)){
+            if (!(firstName && phoneNumber && email && lastName && password)){
 
                 return res.status(400).json({
                     status : false,
@@ -69,10 +70,8 @@ exports.signup = ( async (req, res) => {
             else if ( checkUsername == null && checkEmail == null && checkPhoneNumber == null ) {
 
                 code = services.codeGenerator(6)
-                const phoneNumber = data.phoneNumber
-                const fullName = data.lastName + " " + data.firstName
-                const email = data.email
-                const pwd = await bcrypt.hash(data.password, 10);
+                const fullName = lastName + " " + firstName
+                const pwd = await bcrypt.hash(password, 10);
                 const hashedPin = await bcrypt.hash("0000", 10);
 
                 Users.create({
@@ -221,7 +220,7 @@ exports.confirmCode = ( async (req, res) => {
             Users.findOne({attributes: ['code'], where: {userUid: userId, code}})
             .then((data) => {
 
-                if ( data.code != null && data.code == code ) {
+                if ( code != null && code == code ) {
                     
                     Users.update(
                         { isVerified: true, userLevel: 1},
