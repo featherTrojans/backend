@@ -126,11 +126,11 @@ exports.buyAirtime = ( async (req, res) => {
                             if ( buyAirtime == false) {
     
                                 //return charged amount
-                                new Promise(function(resolve, reject) {
-                                    let reCredit = creditService({userUid: userId, reference: creditReference, amount, from: 'pay Bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
+                                // new Promise(function(resolve, reject) {
+                                //     let reCredit = creditService({userUid: userId, reference: creditReference, amount, from: 'pay Bills', to: 'primary wallet', description: `NGN${amount} ${network} airtime purchase reversal on ${phone}`, title: 'Fund Reversal'})
     
-                                    reCredit ? setTimeout(() => resolve("done"), 9000) : setTimeout(() => reject( new Error(`Cannot re credit`)));
-                                })
+                                //     reCredit ? setTimeout(() => resolve("done"), 9000) : setTimeout(() => reject( new Error(`Cannot re credit`)));
+                                // })
                                 //update NewBills status 
                                 NewBills.update({status: "FAILED"}, {where: {reference}})
                                 return res.status(400).json({
