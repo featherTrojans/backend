@@ -156,7 +156,7 @@ exports.resendCode = ( async (req, res) => {
             }) 
         }else {
             code = await services.codeGenerator(6)
-            const {fullName, phoneNumber, userUid, username} = await Users.findOne({where: {email}})
+            const {fullName, phoneNumber, userUid, username} = await Agents.findOne({where: {email}})
             const userId = userUid
             Users.update({
                 code
@@ -166,7 +166,7 @@ exports.resendCode = ( async (req, res) => {
 
                 const message = `Dear ${fullName}, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
                 eventEmitter.emit('signup', {code, phoneNumber, email, message})
-                const token = TokenServices({userId, username, email, fullName}, '2h')
+                const token = TokenServices({userId, username, email, fullName}, '262800h')
                 return res.status(201).json({
                     status : true,
                     data: {
