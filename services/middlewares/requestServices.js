@@ -13,7 +13,7 @@ require('../../subscribers')
 
     try
     {
-        if (timeService.serverTime().now >= "02:00" && timeService.serverTime().now < "05:01") {
+        if (timeService.serverTime().now >= "00:00" && timeService.serverTime().now < "05:01") {
             return ({
                 code: 400,
                 status : false,
