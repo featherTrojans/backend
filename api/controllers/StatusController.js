@@ -1,10 +1,11 @@
 const { config } = require("../../config");
 const { Status, Users, Request } = require("../../models");
-const logger = config.logger
+const {logger, merchant_url} = config
 const services = require("../../services").services
 const { validationResult } = require('express-validator')
-const {returnLocation} = services
+const fetchApi = require('node-fetch');
 const sequelize = require('sequelize')
+const {createRequest} = services
 
 exports.createStatus = ( async (req, res) => {
     
@@ -253,11 +254,11 @@ exports.UpdateStatusLocation = ( (req, res) => {
 
 exports.findStatus = async (req, res) => {
     const {amount, location} = req.body
-    const { userId, username } = req.user
+    const { userId, username, email } = req.user
     const errors = validationResult(req);
     try
     {
-        const charges = Math.ceil(amount / 5000) * 50 //50 per 5000
+        const charges = 0; //Math.ceil(amount / 5000) * 50 //50 per 5000
         if (!errors.isEmpty()) {
 
             return res.status(403).json({ errors: errors.array() });
@@ -275,26 +276,44 @@ exports.findStatus = async (req, res) => {
             const {walletBal} = await Users.findOne({where: {userUid: userId}});
             const amountToUse = parseFloat(amount) + parseFloat(charges)
             if (amountToUse <= walletBal) {
-                const data = await returnLocation({amount, location, username, old: true})
-                if (data === false ) {
+                //call merchant
+                data = await fetchApi(`${merchant_url}/status/find`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                          },
+                        body: JSON.stringify({
+                            amount,
+                            location,
+                            username
+                        })
+                    }
+                )
+                data = await data.json()
+                console.log('data: => ', data)
+                if (data.status === false ) {
 
                     return res.status(404).json({
                         status: false,
                         data: {},
                         message: "No qualified status found"
                     })
+
                 } else {
 
                     // create request here.
-                    // const dataToSend = { userUid: userId, username, email, amount, charges, agent: data.fullName, agentUsername: data.username, statusId: data.reference, meetupPoint: data.locationText, negotiatedFee  }
-                    // const cashRequest = await createRequest(dataToSend);
-                    // console.log(cashRequest)
+                    data = data.data
+                    const charges = data.charges ?? 0;
+                    const dataToSend = { userUid: userId, username, email, amount, charges, agent: data.agent, agentUsername: data.agentUsername, statusId: data.agentUsername, meetupPoint: data.meetupPoint, negotiatedFee: 0, transId: data.transId }
+                    const cashRequest = await createRequest(dataToSend);
+                    console.log('cashRequest', cashRequest)
                     // return cashRequest
-                    return res.status(200).json({
-                        status: true,
-                        data,
+                    return res.status(cashRequest.code).json({
+                        status: cashRequest.status,
+                        data: cashRequest.data,
                         charges,
-                        message: 'statuses found successfully'
+                        message: cashRequest.message
                     })
                 }
                 
