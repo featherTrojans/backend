@@ -8,33 +8,28 @@ require('../../subscribers')
 
  exports.createRequest = ( async (data) => {
     
-    const { userUid, username, email, amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee  } = data
-    
-    const transId = idGenService(10);
-    const errors = validationResult(req);
+    const { userUid, username, email, amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee  , transId} = data
 
-    logger.info(req.body)
 
     try
     {
-        if (timeService.serverTime().now >= "00:00" && timeService.serverTime().now < "05:01") {
-            return res.status(400).json({
+        if (timeService.serverTime().now >= "02:00" && timeService.serverTime().now < "05:01") {
+            return ({
+                code: 400,
                 status : false,
                 data: {},
                 message: "Aw Padi!! Cash requests are not available during this period, try again later!!!"
             })
-        } else if (!errors.isEmpty()) {
-
-            return res.status(403).json({ errors: errors.array() });
-  
-        }else if (!(amount || charges || agent || agentUsername || statusId || meetupPoint)) {
-            return res.status(400).json({
+        } else if (!(amount || charges || agent || agentUsername || statusId || meetupPoint)) {
+            return ({
+                code: 400,
                 status : false,
                 data: {},
                 message: "Aww padi! Something occurred; please try again later"
             })
         } else if (amount < 200 ) {
-            return res.status(400).json({
+            return ({
+                code: 400,
                 status : false,
                 data: {},
                 message: "Invalid request amount. Make a request of NGN200 and above"
@@ -50,7 +45,8 @@ require('../../subscribers')
             })
 
             if (activeRequests.length >= 3 ) {
-                return res.status(400).json({
+                return ({
+                    code: 400,
                     status: false,
                     data: {},
                     message: "Sorry Padi, you cannot have more than 3 active requests at a time!!!!"
@@ -75,11 +71,8 @@ require('../../subscribers')
                     // })
                     // credit user escrow balance
                     Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal - total)}, {where: {userUid}});
-                    const agentData = await Users.findOne({
-                        where: {username: agentUsername},
-                        attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid']
-                    })
-                    Request.create({
+                    
+                    await Request.create({
 
                         userUid,
                         amount,
@@ -91,40 +84,31 @@ require('../../subscribers')
                         total,
                         statusId,
                         meetupPoint,
+                        status: 'APPROVED',
                         negotiatedFee: negotiatedFee ? negotiatedFee : 0
         
-                    }).then (() => {
-
-                        const message = `Dear @${username}, you have a new cash withdrawal`;
-                        eventEmitter.emit('createRequest', {email, message})
-                        eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: 'Hey padi, your cash request has been successfully created', redirectTo: 'Withdraw'})
-                        //send to agent 
-                        const agentMessage = `Dear @${agentUsername}, you have a new cash withdrawal from @${username}, login to complete transaction`;
-                        eventEmitter.emit('notification', {userUid: agentData.userUid, title: 'Cash Withdrawal', description: `Hey padi, you have a new cash withdrawal request from  @${username}.`, redirectTo: 'Depositupdate'})
-
-                        eventEmitter.emit('createRequest', {email: agentData.email, message: agentMessage})
-
-        
-                        return res.status(201).json({
-                            status: true,
-                            data: {
-                                amount,
-                                agent,
-                                "message": "Hey padi, Cash request created successfully"
-                            },
-                            message: "success"
-                        }) 
-                            
-                    }).catch((error) => {
-                        logger.info(error)
-                        return res.status(404).json({
-                            status: false,
-                            data : error,
-                            message: "Aww padi, Cannot create data"
-                        })
                     })
+
+                    const message = `Dear @${username}, you have a new cash withdrawal`;
+                    eventEmitter.emit('createRequest', {email, message})
+                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: 'Hey padi, your cash request has been successfully created', redirectTo: 'Withdraw'})
+
+    
+                    return ({
+                        code: 201,
+                        status: true,
+                        data: {
+                            amount,
+                            agent,
+                            "message": "Hey padi, Cash request created successfully"
+                        },
+                        message: "success"
+                    }) 
+                            
+                    
                 } else {
-                    return res.status(403).json({
+                    return ({
+                        code: 403,
                         status: false,
                         data: {},
                         message: "Aww padi, your balance is not enough for this transaction"
@@ -135,7 +119,8 @@ require('../../subscribers')
         
     } catch (error) {
         logger.info(error)
-        return res.status(409).json({
+        return ({
+            code: 409,
             status: false,
             data : error,
             message: "error occur"
