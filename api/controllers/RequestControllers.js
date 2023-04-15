@@ -3,7 +3,7 @@ const { Request, Users } = require("../../models");
 const {logger, eventEmitter, dollarUSLocale } = config
 const {services} = require("../../services")
 const { validationResult } = require('express-validator')
-const {idGenService, debitService, creditService, timeService} = services
+const {idGenService, debitService, creditService, timeService, sendRequestWebhook} = services
 require('../../subscribers')
 
 
@@ -160,6 +160,10 @@ exports.cancelRequests = ( async (req, res) => {
                 if ( updated[0] > 0 ) {
 
                     Users.update({escrowBal: newEscrowBal, walletBal: newWalletBal }, {where: {userUid}});
+                    sendRequestWebhook({
+                        reference,
+                        status: 'CANCELLED'
+                    })
                     //notify depositor
                     eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal has been cancelled`, redirectTo: 'Notifications'})
                     //return and debit escrow
@@ -192,6 +196,10 @@ exports.cancelRequests = ( async (req, res) => {
                 if (data[0] > 0 ) {
 
                     Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
+                    sendRequestWebhook({
+                        reference,
+                        status: 'CANCELLED'
+                    })
                     //return and debit escrow
                     creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
                     return res.status(202).json({
