@@ -2,7 +2,7 @@ const { config } = require("../config")
 const { Request } = require("../models")
 const refundUser = require("./middlewares/refundUser")
 const {Op, logger } = config
-const {timeService} = require("../services").services
+const {timeService, sendRequestWebhook} = require("../services").services
 
 var cron = require('node-cron');
 
@@ -21,6 +21,10 @@ const treatRequests = async (yesterday = timeService.serverTime().yesterday) => 
             for (const [key, value] of Object.entries(requests)) {
                 
                 //refund withdrawer
+                sendRequestWebhook({
+                    reference: value.reference,
+                    status: 'CANCELLED'
+                })
                 await refundUser(value.reference)
 
             }

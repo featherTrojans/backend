@@ -84,7 +84,7 @@ require('../../subscribers')
                         total,
                         statusId,
                         meetupPoint,
-                        status: 'APPROVED',
+                        status: 'ACCEPTED',
                         negotiatedFee: negotiatedFee ? negotiatedFee : 0
         
                     })
