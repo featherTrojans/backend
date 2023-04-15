@@ -273,7 +273,7 @@ exports.findStatus = async (req, res) => {
 
             //check user balance before creating request
 
-            const {walletBal} = await Users.findOne({where: {userUid: userId}});
+            const {walletBal, phoneNumber} = await Users.findOne({where: {userUid: userId}});
             const amountToUse = parseFloat(amount) + parseFloat(charges)
             if (amountToUse <= walletBal) {
                 //call merchant
@@ -286,7 +286,8 @@ exports.findStatus = async (req, res) => {
                         body: JSON.stringify({
                             amount,
                             location,
-                            username
+                            username,
+                            peerNumber: phoneNumber
                         })
                     }
                 )
