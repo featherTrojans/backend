@@ -65,4 +65,5 @@ exports.services = {
     queryWithdrawals: PaystackServices.queryWithdrawals,
     getPayStackBalance: PaystackServices.getBalance,
     getMobileBal: mobilenigService.getBalance,
+    sendRequestWebhook: requestServices.sendRequestWebhook,
 }
