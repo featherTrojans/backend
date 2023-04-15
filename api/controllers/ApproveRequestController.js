@@ -20,7 +20,7 @@ exports.approveRequest = ( async (req, res) => {
 
             return res.status(403).json({ errors: errors.array() });
   
-        }else if (!(reference) || !(user_pin)) {
+        }else if (!(reference) || !(user_pin) || !(agreedCharge)) {
             
             return res.status(400).json({
                 status : false,
