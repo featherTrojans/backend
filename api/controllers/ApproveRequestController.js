@@ -100,7 +100,7 @@ exports.approveRequest = ( async (req, res) => {
 
             } else {
 
-                pin_attempts += 1;
+                pin_attempts = parseFloat(pin_attempts) + 1;
                 pin_verified = await bcrypt.compare(user_pin, pin);
                 //check pin 
                 await Users.update({pin_attempts}, {where: {userUid}});
@@ -134,7 +134,7 @@ exports.approveRequest = ( async (req, res) => {
                                     userUid,
                                     transId: reference,
                                     initialBal: parseFloat(walletBal) + parseFloat(escrowBal),
-                                    amount: parseFloat(total + agreedCharge),
+                                    amount: parseFloat(total) +  parseFloat(agreedCharge),
                                     finalBal: walletBal,
                                     description: `NGN${total} cash withdrawal`,
                                     charges: agreedCharge,

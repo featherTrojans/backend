@@ -77,10 +77,10 @@ exports.getAcceptedRequests = (  async (req, res) => {
         for (const [key, value] of Object.entries(data)){
 
                 //get agentDetails
-                let agent = await Users.findOne({
-                    where: {username: value.dataValues.agentUsername},
-                    attributes: ['phoneNumber', 'imageUrl', 'userUid']
-                })
+                // let agent = await Users.findOne({
+                //     where: {username: value.dataValues.agentUsername},
+                //     attributes: ['phoneNumber', 'imageUrl', 'userUid']
+                // })
                 results.push({
                     reference: value.dataValues.reference,
                     amount: value.dataValues.amount,
@@ -89,12 +89,12 @@ exports.getAcceptedRequests = (  async (req, res) => {
                     negotiatedFee: value.dataValues.negotiatedFee,
                     agent: value.dataValues.agent,
                     agentUsername: value.dataValues.agentUsername,
-                    phoneNumber: agent.phoneNumber,
+                    phoneNumber: '0' + value.dataValues.agentUsername,
                     status: value.dataValues.status,
                     meetupPoint: value.dataValues.meetupPoint,
                     createdAt: value.dataValues.createdAt,
-                    image: agent.imageUrl,
-                    agentId: agent.userUid
+                    image: null,
+                    agentId: value.dataValues.statusId
 
                 })
 
@@ -303,7 +303,7 @@ exports.createRequest = ( async (req, res) => {
 
                     // })
                     // credit user escrow balance
-                    Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal - total)}, {where: {userUid: userId}});
+                    Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal) - parseFloat(total)}, {where: {userUid: userId}});
                     const agentData = await Users.findOne({
                         where: {username: agentUsername},
                         attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid']
