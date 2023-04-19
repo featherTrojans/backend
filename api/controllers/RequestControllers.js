@@ -93,7 +93,7 @@ exports.getAcceptedRequests = (  async (req, res) => {
                     status: value.dataValues.status,
                     meetupPoint: value.dataValues.meetupPoint,
                     createdAt: value.dataValues.createdAt,
-                    image: null,
+                    agentImage: value.dataValues.agentImage,
                     agentId: value.dataValues.statusId
 
                 })

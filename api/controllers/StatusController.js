@@ -306,7 +306,7 @@ exports.findStatus = async (req, res) => {
                     // create request here.
                     data = data.data
                     const charges = data.charges ?? 0;
-                    const dataToSend = { userUid: userId, username, email, amount, charges, agent: data.agent, agentUsername: data.agentUsername, statusId: data.agentUsername, meetupPoint: data.meetupPoint, negotiatedFee: 0, transId: data.transId }
+                    const dataToSend = { userUid: userId, username, email, amount, charges, agent: data.agent, agentUsername: data.agentUsername, statusId: data.agentUsername, meetupPoint: data.meetupPoint, negotiatedFee: 0, transId: data.transId, agentImage: data.agentImage }
                     const cashRequest = await createRequest(dataToSend);
                     console.log('cashRequest', cashRequest)
                     // return cashRequest

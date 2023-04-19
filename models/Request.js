@@ -106,6 +106,14 @@ const Request = db_con.define("requests", {
            notEmpty: true
         }
     },
+    "agentImage": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        defaultValue: null,
+        validate: {
+           notEmpty: true
+        }
+    },
     
 })
 
