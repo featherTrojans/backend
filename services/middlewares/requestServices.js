@@ -8,7 +8,7 @@ require('../../subscribers')
 
  exports.createRequest = ( async (data) => {
     
-    const { userUid, username, email, amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee  , transId} = data
+    const { userUid, username, email, amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee  , transId, agentImage} = data
 
 
     try
@@ -85,6 +85,7 @@ require('../../subscribers')
                         statusId,
                         meetupPoint,
                         status: 'ACCEPTED',
+                        agentImage,
                         negotiatedFee: negotiatedFee ? negotiatedFee : 0
         
                     })
