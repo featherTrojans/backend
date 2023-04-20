@@ -23,7 +23,13 @@ exports.buyAirtime = ( async (req, res) => {
 
         // get level details
         let {privilege} = await UserLevels.findOne({where: {level: userLevel}})
+        return res.status(403).json({
 
+            status: false,
+            data : {},
+            message: "Service unavialable at the moment, please try again later"
+
+        })
         if (verifyPin != true ) {
             return res.status(403).json({
 

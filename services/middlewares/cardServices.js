@@ -10,14 +10,14 @@ exports.createHolder = async () => {
      */
     var options = {
         method: 'POST',
-        Headers : {
-          Token: `Bearer ${bc_akey}`,
+        headers : {
+          token: `Bearer ${bc_akey}`,
           'Content-Type': 'application/json'
         },
 
         body: 
-            {
-              "token": `Bearer ${bc_akey}`,
+            JSON.stringify({
+              // "token": `Bearer ${bc_akey}`,
           "first_name": "John",
           "last_name": "Doe",
           "address": {
@@ -35,17 +35,16 @@ exports.createHolder = async () => {
             "id_no": "11111111111",
             "id_image": "",
             "bvn": "2222222222"
-          },
-        }
+          }
+        })
     };
 
     let response = await fetch(`${bc_url}/cardholder/register_cardholder_synchronously`, options);
-console.log(response)
+// console.log(response)
     response = await response.json()
-    console.log(`${bc_url}/cardholder/register_cardholder_synchronously`)
     console.log('request: ', response)
       
 }
 
 
-// this.createHolder()
+this.createHolder()
