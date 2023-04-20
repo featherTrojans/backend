@@ -446,6 +446,14 @@ router.group('/', (router) => {
         ], 
         controller.findStatus
         );
+
+        router.get('/merchant/detail/:username',
+                [   
+                    Authenticate,
+                ], 
+                controller.getMerchant
+        );
+
         router.group('/user', (router) => {
             router.get('/:username',
                 [   
@@ -453,7 +461,9 @@ router.group('/', (router) => {
                 ], 
                 controller.users
             );
-
+            router.get('/detail/:username',
+                controller.getUserWtoutLog
+            );
             router.post('/multiple', 
             [
                 Authenticate
