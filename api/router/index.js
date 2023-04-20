@@ -446,6 +446,14 @@ router.group('/', (router) => {
         ], 
         controller.findStatus
         );
+
+        router.get('/merchant/detail/:username',
+                [   
+                    Authenticate,
+                ], 
+                controller.getMerchant
+        );
+
         router.group('/user', (router) => {
             router.get('/:username',
                 [   

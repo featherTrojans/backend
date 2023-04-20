@@ -3,8 +3,9 @@ const { validationResult } = require('express-validator');
 const {Users, Status, Request, Transactions} = require('../../models/')
 const {services} = require("../../services")
 const {TokenServices} = services
+const fetchAPi = require('node-fetch')
 
-const {logger, Op} = config
+const {logger, Op, merchant_url} = config
 exports.getUser = ( async (req, res) => {
 
     const { username } = req.params
@@ -32,6 +33,38 @@ exports.getUser = ( async (req, res) => {
                 data : users,
                 message: "success"
             })
+        }
+
+
+
+    } catch (error) {
+        logger.info(error)
+        return res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        })
+    }
+});
+
+exports.getMerchant = ( async (req, res) => {
+
+    const { username } = req.params
+    try
+    {
+        
+
+        if (username == null) {
+            return res.status(404).json({
+                status: false,
+                data: {},
+                message: `Hey padi all fields are required`
+            })
+        }else {
+            merchant = await fetchAPi(`${merchant_url}/agent/get/${username}`)
+            merchant = await merchant.json()
+            console.log('merchant', merchant)
+            return res.status(merchant.status ? 200: 400).json(merchant)
         }
 
 
