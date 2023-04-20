@@ -83,4 +83,5 @@ exports.controller = {
     agentDashboard: Controller.AgentDashController.dashboard,
     getMerchant: Controller.UserController.getMerchant,
     getUserWtoutLog: Controller.UserController.getUserWtoutLog
+
 }

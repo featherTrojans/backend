@@ -6,6 +6,7 @@ const {TokenServices} = services
 const fetchAPi = require('node-fetch')
 
 const {logger, Op, merchant_url, environment} = config
+
 exports.getUser = ( async (req, res) => {
 
     const { username } = req.params
