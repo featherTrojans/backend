@@ -137,90 +137,100 @@ exports.cancelRequests = ( async (req, res) => {
             })
         } else {
 
-            const {amount, charges, negotiatedFee, userUid, agentUsername} = await Request.findOne({attributes: ['total','userUid', 'agentUsername', 'amount', 'charges', 'negotiatedFee'],
+            const {amount, charges, negotiatedFee, userUid, agentUsername, status} = await Request.findOne({attributes: ['total','userUid', 'agentUsername', 'amount', 'charges', 'negotiatedFee', 'status'],
             where: {reference}})
 
-            const {escrowBal, walletBal} = await Users.findOne({attributes: ['escrowBal', 'walletBal'],
+            if (status != 'ACCEPTED' || status != 'PENDING') {
+                return res.status(400).json({
+                    status: false,
+                    data: {},
+                    message: "Request has previously been treated. "
+                })
+            } else {
+                    const {escrowBal, walletBal} = await Users.findOne({attributes: ['escrowBal', 'walletBal'],
                     where: {
                         userUid
                     }
-            })
-
-            const total = parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee)
-
-            const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
-            const newWalletBal = parseFloat(walletBal) + parseFloat(total);
-
-            if (username.toUpperCase() === agentUsername.toUpperCase()) {
-
-                const updated = await Request.update({status: 'CANCELLED', reasonForCancel},{
-                    where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
                 })
 
-                if ( updated[0] > 0 ) {
+                const total = parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee)
 
-                    Users.update({escrowBal: newEscrowBal, walletBal: newWalletBal }, {where: {userUid}});
-                    sendRequestWebhook({
-                        reference,
-                        status: 'CANCELLED'
+                const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
+                const newWalletBal = parseFloat(walletBal) + parseFloat(total);
+
+                if (username.toUpperCase() === agentUsername.toUpperCase()) {
+
+                    const updated = await Request.update({status: 'CANCELLED', reasonForCancel},{
+                        where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
                     })
-                    //notify depositor
-                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal has been cancelled`, redirectTo: 'Notifications'})
-                    //return and debit escrow
 
-                    // creditService({userUid, reference: transId, amount: total, description: `NGN${dollarUSLocale.format(total)} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
-                    return res.status(202).json({
-                        status: true,
-                        data: {
+                    if ( updated[0] > 0 ) {
+
+                        Users.update({escrowBal: newEscrowBal, walletBal: newWalletBal }, {where: {userUid}});
+                        sendRequestWebhook({
                             reference,
-                            "message": "cancelled successfully"
-                        },
-                        message: "success"
-                    })
-                } else {
-                    logger.info(updated)
-                    return res.status(404).json({
-                        status: false,
-                        data: {},
-                        message: `Cannot cancel request ${reference} or it does not exist`
-                    }) 
-                }
-                        
-                
-            } else{
+                            status: 'CANCELLED'
+                        })
+                        //notify depositor
+                        eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal has been cancelled`, redirectTo: 'Notifications'})
+                        //return and debit escrow
 
-                let data = await Request.update({status: 'CANCELLED', reasonForCancel},{
-                    where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
-                })
-                
-                if (data[0] > 0 ) {
+                        // creditService({userUid, reference: transId, amount: total, description: `NGN${dollarUSLocale.format(total)} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
+                        return res.status(202).json({
+                            status: true,
+                            data: {
+                                reference,
+                                "message": "cancelled successfully"
+                            },
+                            message: "success"
+                        })
+                    } else {
+                        logger.info(updated)
+                        return res.status(404).json({
+                            status: false,
+                            data: {},
+                            message: `Cannot cancel request ${reference} or it does not exist`
+                        }) 
+                    }
+                            
+                    
+                } else{
 
-                    Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
-                    sendRequestWebhook({
-                        reference,
-                        status: 'CANCELLED'
+                    let data = await Request.update({status: 'CANCELLED', reasonForCancel},{
+                        where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
                     })
-                    //return and debit escrow
-                    creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
-                    return res.status(202).json({
-                        status: true,
-                        data: {
+                    
+                    if (data[0] > 0 ) {
+
+                        Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
+                        sendRequestWebhook({
                             reference,
-                            "message": "cancelled successfully"
-                        },
-                        message: "success"
-                    })
-                } else {
-                    logger.info(data)
-                    return res.status(404).json({
-                        status: false,
-                        data: {},
-                        message: `request ${reference} does not exist`
-                    }) 
+                            status: 'CANCELLED'
+                        })
+                        //return and debit escrow
+                        creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
+                        return res.status(202).json({
+                            status: true,
+                            data: {
+                                reference,
+                                "message": "cancelled successfully"
+                            },
+                            message: "success"
+                        })
+                    } else {
+                        logger.info(data)
+                        return res.status(404).json({
+                            status: false,
+                            data: {},
+                            message: `request ${reference} does not exist`
+                        }) 
+                    }
+                            
+                    
                 }
-                        
-                
             }
+
+           
             
         }
         
