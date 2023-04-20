@@ -461,7 +461,9 @@ router.group('/', (router) => {
                 ], 
                 controller.users
             );
-
+            router.get('/detail/:username',
+                controller.getUserWtoutLog
+            );
             router.post('/multiple', 
             [
                 Authenticate

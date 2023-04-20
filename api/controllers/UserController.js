@@ -5,7 +5,8 @@ const {services} = require("../../services")
 const {TokenServices} = services
 const fetchAPi = require('node-fetch')
 
-const {logger, Op, merchant_url} = config
+const {logger, Op, merchant_url, environment} = config
+
 exports.getUser = ( async (req, res) => {
 
     const { username } = req.params
@@ -46,6 +47,68 @@ exports.getUser = ( async (req, res) => {
         })
     }
 });
+
+exports.getUserWtoutLog = ( async (req, res) => {
+
+    const { username } = req.params
+    try
+    {
+        var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+        console.log('environment: ', environment)
+        console.log('environment _ip: ', ip)
+        if (environment == 'live') {
+            if ( (ip != '::ffff:54.86.238.137' && ip != '::ffff:44.195.222.116' && ip != '::ffff:191.101.42.78') ) {
+            
+                // logger.info('Auth Token  not correct')
+                logger.info("Unauthorized request")
+                return res.status(403).json({
+                    message: 'invalid request, unauthorized caller'
+                })
+            } else {
+                const user = await  Users.findOne({where: {
+                    [Op.or]: {
+                        username,
+                        phoneNumber: username,
+                        userUid: username,
+                    },
+                    },
+                    attributes: {exclude: ['id', 'pin', 'pin_attempts', 'password', 'updatedAt', 'referredBy', 'code']}
+                });
+        
+                if (user == null) {
+                    return res.status(404).json({
+                        status: false,
+                        data: {},
+                        message: `User ${username} does not exist`
+                    })
+                }else {
+                    return res.status(200).json({
+                        status: true,
+                        data : user,
+                        message: "success"
+                    })
+                }
+        
+            }
+         } else {
+            return res.status(403).json({
+                message: 'invalid request, unauthorized caller'
+            })
+         }
+
+        
+
+
+    } catch (error) {
+        logger.info(error)
+        return res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occur"
+        })
+    }
+});
+
 
 exports.getMerchant = ( async (req, res) => {
 

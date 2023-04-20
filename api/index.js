@@ -81,5 +81,7 @@ exports.controller = {
     switchStatus: Controller.AgentController.switchStatus,
     updateLocation: Controller.AgentController.updateLocation,
     agentDashboard: Controller.AgentDashController.dashboard,
-    getMerchant: Controller.UserController.getMerchant
+    getMerchant: Controller.UserController.getMerchant,
+    getUserWtoutLog: Controller.UserController.getUserWtoutLog
+
 }
