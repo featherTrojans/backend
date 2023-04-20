@@ -23,13 +23,7 @@ exports.buyAirtime = ( async (req, res) => {
 
         // get level details
         let {privilege} = await UserLevels.findOne({where: {level: userLevel}})
-        return res.status(403).json({
 
-            status: false,
-            data : {},
-            message: "Service unavialable at the moment, please try again later"
-
-        })
         if (verifyPin != true ) {
             return res.status(403).json({
 
@@ -184,11 +178,11 @@ exports.buyAirtime = ( async (req, res) => {
 
                         })
                     })
-                    // res.status(200).json({
-                    //     status: true,
-                    //     data: {},
-                    //     message: "Hey padi, your request is successful"
-                    // })
+                    res.status(200).json({
+                        status: true,
+                        data: {},
+                        message: "Hey padi, your order is processing"
+                    })
                     
                     
                 }).catch(error => {
