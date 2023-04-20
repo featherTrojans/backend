@@ -181,7 +181,7 @@ exports.buyAirtime = ( async (req, res) => {
                     res.status(200).json({
                         status: true,
                         data: {},
-                        message: "Hey padi, your request is successful"
+                        message: "Hey padi, your order is processing"
                     })
                     
                     
