@@ -3,11 +3,11 @@ const { Request, Users } = require("../../models");
 const refundUser = async (reference) => {
 
     //get userId 
-    const { userUid, charges, negotiatedFee, amount} = await Request.findOne({
+    const { userUid, charges, negotiatedFee, amount, agreedCharge} = await Request.findOne({
     where: {reference},
-    attributes: ['userUid', 'agentUsername', 'statusId', 'charges', 'negotiatedFee', 'amount']
+    attributes: ['userUid', 'agentUsername', 'statusId', 'charges', 'negotiatedFee', 'amount', 'agreedCharge']
     });
-    const total = (parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee))
+    const total = (parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee) + parseFloat(agreedCharge))
 
     let {escrowBal, walletBal } = await Users.findOne({
         where: {userUid},
