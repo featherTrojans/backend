@@ -49,7 +49,7 @@ exports.rateUser = ( async (req, res) => {
                 if ( createRating ) {
                     //credit the rater
                     const transId = 'FTHRTNG' + idGenService(7)
-                    creditService({userUid: userId, reference: transId, amount: 10, description: `NGN10 Rating bonus from `, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'});
+                    creditService({userUid: userId, reference: transId, amount: 1, description: `NGN10 Rating bonus from `, from: 'Bonus', to: 'primary wallet', title: 'Wallet Credit'});
                          
                     return res.status(200).json({
                         status: true,
