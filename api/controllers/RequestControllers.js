@@ -140,7 +140,7 @@ exports.cancelRequests = ( async (req, res) => {
             const {amount, charges, negotiatedFee, userUid, agentUsername, status} = await Request.findOne({attributes: ['total','userUid', 'agentUsername', 'amount', 'charges', 'negotiatedFee', 'status'],
             where: {reference}})
 
-            if (status != 'ACCEPTED' && status != 'PENDING') {
+            if (status == 'SUCCESS' || status == 'CANCELLED') {
                 return res.status(400).json({
                     status: false,
                     data: {},
