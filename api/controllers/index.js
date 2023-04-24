@@ -39,6 +39,7 @@ const MarketingController = require('./MarketingController')
 const SecurityQuestionController = require('./SecurityQuestionController')
 const UserEmailControllers = require('./UserEmailControllers')
 const AgentDashController = require('./AgentDashController')
+const RequestWebhookController = require('./RequestWebhookController')
 
 module.exports = {
     
@@ -82,5 +83,6 @@ module.exports = {
     SecurityQuestionController,
     UserEmailControllers,
     AgentAuthController,
-    AgentDashController
+    AgentDashController,
+    RequestWebhookController
 }
