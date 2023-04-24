@@ -21,7 +21,7 @@ const creditService = async (data) => {
             finalBal,
             description: data?.description ?? `${amount} Funding`,
             reference: data.id ? data.id : reference,
-            title: data?.title ?? 'funding'
+            title: data?.title ?? 'Wallet Credit'
         }) : 
         await Transactions.create({
             userUid,
@@ -33,7 +33,7 @@ const creditService = async (data) => {
             from: data.from,
             to: data.to,
             reference: data.id ? data.id : reference,
-            title: data?.title ?? 'funding'
+            title: data?.title ?? 'Wallet Credit'
         })
 
         let obj = {
