@@ -308,6 +308,9 @@ router.group('/', (router) => {
         router.post('/pay/webhook',
             controller.webhook
         );
+        router.post('/request/webhook',
+        controller.sendRequestWebhook
+    );
         router.post('/vfd/webhook',
             controller.vfdwebhook
         );
