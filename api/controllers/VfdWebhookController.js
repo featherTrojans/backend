@@ -78,7 +78,7 @@ exports.webhook = (async (req, res) => {
                 } else {
     
                     //credit user
-                    services.creditService({userUid, reference, amount, description: originator_narration,from: `${originator_account_name} - ${originator_account_number},`, to: "primary wallet" })
+                    services.creditService({userUid, reference, amount, description: originator_narration})
                     return res.status(200).json({
                         message: 'credited successfully'
                     });
