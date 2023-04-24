@@ -31,9 +31,9 @@ exports.approveRequest = ( async (req, res) => {
         } else {
 
             //get userId 
-            const { userUid, agentUsername, statusId, charges, negotiatedFee, amount} = await Request.findOne({
+            const { agent, userUid, agentUsername, statusId, charges, negotiatedFee, amount} = await Request.findOne({
                 where: {reference},
-                attributes: ['userUid', 'agentUsername', 'statusId', 'charges', 'negotiatedFee', 'amount']
+                attributes: ['userUid', 'agentUsername', 'statusId', 'charges', 'negotiatedFee', 'amount', 'agent']
             });
 
             const total = (parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee))
@@ -136,13 +136,13 @@ exports.approveRequest = ( async (req, res) => {
                                     initialBal: parseFloat(walletBal) + parseFloat(escrowBal),
                                     amount: parseFloat(total) +  parseFloat(agreedCharge),
                                     finalBal: chargedBal,
-                                    description: `NGN${total} cash withdrawal`,
+                                    description: `NGN${total} cash withdrawn`,
                                     charges: agreedCharge,
                                     from: 'primary wallet',
-                                    to: agentUsername,
+                                    to: `${agent}-${agentUsername}`,
                                     reference,
                                     direction: "out",
-                                    title: "Wallet Debit"
+                                    title: "Cash Withdrawal"
                                 })
 
                                 eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
