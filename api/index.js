@@ -1,3 +1,4 @@
+const { sendRequestWebhook } = require('../services/middlewares/requestService')
 const Controller = require('./controllers')
 
 exports.controller = {
@@ -82,5 +83,6 @@ exports.controller = {
     updateLocation: Controller.AgentController.updateLocation,
     agentDashboard: Controller.AgentDashController.dashboard,
     getMerchant: Controller.UserController.getMerchant,
-    getUserWtoutLog: Controller.UserController.getUserWtoutLog
+    getUserWtoutLog: Controller.UserController.getUserWtoutLog,
+    sendRequestWebhook: Controller.RequestWebhookController.webhook
 }
