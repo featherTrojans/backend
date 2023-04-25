@@ -108,6 +108,12 @@ const Transactions = db_con.define("transactions", {
         defaultValue: false
 
     },
+    "type": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        defaultValue: null
+
+    },
     
 })
 module.exports = Transactions
