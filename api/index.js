@@ -84,5 +84,6 @@ exports.controller = {
     agentDashboard: Controller.AgentDashController.dashboard,
     getMerchant: Controller.UserController.getMerchant,
     getUserWtoutLog: Controller.UserController.getUserWtoutLog,
-    sendRequestWebhook: Controller.RequestWebhookController.webhook
+    sendRequestWebhook: Controller.RequestWebhookController.webhook,
+    transferFundsToAgent: Controller.TransferController.transferFundsToAgent
 }

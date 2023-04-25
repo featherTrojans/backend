@@ -188,7 +188,7 @@ const create_n_bills_table = ()=>{
 
 // create_users_table();
 // create_user_levels_table();
-// create_transactions_table();
+create_transactions_table();
 // create_double_spent_table();
 // create_payments_table();
 // create_location_table()
@@ -204,5 +204,5 @@ const create_n_bills_table = ()=>{
 // create_webhooks_table()
 // create_collections_table()
 // create_vfd_payments_table()
-create_agents_table()
+// create_agents_table()
 // create_n_bills_table()

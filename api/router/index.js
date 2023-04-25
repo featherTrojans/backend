@@ -457,6 +457,13 @@ router.group('/', (router) => {
                 controller.getMerchant
         );
 
+        router.post('/merchant/transfer',
+                [   
+                    Authenticate,
+                ], 
+                controller.transferFundsToAgent
+        );
+
         router.group('/user', (router) => {
             router.get('/:username',
                 [   
