@@ -94,7 +94,7 @@ exports.transferFunds = ( async (req, res) => {
                     }).then(() => {
 
                         // credit after successful debit
-                        services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, id: transId, title: 'Wallet Credit'})
+                        services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, id: transId, title: 'Wallet Credit', type: "Feather2Feather"})
 
                     }).catch(error => {
                         logger.debug(error)
