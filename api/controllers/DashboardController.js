@@ -11,7 +11,7 @@ exports.dashboard = ( async (req, res) => {
         const bal = parseFloat(userDetails.walletBal) + parseFloat(userDetails.escrowBal) //wallet bal + escrow bal
         let results = []
         const transactions = await Transactions.findAll({
-            attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'title', 'createdAt', 'charges'],
+            attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'title', 'createdAt', 'charges', 'trans_type'],
             where: {userUid: userId},
             order: [['createdAt', 'DESC']],
             limit: 10,
@@ -73,7 +73,7 @@ exports.dashboard = ( async (req, res) => {
 
 
         }
-        
+
         return res.status(200).json({
             status: true,
             data : {
