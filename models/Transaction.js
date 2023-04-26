@@ -108,7 +108,7 @@ const Transactions = db_con.define("transactions", {
         defaultValue: false
 
     },
-    "type": {
+    "trans_type": {
         allowNull: true,
         type: Sequelize.STRING,
         defaultValue: null
