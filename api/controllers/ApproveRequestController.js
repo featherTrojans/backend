@@ -142,7 +142,8 @@ exports.approveRequest = ( async (req, res) => {
                                     to: `${agent}-${agentUsername}`,
                                     reference,
                                     direction: "out",
-                                    title: "Cash Withdrawal"
+                                    title: "Cash Withdrawal",
+                                    isQueried: true,
                                 })
 
                                 eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
