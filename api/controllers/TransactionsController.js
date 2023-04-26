@@ -54,6 +54,7 @@ exports.transactions = ( async (req, res) => {
                 results.push(value.dataValues)
             }
 
+            
 
 
         }
