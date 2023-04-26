@@ -10,7 +10,7 @@ exports.transactions = ( async (req, res) => {
         let results = []
         const transactions = await Transactions.findAll({
 
-            attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'charges', 'description', 'from', 'to', 'direction', 'title', 'createdAt'],
+            attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'charges', 'description', 'from', 'to', 'direction', 'title', 'createdAt', 'trans_type'],
             where: {userUid: userId},
             order: [['createdAt', 'DESC']],
             include: [{
@@ -54,7 +54,7 @@ exports.transactions = ( async (req, res) => {
                 results.push(value.dataValues)
             }
 
-            
+
 
 
         }
