@@ -25,7 +25,8 @@ const debitService = async (data) => {
             reference: data.id ? data.id : reference,
             direction: "out",
             title: data?.title ?? 'funding',
-            charges: data?.charges ?? 0
+            charges: data?.charges ?? 0,
+            trans_type: data?.type ??  null
         }) : 
         await Transactions.create({
             userUid,
@@ -39,7 +40,8 @@ const debitService = async (data) => {
             reference: data.id ? data.id : reference,
             direction: "out",
             title: data?.title ?? 'funding',
-            charges: data?.charges ?? 0
+            charges: data?.charges ?? 0,
+            trans_type: data?.type ??  null
         })
         let obj = {
             userUid,
