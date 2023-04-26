@@ -22,7 +22,7 @@ const creditService = async (data) => {
             description: data?.description ?? `${amount} Funding`,
             reference: data.id ? data.id : reference,
             title: data?.title ?? 'Funding',
-            type: data.type ?? null
+            type: data?.type ??  null
         }) : 
         await Transactions.create({
             userUid,
@@ -35,7 +35,7 @@ const creditService = async (data) => {
             to: data.to,
             reference: data.id ? data.id : reference,
             title: data?.title ?? 'Funding',
-            type: data.type ?? null
+            type: data?.type ?? null
         })
 
         let obj = {
