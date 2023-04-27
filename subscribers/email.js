@@ -46,6 +46,17 @@ await sendEmail({email, subject, message})
   logger.info(`password changed email sent`);
 })
 
+eventEmitter.addListener('changedPassword', async (data) => {
+  //send email
+  let email, subject, message;
+  email = data.email;
+  message = data.message;
+  subject = 'Password Changed';
+
+await sendEmail({email, subject, message})
+  logger.info(`password changed email sent`);
+})
+
 eventEmitter.addListener('walletDebit', async (data) => {
   //send email
   let email, subject, message;
