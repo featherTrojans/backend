@@ -178,16 +178,21 @@ exports.buyLight = async({service, amount, meter_number, trans_id}) => {
     console.log(details);
 
     if (details ) {
-        const {customerDistrict, customerAddress, customerName } = details
+        const {customerNumber, meterNumber, customerAccountType, customerDistrict, customerAddress, customerName, accountNumber,  customerDtNumber } = details
         var url = `${mobilenig_url}services/`
         const body = JSON.stringify({
             "service_id": getServiceId(service),
             trans_id,
-            "meterNumber": meter_number,
+            meterNumber,
             customerDistrict,
             customerAddress,
             customerName,
-            amount
+            amount,
+            accountNumber,
+            customerDtNumber,
+            customerNumber,
+            customerAccountType,
+            customerReference: meterNumber,
         })
         const data = await fetchApiPost({url, key: mobilenig_sk_key, body})
         console.log('data', data)
