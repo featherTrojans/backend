@@ -105,7 +105,7 @@ exports.setNewPassword = (async (req, res) => {
                 ).then(()=>{
                     const message = `Dear ${fullName}, Your password has been successfully changed. Kindly contact customer support if you didn't initiate this process`
 
-                    eventEmitter.emit('changePassword', {fullName, email, message});
+                    eventEmitter.emit('changedPassword', {fullName, email, message});
                     eventEmitter.emit('notification', {userUid: userId, title: 'Password Changed', description: 'Hey padi, Your password has just been  changed. Kindly contact customer support if you didn\'t initiate this process'});
                     const token = TokenServices({userId, username, email, fullName}, '2h')
                     return res.status(202).json({
