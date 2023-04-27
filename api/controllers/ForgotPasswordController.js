@@ -12,6 +12,12 @@ exports.sendForgotPasswordCode = ( async (req, res) => {
     try {
         const { email } = req.body
         const errors = validationResult(req);
+
+        return res.status(400).json({
+            status: false,
+            data: {},
+            message: "Unvailable kindly try again later"
+        })
         if (!errors.isEmpty()) {
 
             return res.status(403).json({ errors: errors.array() });
