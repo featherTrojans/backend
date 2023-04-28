@@ -8,7 +8,7 @@ const bcrypt = require('bcryptjs');
 exports.withdrawFund = ( async (req, res) => {
 
     const { account_code, amount, userPin } = req.body
-    const {userId, username } = req.user
+    const {userId, username , fullName} = req.user
     const errors = validationResult(req);
     try
     {
@@ -68,7 +68,7 @@ exports.withdrawFund = ( async (req, res) => {
                 
                 const {account_number, account_name, bank_name} = await BankAccount.findOne({attributes: ['account_number', 'account_name', 'bank_name'], where: {account_code}});
 
-                const description = `${username} withdrawal`;
+                const description = `${fullName} (${username}) withdrawal`;
 
                 await new Promise(function(resolve, reject) {
 
