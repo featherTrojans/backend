@@ -74,7 +74,7 @@ exports.upgradeUser = (async (req, res) => {
                 return res.status(400).json({
                     status: false,
                     data: {verifyUser},
-                    message: "Hi Padi, error occur could not verify you at the moment. Kindly try again"
+                    message: "Hi Padi, error occured could not verify you at the moment. Kindly try again"
                 })
             }
         }else if (check != null ) {
@@ -99,7 +99,7 @@ exports.upgradeUser = (async (req, res) => {
                 return res.status(400).json({
                     status: false,
                     data: {verifyUser},
-                    message: "Hi Padi, error occur could not verify you at the moment. Kindly try again"
+                    message: "Hi Padi, error occured could not verify you at the moment. Kindly try again"
                 })
             }
         }
@@ -109,7 +109,7 @@ exports.upgradeUser = (async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 })

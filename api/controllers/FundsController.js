@@ -36,7 +36,7 @@ exports.makePayment = ( async (req, res) => {
             return res.status(400).json({
                 status: false,
                 data: {},
-                message: "error occur"
+                message: "error occured"
             })
         }
 
@@ -47,7 +47,7 @@ exports.makePayment = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -102,7 +102,7 @@ exports.verifyTransaction = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 

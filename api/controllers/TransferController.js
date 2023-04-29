@@ -19,7 +19,7 @@ exports.transferFunds = ( async (req, res) => {
             return res.status(403).json({ 
                 status: false,
                 data: errors.array(),
-                message: "Error occur"
+                message: "Error occured"
             });
     
           } else {
@@ -158,7 +158,7 @@ exports.transferFundsToAgent = ( async (req, res) => {
             return res.status(403).json({ 
                 status: false,
                 data: errors.array(),
-                message: "Error occur"
+                message: "Error occured"
             });
     
           } else {

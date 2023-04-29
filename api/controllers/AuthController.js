@@ -132,7 +132,7 @@ exports.signup = ( async (req, res) => {
         res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 
@@ -331,7 +331,7 @@ exports.setPassword = (async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -393,7 +393,7 @@ exports.setPin = (async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -463,7 +463,7 @@ exports.setUsername = (async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -538,7 +538,7 @@ exports.signIn = async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 }
@@ -603,7 +603,7 @@ exports.signInTwo = async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 }
@@ -657,7 +657,7 @@ exports.confirmLoginCode =  async ( req, res) => {
         return res.status(409).json({
             status: false,
             data: {},
-            message: "Aww padi,An error occured. Contact support"
+            message: "Aww padi,An error occureded. Contact support"
         })
     }
 
