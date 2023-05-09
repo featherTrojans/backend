@@ -178,11 +178,11 @@ exports.buyAirtime = ( async (req, res) => {
 
                         })
                     })
-                    // return res.status(200).json({
-                    //     status: true,
-                    //     data: {},
-                    //     message: "Hey padi, your order is processing"
-                    // })
+                    return res.status(200).json({
+                        status: true,
+                        data: {},
+                        message: "Hey padi, your order is processing"
+                    })
                     
                     
                 }).catch(error => {
