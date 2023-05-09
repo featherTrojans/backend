@@ -133,7 +133,7 @@ exports.buyAirtime = ( async (req, res) => {
                                 // })
                                 //update NewBills status 
                                 NewBills.update({status: "FAILED"}, {where: {reference}})
-                                return res.status(400).json({
+                               console.log(json({
                                     status: false,
                                     data : {
                                         network,
@@ -142,14 +142,14 @@ exports.buyAirtime = ( async (req, res) => {
                                     },
                                     message: "Cannot purchase airtime at the moment please try again later"
                     
-                                })
+                                }))
                             } else if (buyAirtime.message == 'success' || buyAirtime.message == '') {
                                 //update NewBills table
                                 NewBills.update({
                                     status: "SUCCESS", transId: buyAirtime.request_id,
                                     
                                 }, {where: {reference}})
-                                return res.status(200).json({
+                                console.log(json({
                                     status: true,
                                     data: {
                                         network,
@@ -157,27 +157,30 @@ exports.buyAirtime = ( async (req, res) => {
                                         phone
                                     },
                                     message: "Hi padi, Successfully purchased"
-                                })
+                                }))
                             }
                         }).catch(err => {
                             logger.info(err)
-                            return res.status(400).json({
+                            // return res.status(400).
+                            console.log(json({
                                 status: false,
                                 data : err,
                                 message: "Hi padi an error occurred"
     
-                            })
+                            }))
                         })
     
                     }).catch(err => {
                         logger.info(err)
-                        return res.status(400).json({
+                        // return res.status(400).
+                        console.log(json({
                             status: false,
                             data: err,
                             message: "Hi padi, cannot create this at this time"
 
-                        })
+                        }))
                     })
+
                     return res.status(200).json({
                         status: true,
                         data: {},
