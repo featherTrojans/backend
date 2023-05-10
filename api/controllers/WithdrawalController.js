@@ -98,13 +98,13 @@ exports.withdrawFund = ( async (req, res) => {
                         return res.status(404).json({
                             status: false,
                             data: {},
-                            message: "Oops!! An error occur! withdrawal can not be made. Kindly try again later"
+                            message: "Oops!! An error occured! withdrawal can not be made. Kindly try again later"
                         })
                     } else {
                         return res.status(404).json({
                             status: false,
                             data: {},
-                            message: "Oops!! An error occur! Kindly contact support"
+                            message: "Oops!! An error occured! Kindly contact support"
                         })
                     }
 

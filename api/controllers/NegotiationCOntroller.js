@@ -105,7 +105,7 @@ exports.createNegotiation = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "Ops something went wrong!!!!! error occur"
+            message: "Ops something went wrong!!!!! error occured"
         })
     }
 });

@@ -178,11 +178,11 @@ exports.buyAirtime = ( async (req, res) => {
 
                         })
                     })
-                    // return res.status(200).json({
-                    //     status: true,
-                    //     data: {},
-                    //     message: "Hey padi, your order is processing"
-                    // })
+                    return res.status(200).json({
+                        status: true,
+                        data: {},
+                        message: "Hey padi, your order is processing"
+                    })
                     
                     
                 }).catch(error => {
@@ -211,7 +211,7 @@ exports.buyAirtime = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 })
