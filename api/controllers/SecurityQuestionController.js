@@ -49,7 +49,7 @@ exports.createSecurityQuestions = async (req, res) => {
                 res.status(400).json({
                     status: false,
                     data: {},
-                    message: "Aww padi, an error occur could not set your security question"
+                    message: "Aww padi, an error occured could not set your security question"
                 })
             }
           }

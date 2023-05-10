@@ -75,7 +75,7 @@ exports.transactions = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });

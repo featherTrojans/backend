@@ -90,7 +90,7 @@ exports.createStatus = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -166,7 +166,7 @@ exports.UpdateStatus = ( (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -246,7 +246,7 @@ exports.UpdateStatusLocation = ( (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -334,7 +334,7 @@ exports.findStatus = async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 }
@@ -412,7 +412,7 @@ exports.allStatus = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });

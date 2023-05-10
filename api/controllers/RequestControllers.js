@@ -57,7 +57,7 @@ exports.getPendingRequests = (  async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -111,7 +111,7 @@ exports.getAcceptedRequests = (  async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -239,7 +239,7 @@ exports.cancelRequests = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -377,7 +377,7 @@ exports.createRequest = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -453,7 +453,7 @@ exports.markRequests = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
@@ -495,7 +495,7 @@ exports.getRequestStatus = (  (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occur"
+            message: "error occured"
         })
     }
 });
