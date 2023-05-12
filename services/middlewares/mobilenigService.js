@@ -221,7 +221,51 @@ exports.buyCable = async({phone, service, smartcard_number, variation}) => {
         return false
     }
 }
+
+exports.pricing = async({service_id, requestType}) => {
+
+        var url = `${mobilenig_url}services/packages`
+        const body = JSON.stringify({
+            service_id,
+            requestType
+        })
+        const data = await fetchApiPost({url, key: mobilenig_sk_key, body})
+        console.log('data', data)
+        if (data !== false){
+            return data
+
+        }else{
+            return false
+        }
+    
+}
+
+exports.query_trans = async (trans_id) => {
+    var url = `${mobilenig_url
+    }services/query?trans_id=${trans_id}`
+
+    let data = await fetch(url, {
+        headers: {Authorization: `Bearer ${mobilenig_sk_key}`,
+                    "Content-Type": "application/json"
+                } 
+    })
+
+    data = await data.json()
+    // logger.info(data)
+    // console.log(typeof (data.details) == 'string')
+    console.log(data)
+    if (typeof (data.details) != null){ 
+        console.log(data)
+        return data
+    }else{
+        return false
+    }
+
+}
 // this.buyAirtimeData({phone: "07068006837", network: "mtn", amount: "100", type: "airtime", trans_id: "FTH-BILLs-09898766"})
 // this.buyLight({phone: "07068006837", service: "ibadan-electric", amount: "500", variation: "prepaid", meter_number: "7867766660"})
 
 // this.getBalance()
+
+// this.query_trans('3vD3xcoCFew')
+// this.pricing('BCA', 'SME')
