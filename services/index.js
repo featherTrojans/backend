@@ -25,6 +25,7 @@ const notifService = require('./middlewares/notificationServices')
 const requestService = require('./middlewares/requestServices')
 const cardService = require('./middlewares/cardServices')
 const mobilenigService = require('./middlewares/mobilenigService')
+const queryBills = require('./middlewares/queryBills')
 
 exports.services = {
     confirmAccount,
@@ -66,4 +67,5 @@ exports.services = {
     getPayStackBalance: PaystackServices.getBalance,
     getMobileBal: mobilenigService.getBalance,
     sendRequestWebhook: requestServices.sendRequestWebhook,
+    queryMobil: mobilenigService.query_trans
 }
