@@ -304,6 +304,7 @@ const queryWithdrawals = async (fifteen_mins_ago = timeService.serverTime().fift
                         },
                 // body
             })
+            console.log(value.reference, 'query: ', query)
             // console.log(value.reference, query.status)
             let {amount, userUid, reference, from, to, isQueried} = value
             if (query.status === 404 && isQueried === false && (check == null || check.length == 0 || check == false )) {
