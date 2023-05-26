@@ -296,6 +296,7 @@ const queryWithdrawals = async (fifteen_mins_ago = timeService.serverTime().fift
             })
 
             logger.info(check);
+            console.log(value.reference, 'check: ', check)
             query = await fetch(`https://api.paystack.co/transfer/verify/${value.reference}`, {
                 // method: 'GET',
                 headers: {Authorization: `Bearer ${APIKEY}`,
@@ -305,7 +306,7 @@ const queryWithdrawals = async (fifteen_mins_ago = timeService.serverTime().fift
             })
             // console.log(value.reference, query.status)
             let {amount, userUid, reference, from, to, isQueried} = value
-            if (query.status === 404 && isQueried === false && check == null) {
+            if (query.status === 404 && isQueried === false && (check == null || check.length == 0 || check == false )) {
                 // console.log(`${amount}`)
                 //refund
                 await creditService({userUid, reference: "FTHRVRSL" + reference, amount, description: `NGN${amount} withdrawal reversal`, title: 'Fund Reversal', from, to })
