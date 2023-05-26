@@ -68,7 +68,7 @@ exports.withdrawFund = ( async (req, res) => {
                 
                 const {account_number, account_name, bank_name} = await BankAccount.findOne({attributes: ['account_number', 'account_name', 'bank_name'], where: {account_code}});
 
-                const description = `feather: FRM ${fullName}`;
+                const description = `${fullName} withdrawal`;
 
                 await new Promise(function(resolve, reject) {
 
