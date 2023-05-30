@@ -125,7 +125,7 @@ exports.buyAirtime = ( async (req, res) => {
     
                                 //update NewBills status 
                                 NewBills.update({status: "FAILED"}, {where: {reference}})
-                               console.log(json({
+                               console.log(({
                                     status: false,
                                     data : {
                                         network,
@@ -141,7 +141,7 @@ exports.buyAirtime = ( async (req, res) => {
                                     status: "SUCCESS", transId: buyAirtime.request_id,
                                     
                                 }, {where: {reference}})
-                                console.log(json({
+                                console.log(({
                                     status: true,
                                     data: {
                                         network,
