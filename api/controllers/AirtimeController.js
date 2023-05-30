@@ -154,7 +154,7 @@ exports.buyAirtime = ( async (req, res) => {
                         }).catch(err => {
                             logger.info(err)
                             // return res.status(400).
-                            console.log(json({
+                            console.log(({
                                 status: false,
                                 data : err,
                                 message: "Hi padi an error occurred"
@@ -165,7 +165,7 @@ exports.buyAirtime = ( async (req, res) => {
                     }).catch(err => {
                         logger.info(err)
                         // return res.status(400).
-                        console.log(json({
+                        console.log(({
                             status: false,
                             data: err,
                             message: "Hi padi, cannot create this at this time"
