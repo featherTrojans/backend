@@ -88,8 +88,8 @@ exports.config = {
     fn,
     col,
     bc_url: process.env.B_URL,
-    bc_akey: process.env.A_URL,
-    bc_skey: process.env.S_URL,
+    bc_akey: process.env.B_AKEY,
+    bc_skey: process.env.B_SKEY,
     merchant_url: process.env.M_URL
     
 
