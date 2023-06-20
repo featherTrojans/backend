@@ -1,5 +1,5 @@
 const { config } = require("../../config")
-const { Users, Payments, Request, Bills, Withdrawal, Transactions, Status, VfdPayment } = require("../../models")
+const { Users, Payments, Request, NewBills, Withdrawal, Transactions, Status, VfdPayment } = require("../../models")
 const {logger} = config
 const sequelize = require('sequelize')
 const {getPayStackBalance, getMobileBal } = require("../../services").services
@@ -38,7 +38,7 @@ exports.stats = ( async (req, res) => {
         })
         const {totalWithdrawal, totalWithdrawalCount} = withdrawals[0].dataValues
 
-        const bills = await Bills.findAll({
+        const bills = await NewBills.findAll({
             where: {status: ['SUCCESS', 'PROCESSING']},
             attributes: [[sequelize.fn('SUM', sequelize.col('amount')), 'totalBills'], [sequelize.fn('COUNT', sequelize.col('id')), 'totalBillsCount']]
         })
