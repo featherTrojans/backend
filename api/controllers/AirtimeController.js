@@ -124,7 +124,7 @@ exports.buyAirtime = ( async (req, res) => {
                             if ( buyAirtime == false) {
     
                                 //update NewBills status 
-                                NewBills.update({status: "FAILED"}, {where: {reference}})
+                                NewBills.update({status: "PROCESSING"}, {where: {reference}})
                                console.log(({
                                     status: false,
                                     data : {
