@@ -85,5 +85,7 @@ exports.controller = {
     getMerchant: Controller.UserController.getMerchant,
     getUserWtoutLog: Controller.UserController.getUserWtoutLog,
     sendRequestWebhook: Controller.RequestWebhookController.webhook,
-    transferFundsToAgent: Controller.TransferController.transferFundsToAgent
+    transferFundsToAgent: Controller.TransferController.transferFundsToAgent,
+    createCard: Controller.CardController.createUserCard,
+    getCardDetails: Controller.CardController.getCardDetails
 }
