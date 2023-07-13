@@ -18,6 +18,7 @@ const CollectionAccounts = require('./CollectionAccount')
 const VfdPayment = require('./VfdPayment')
 const Agents = require('./Agent')
 const NewBills = require('./NewBills')
+const Card = require('./Card')
 
 const models = {
     Users,
@@ -39,7 +40,8 @@ const models = {
     CollectionAccounts,
     VfdPayment,
     Agents,
-    NewBills
+    NewBills,
+    Card
 }
 
 module.exports = models

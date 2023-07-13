@@ -5,7 +5,8 @@ const {
     LocationHistory, Request, Status, BankAccount, Withdrawal,
     Bills, Rating, Notification, BVN, Webhook, CollectionAccounts,
     VfdPayment,
-    Agents
+    Agents,
+    Card
 } = require('../models/')
 const NewBills = require('../models/NewBills')
 
@@ -186,9 +187,18 @@ const create_n_bills_table = ()=>{
     })
 }
 
+const create_cards_table = ()=>{
+    Card.sync({force: true}).then(()=>{
+    
+    config.logger.info('cards table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
+
 // create_users_table();
 // create_user_levels_table();
-create_transactions_table();
+// create_transactions_table();
 // create_double_spent_table();
 // create_payments_table();
 // create_location_table()
@@ -206,3 +216,4 @@ create_transactions_table();
 // create_vfd_payments_table()
 // create_agents_table()
 // create_n_bills_table()
+create_cards_table()

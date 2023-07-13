@@ -489,6 +489,15 @@ router.group('/', (router) => {
             ], 
                 controller.upgradeUser
             );
+            router.post('/card/create',
+                [ Authenticate ],
+                controller.createCard
+            )
+
+            router.get('/card/get',
+                [ Authenticate ],
+                controller.getCardDetails
+            )
 
             router.post('/verify/upgrade', 
             [
