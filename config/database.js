@@ -7,7 +7,7 @@ exports.connection = config.environment == 'live' ? new Sequelize(config.db_name
     host: config.db_host,
     dialectOptions: {
         ssl: {
-            ca: readFileSync('/etc/ssl/certs/ca-certificate.crt')
+            ca: readFileSync('../../../etc/ssl/certs/ca-certificate.crt')
         }
     },
     logging: (msg) => {
