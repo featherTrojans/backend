@@ -310,7 +310,10 @@ router.group('/', (router) => {
         );
         router.post('/request/webhook',
         controller.sendRequestWebhook
-    );
+        );
+        router.post('/card/webhook',
+            controller.bridgeWebhok
+        );
         router.post('/vfd/webhook',
             controller.vfdwebhook
         );
