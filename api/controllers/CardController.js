@@ -81,7 +81,25 @@ exports.getCardDetails = ( async ( req, res) => {
       return res.status(409).json({
         status: false,
         data : error,
-        message: "error occur"
+        message: "error occurred"
       })
    }
+})
+
+exports.fundCard = (async (req, res) => {
+  try{
+    const { userId } = req.user
+    const { amountUsd, amountNaira } = req.body
+    const nairaToUsd = await NairaToUsd.findAll({
+      order: [['createdAt', 'DESC']],
+        limit: 1,
+    })
+  }catch  (error) {
+
+    return res.status(409).json({
+      status: false,
+      data : error,
+      message: "error occurred"
+    })
+ }
 })

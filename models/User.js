@@ -13,7 +13,7 @@ const Users = db_con.define("users", {
 
     },
     "username": {
-        allowNull: false,
+        allowNull: true,
         unique: true,
         type: Sequelize.STRING,
         validate : {
