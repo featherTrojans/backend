@@ -89,7 +89,7 @@ exports.signup = ( async (req, res) => {
 
                     // const message = `Dear ${fullName}, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
                     // eventEmitter.emit('signup', {code, phoneNumber, email, message})
-                    const token = TokenServices({userId, username, email, fullName}, '262800h')
+                    const token = TokenServices({userId, username, email, fullName}, '168h')
                     return res.status(201).json({
                         status : true,
                         data: {
@@ -166,7 +166,7 @@ exports.resendCode = ( async (req, res) => {
 
                 const message = `Dear ${fullName}, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
                 eventEmitter.emit('signup', {code, phoneNumber, email, message})
-                const token = TokenServices({userId, username, email, fullName}, '2h')
+                const token = TokenServices({userId, username, email, fullName}, '168h')
                 return res.status(201).json({
                     status : true,
                     data: {
@@ -305,7 +305,7 @@ exports.setPassword = (async (req, res) => {
                     Get cash easily without stress. Your username/tag is @${username}, you can change it to your desired one on the app. Welcome once again`
 
                     eventEmitter.emit('signupSuccess', {fullName, email, message}, fullName);
-                    const token = TokenServices({userId, username, email, fullName}, '2h')
+                    const token = TokenServices({userId, username, email, fullName}, '168h')
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -368,7 +368,7 @@ exports.setPin = (async (req, res) => {
                    { pin: hashedPin},
                     {where: {userUid: userId}}
                 ).then(()=>{
-                    const token = TokenServices({userId, username, email, fullName}, '2h')
+                    const token = TokenServices({userId, username, email, fullName}, '168h')
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -438,7 +438,7 @@ exports.setUsername = (async (req, res) => {
                     {where: {userUid: userId}}
                 ).then(()=>{
                     username = newUsername
-                    const token = TokenServices({userId, username, email, fullName}, '2h')
+                    const token = TokenServices({userId, username, email, fullName}, '168h')
                     return res.status(202).json({
                         status: true,
                         data: {
@@ -519,7 +519,7 @@ exports.signIn = async (req, res) => {
                     })
                 }else {
 
-                    const token = TokenServices({userId: userUid, username, email, fullName}, '2h')
+                    const token = TokenServices({userId: userUid, username, email, fullName}, '168h')
                     return res.status(200).json({
                         status: true,
                         data: {
@@ -633,7 +633,7 @@ exports.confirmLoginCode =  async ( req, res) => {
                 })
             } else{
                 const {userUid, username, email, fullName} = checkUser;  
-                const token = TokenServices({userId: userUid, username, email, fullName}, '4380d') // set token to 12 years
+                const token = TokenServices({userId: userUid, username, email, fullName}, '168h') // set token to 12 years
                 // set isLoggedIn to true
                 Users.update(
                 {
