@@ -1,4 +1,4 @@
-const { appendFileSync, readFileSync } = require('fs')
+const { appendFileSync } = require('fs')
 const Sequelize = require('sequelize')
 const { config } = require('./')
 
@@ -6,11 +6,6 @@ exports.connection = config.environment == 'live' ? new Sequelize(config.db_name
     dialect: 'mysql',
     host: config.db_host,
     port: 25060,
-    // dialectOptions: {
-    //     ssl: {
-    //         ca: readFileSync('../../../etc/ssl/certs/ca-certificate.crt')
-    //     }
-    // },
     logging: (msg) => {
         appendFileSync("db.out.log", msg + "\n \n", "UTF-8",{'flags': 'a+'});
     }

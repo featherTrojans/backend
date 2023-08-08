@@ -9,7 +9,7 @@ let fetchApi = require('node-fetch')
 
 
 exports.transferFunds = ( async (req, res) => {
-    const {transferTo, amount, userPin } = req.body
+    const {transferTo, amount, userPin, narration } = req.body
     const { userId, username } = req.user
     const errors = validationResult(req);
 
@@ -95,7 +95,7 @@ exports.transferFunds = ( async (req, res) => {
                     }).then(() => {
 
                         // credit after successful debit
-                        services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, id: transId, title: 'Wallet Credit', type: "Feather2Feather"})
+                        services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}  ${narration}`, id: transId, title: 'Wallet Credit', type: "Feather2Feather"})
 
                     }).catch(error => {
                         logger.debug(error)
@@ -148,7 +148,7 @@ exports.transferFunds = ( async (req, res) => {
 
 
 exports.transferFundsToAgent = ( async (req, res) => {
-    const {transferTo, amount, userPin } = req.body
+    const {transferTo, amount, userPin, narration } = req.body
     const { userId, username } = req.user
     const errors = validationResult(req);
 
