@@ -138,6 +138,106 @@ exports.signup = ( async (req, res) => {
 
 })
 
+exports.signupTwo = ( async (req, res) => {
+
+    try
+    {
+        let {phoneNumber, referredBy} = req.body
+        const userId = services.idGenService(10)
+        const refId = services.idGenService(7)
+        const errors = validationResult(req);
+         referredBy = !referredBy ? 'SETH' : referredBy;
+
+        if (!errors.isEmpty()) {
+
+          return res.status(403).json({ errors: errors.array() });
+
+        } else {
+
+            // const checkUsername = await services.confirmData({data: username, type: 'username'});
+            // const checkEmail = await services.confirmData({data: email, type: 'email'});
+            const checkPhoneNumber = await services.confirmData({data: phoneNumber, type: 'phoneNumber'});
+
+
+            if (!( phoneNumber)){
+
+                return res.status(400).json({
+                    status : false,
+                    data: {},
+                    message: "All input are required"
+                })
+
+            }  else if (checkPhoneNumber != null ) {
+                const isVerified = checkPhoneNumber.isVerified
+                return res.status(400).json({
+                    status : false,
+                    data: {
+                        isVerified
+                    },
+                    message: "Phone Number already exist"
+                }) 
+            } else if (  checkPhoneNumber == null ) {
+
+                code = services.codeGenerator(6)
+                const hashedPin = await bcrypt.hash("0000", 10);
+
+                Users.create({
+                    userUid: userId,
+                    phoneNumber,
+                    refId,
+                    code,
+                    referredBy,
+                    pin: hashedPin,
+                }).then( () => {
+
+                    const message = `Hey padi, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
+                    eventEmitter.emit('signup', {code, phoneNumber, message})
+                    const token = TokenServices({userId}, '168h')
+                    return res.status(201).json({
+                        status : true,
+                        data: {
+                            userId,
+                            phoneNumber,
+                            token
+                        },
+                        message: "Signed up Successfully"
+                    })
+
+                }).catch((error) => {
+
+                    logger.info(error)
+                    return res.status(400).json({
+                        status : false,
+                        data: error,
+                        message: "Cannot sign up"
+                    })
+
+                })
+
+            } else {
+
+                return res.status(404).json({
+                    status : false,
+                    data: {},
+                    message: "Invalid data provided"
+                }) 
+            }
+
+        }
+
+    }
+    catch (error) {
+
+        logger.info(error)
+        res.status(409).json({
+            status: false,
+            data : error,
+            message: "error occured"
+        })
+    }
+
+})
+
 exports.resendCode = ( async (req, res) => {
     try {
         const { email } = req.body
@@ -647,7 +747,7 @@ exports.confirmLoginCode =  async ( req, res) => {
                         username,
                         token
                     },
-                    message: "User signed in successfully"
+                    message: "Hey padi, you have signed in successfully"
                 })
             }
             
@@ -657,7 +757,61 @@ exports.confirmLoginCode =  async ( req, res) => {
         return res.status(409).json({
             status: false,
             data: {},
-            message: "Aww padi,An error occureded. Contact support"
+            message: "Aww padi,An error occured. Contact support"
+        })
+    }
+
+
+}
+
+exports.confirmRegisterCode =  async ( req, res) => {
+
+    try {
+        const {code} = req.body
+        if (code === null || code === '') {
+            return res.status(400).json({
+                status: false,
+                data: {},
+                message: 'Aww padi, code cannot be empty'
+            })
+        } else  {
+            const checkUser = await Users.findOne({
+                where: {code}
+            })
+            console.log (checkUser)
+
+            if (checkUser === null) {
+                return res.status(404).json({
+                    status: false,
+                    data: {},
+                    message: 'Aww padi, the code you entered is invalid, please retry'
+                })
+            } else{
+                const {userUid} = checkUser;  
+                const token = TokenServices({userId: userUid}, '168h') // set token to 12 years
+                // set isLoggedIn to true
+                Users.update(
+                {
+                    isVerified: true
+                },
+                {where: {userUid}})
+                return res.status(200).json({
+                    status: true,
+                    data: {
+                        userId: userUid,
+                        token
+                    },
+                    message: "Hey padi, Your registeration is successful"
+                })
+            }
+            
+        }
+    }catch ( error) {
+        console.log('error', error)
+        return res.status(409).json({
+            status: false,
+            data: {},
+            message: "Aww padi,An error occured. Contact support"
         })
     }
 

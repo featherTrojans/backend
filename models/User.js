@@ -22,7 +22,7 @@ const Users = db_con.define("users", {
 
     },
     "fullName": {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
@@ -39,7 +39,7 @@ const Users = db_con.define("users", {
 
     },
     "email": {
-        allowNull: false,
+        allowNull: true,
         unique: true,
         type: Sequelize.STRING,
         validate : {

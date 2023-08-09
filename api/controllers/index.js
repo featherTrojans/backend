@@ -42,6 +42,7 @@ const AgentDashController = require('./AgentDashController')
 const RequestWebhookController = require('./RequestWebhookController')
 const CardController = require('./CardController')
 const BridgeWebhookController = require('./BridgeWebhookController')
+const ProfileController = require('./ProfileController')
 
 module.exports = {
     
@@ -88,5 +89,6 @@ module.exports = {
     AgentDashController,
     RequestWebhookController,
     CardController,
-    BridgeWebhookController
+    BridgeWebhookController,
+    ProfileController
 }
