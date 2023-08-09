@@ -96,6 +96,14 @@ router.group('/', (router) => {
             controller.setPin
             );
 
+            router.put('/data/update',
+            [   
+                Authenticate
+                
+            ], 
+            controller.createProfile
+            );
+
             router.post('/pin/verify',
             [   
                 Authenticate,
@@ -141,7 +149,13 @@ router.group('/', (router) => {
             ], 
             controller.signIn
             );
-
+            router.post('/signup/v2',
+            [   
+                body('username').toLowerCase()
+                
+            ], 
+            controller.signUpTwo
+            );
             router.post('/signin/v2',
             [   
                 body('username').toLowerCase()
@@ -157,6 +171,13 @@ router.group('/', (router) => {
             controller.confirmLoginCode
             );
 
+            router.post('/signup/confirm',
+            [   
+                body('code')
+                
+            ], 
+            controller.confirmRegisterCode
+            );
 
             router.group('/agent', (router) => {
 
