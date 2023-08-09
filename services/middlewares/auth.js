@@ -22,6 +22,7 @@ const Authenticate = ((req, res, next) =>{
     }
         const decoded = jwt.verify(token, config.jwt_secret)
         req.user = decoded
+        req.token = token
 
     } catch (err) {
 
