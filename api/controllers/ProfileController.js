@@ -16,7 +16,8 @@ exports.createProfile = ( async (req, res) => {
             Users.update({
                 fullName,
                 email,
-                gender
+                gender,
+                userLevel: 1
             }, {where: {userUid: userId}})
             return res.status(200).json({
                 status: true,
