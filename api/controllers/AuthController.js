@@ -735,11 +735,11 @@ exports.confirmLoginCode =  async ( req, res) => {
                 const {userUid, username, email, fullName} = checkUser;  
                 const token = TokenServices({userId: userUid, username, email, fullName}, '168h') // set token to 12 years
                 // set isLoggedIn to true
-                Users.update(
-                {
-                    isLoggedIn: true
-                },
-                {where: {userUid}})
+                // Users.update(
+                // {
+                //     isLoggedIn: true
+                // },
+                // {where: {userUid}})
                 return res.status(200).json({
                     status: true,
                     data: {
