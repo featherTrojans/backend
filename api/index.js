@@ -91,5 +91,6 @@ exports.controller = {
     transferFundsToAgent: Controller.TransferController.transferFundsToAgent,
     createCard: Controller.CardController.createUserCard,
     getCardDetails: Controller.CardController.getCardDetails,
-    bridgeWebhok: Controller.BridgeWebhookController.bridgeCardwebhook
+    bridgeWebhok: Controller.BridgeWebhookController.bridgeCardwebhook,
+    transactionBtwUSers: Controller.TransactionsController.transactionBtwUSers
 }

@@ -305,6 +305,14 @@ router.group('/', (router) => {
         controller.getTransactions
         );
 
+        router.get('/transactions/users',
+        [   
+            Authenticate
+            
+        ], 
+        controller.transactionBtwUSers
+        );
+
         router.get('/notifications',
         [   
             Authenticate
