@@ -256,24 +256,27 @@ exports.resendCode = ( async (req, res) => {
             }) 
         }else {
             code = await services.codeGenerator(6)
-            const {fullName, phoneNumber, userUid, username} = await Users.findOne({where: {email}})
+            const {fullName, phoneNumber, userUid, username} = await Users.findOne({where: {[Op.or]: {
+                email: email,
+                phoneNumber: email
+            } }})
             const userId = userUid
             Users.update({
                 code
-            }, {where: {email}}).then( (data) => {
+            }, {where: {[Op.or]: {
+                email: email,
+                phoneNumber: email
+            } }}).then( (data) => {
 
                 logger.info(data);
 
-                const message = `Dear ${fullName}, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
-                eventEmitter.emit('signup', {code, phoneNumber, email, message})
-                const token = TokenServices({userId, username, email, fullName}, '168h')
+                const message = `Hey padi, your verification code is: ${code}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
+                eventEmitter.emit('signup', {code, phoneNumber, message})
+                const token = TokenServices({userId}, '168h')
                 return res.status(201).json({
                     status : true,
                     data: {
                         userId,
-                        fullName,
-                        username,
-                        email,
                         phoneNumber,
                         token
                     },
