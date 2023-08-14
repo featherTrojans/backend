@@ -19,6 +19,7 @@ const VfdPayment = require('./VfdPayment')
 const Agents = require('./Agent')
 const NewBills = require('./NewBills')
 const Card = require('./Card')
+const NairaToUsd = require('./NairaToUsd')
 
 const models = {
     Users,
@@ -41,7 +42,8 @@ const models = {
     VfdPayment,
     Agents,
     NewBills,
-    Card
+    Card,
+    NairaToUsd
 }
 
 module.exports = models

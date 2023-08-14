@@ -2,7 +2,7 @@ const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
 
-const Location = db_con.define("usdRates", {
+const NairaToUsd = db_con.define("usdRates", {
     
     "rate": {
         allowNull: false,
@@ -24,4 +24,4 @@ const Location = db_con.define("usdRates", {
     
 })
 
-module.exports = Location
+module.exports = NairaToUsd

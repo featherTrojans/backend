@@ -92,5 +92,6 @@ exports.controller = {
     createCard: Controller.CardController.createUserCard,
     getCardDetails: Controller.CardController.getCardDetails,
     bridgeWebhok: Controller.BridgeWebhookController.bridgeCardwebhook,
-    transactionBtwUSers: Controller.TransactionsController.transactionBtwUSers
+    transactionBtwUSers: Controller.TransactionsController.transactionBtwUSers,
+    fundCard: Controller.CardController.fundCard
 }
