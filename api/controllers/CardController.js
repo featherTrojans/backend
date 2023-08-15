@@ -1,23 +1,17 @@
-const {createCardHolder, getCardDetails, fundCard, idGenService} = require('../../services').services
+const {createCardHolder, getCardDetails, fundCard, idGenService, debitService} = require('../../services').services
 const {Users, BVN, Card, NairaToUsd} = require('../../models')
 var formidable = require('formidable');
 
 exports.createUserCard = (async (req, res) => {
     try {
       const { userId } = req.user
-      const {
-          identity,
-          address
-        } = req.body
-
-        console.log(address)
 
         let usersData = await Users.findOne({
           where: {userUid: userId}
         })
 
 
-    if (usersData.userLevel > 1 ) {
+    if (usersData.userLevel > 2 ) {
       fullName = usersData.fullName.split(' ');
       first_name = fullName[1]
       last_name = fullName[0]
@@ -26,6 +20,20 @@ exports.createUserCard = (async (req, res) => {
       const {bvn} = await BVN.findOne({
         where: {userUid: userId}
       })
+      address = {
+        "address": usersData.address,
+        "city": usersData.city,
+        "state": usersData.state,
+        "country": usersData.country,
+        "postal_code": usersData.postalCode,
+        "house_no": usersData.houseNo
+      }
+      identity = {
+        "id_type": usersData.id_type,
+        "id_no": usersData.id_no,
+        "id_image": usersData.id_image
+      }
+
       //if all data are complete create holder
       let cardResponse = await createCardHolder({
         userUid: userId,
@@ -37,6 +45,7 @@ exports.createUserCard = (async (req, res) => {
         identity,
         bvn
       })
+
       console.log('cardResponse', cardResponse)
       return res.status(cardResponse.statusCode).json(
         cardResponse.other
@@ -47,16 +56,16 @@ exports.createUserCard = (async (req, res) => {
         status: false,
         data: {},
         message: "Unauthorized operation",
-        body: req.body
       })
     }
       
 
     } catch (error) {
+      console.log(error)
       return res.status(409).json({
         status: false,
         data : error,
-        message: "error occur"
+        message: "error occurred"
     })
     }
     
@@ -118,7 +127,7 @@ exports.fundCard = (async (req, res) => {
               limit: 1,
             })
             let {rate} = usdRate[0]
-            let amount = Math.round((rate * amountUsd), 2)
+            let amount = Math.round((rate * (amountUsd + 1)), 2)
 
             if ( amount > user.walletBal) {
               return res.status(400).json({
@@ -128,7 +137,7 @@ exports.fundCard = (async (req, res) => {
               })
             } else {
               //debit naira and credit card
-              await debitService({userUid: userId, reference:ref, amount, description: `NGN${amount} for $ ${amountUsd} card funding  `, from: 'primary wallet', to: 'USD card', title: "Card Funding"})
+              await debitService({userUid: userId, reference:ref, amount, description: `NGN${amount} for $ ${amountUsd} card funding  `, from: 'primary wallet', to: 'USD card', title: "Card Funding", charges: "$1"})
               console.log("rate", usdRate)
               ref = idGenService(15)
               let fundRes = fundCard({

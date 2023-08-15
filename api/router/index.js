@@ -521,6 +521,14 @@ router.group('/', (router) => {
             ], 
                 controller.upgradeUser
             );
+            router.post('/veteran/upgrade', 
+            [
+                Authenticate
+    
+            ], 
+                controller.veteranUpgrade
+            );
+
             router.post('/card/create',
                 [ Authenticate ],
                 controller.createCard
