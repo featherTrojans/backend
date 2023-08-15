@@ -71,5 +71,9 @@ exports.services = {
     queryMobil: mobilenigService.query_trans,
     createCardHolder: cardService.createHolder,
     createCard: cardService.createCard,
-    getCardDetails: cardService.getCardDetails
+    getCardDetails: cardService.getCardDetails,
+    fundCard: cardService.fundCard,
+    freezeCard: cardService.freezeCard,
+    debitCard: cardService.unloadCard,
+    unfreezeCard: cardService.unfreezeCard
 }

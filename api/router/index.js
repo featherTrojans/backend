@@ -524,7 +524,12 @@ router.group('/', (router) => {
             router.post('/card/create',
                 [ Authenticate ],
                 controller.createCard
-            )
+            );
+
+            router.put('/card/fund',
+                [ Authenticate ],
+                controller.fundCard
+            );
 
             router.get('/card/get',
                 [ Authenticate ],

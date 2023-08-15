@@ -1,5 +1,5 @@
-const {createCardHolder, getCardDetails} = require('../../services').services
-const {Users, BVN, Card} = require('../../models')
+const {createCardHolder, getCardDetails, fundCard, idGenService} = require('../../services').services
+const {Users, BVN, Card, NairaToUsd} = require('../../models')
 var formidable = require('formidable');
 
 exports.createUserCard = (async (req, res) => {
@@ -10,7 +10,7 @@ exports.createUserCard = (async (req, res) => {
           address
         } = req.body
 
-        console.log(identity)
+        console.log(address)
 
         let usersData = await Users.findOne({
           where: {userUid: userId}
@@ -37,6 +37,7 @@ exports.createUserCard = (async (req, res) => {
         identity,
         bvn
       })
+      console.log('cardResponse', cardResponse)
       return res.status(cardResponse.statusCode).json(
         cardResponse.other
       )
@@ -90,12 +91,77 @@ exports.fundCard = (async (req, res) => {
   try{
     const { userId } = req.user
     const { amountUsd, amountNaira } = req.body
-    const nairaToUsd = await NairaToUsd.findAll({
-      order: [['createdAt', 'DESC']],
-        limit: 1,
-    })
-  }catch  (error) {
+    if ( amountUsd > 200 ) {
+      return res.status(400).json({
+        status: false,
+        data : {},
+        message: "Hey padi, you have entered an amount greater than stipulated "
+      })
+    } else if (amountUsd < 0 ) {
+      return res.status(400).json({
+        status: false,
+        data : {},
+        message: "Hey padi, you have entered an invalid amount"
+      })
+    } else {
+      let user = await Users.findOne({
+        where: {userUid: userId}
+      })
 
+      if (user !== null ) {
+        let cardDetail = await Card.findOne({ where: {userUid: userId}})
+
+        if ( cardDetail != null ) {
+
+            const usdRate = await NairaToUsd.findAll({
+              order: [['createdAt', 'DESC']],
+              limit: 1,
+            })
+            let {rate} = usdRate[0]
+            let amount = Math.round((rate * amountUsd), 2)
+
+            if ( amount > user.walletBal) {
+              return res.status(400).json({
+                status: false,
+                data : {},
+                message: "Hey padi, you do not have enough balance"
+              })
+            } else {
+              //debit naira and credit card
+              await debitService({userUid: userId, reference:ref, amount, description: `NGN${amount} for $ ${amountUsd} card funding  `, from: 'primary wallet', to: 'USD card', title: "Card Funding"})
+              console.log("rate", usdRate)
+              ref = idGenService(15)
+              let fundRes = fundCard({
+                  "card_id": cardDetail.card_id,
+                  "amount": amountUsd,
+                  "transaction_reference": ref,
+                  "currency": "USD"
+                })
+
+                return res.status(fundRes.statusCode).json(fundRes.other)
+            }
+          
+        } else {
+          return res.status(400).json({
+            status: false,
+            data : {},
+            message: "Hey padi, you do not  have a card"
+          })
+        }
+        
+      } else {
+        return res.status(404).json({
+          status: false,
+          data : {},
+          message: "Hey padi, you can't fund this card at the moment"
+        })
+      }
+      
+
+    }
+    
+  } catch  (error) {
+    console.log('error', error)
     return res.status(409).json({
       status: false,
       data : error,
