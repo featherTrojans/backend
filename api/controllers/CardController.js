@@ -12,7 +12,16 @@ exports.createUserCard = (async (req, res) => {
 
 
     if (usersData.userLevel > 2 ) {
-      fullName = usersData.fullName.split(' ');
+      //check for charged amount
+      const usdRate = await NairaToUsd.findAll({
+        order: [['createdAt', 'DESC']],
+        limit: 1,
+      })
+      let {rate} = usdRate[0]
+      charges = Math.round((rate * 2), 2)
+
+      if (charges > usersData.walletBal ) {
+        fullName = usersData.fullName.split(' ');
       first_name = fullName[1]
       last_name = fullName[0]
       phone = usersData.phoneNumber
@@ -43,7 +52,8 @@ exports.createUserCard = (async (req, res) => {
         phone,
         email_address,
         identity,
-        bvn
+        bvn,
+        charges
       })
 
       console.log('cardResponse', cardResponse)
@@ -51,6 +61,14 @@ exports.createUserCard = (async (req, res) => {
         cardResponse.other
       )
 
+      } else {
+        return res.status(403).json({
+          status: false,
+          data: {},
+          message: "Hey padi, you do not have enough funds to perform this operation",
+        })
+      }
+      
     } else {
       return res.status(403).json({
         status: false,
@@ -137,9 +155,15 @@ exports.fundCard = (async (req, res) => {
               })
             } else {
               //debit naira and credit card
+              ref = idGenService(15)
               await debitService({userUid: userId, reference:ref, amount, description: `NGN${amount} for $ ${amountUsd} card funding  `, from: 'primary wallet', to: 'USD card', title: "Card Funding", charges: "$1"})
               console.log("rate", usdRate)
-              ref = idGenService(15)
+              handleTransaction({
+                reference: ref,
+                description: `NGN${amount} for $ ${amountUsd} card funding  `,
+                amount: amount,
+                type: "minus"
+              })
               let fundRes = fundCard({
                   "card_id": cardDetail.card_id,
                   "amount": amountUsd,
