@@ -5,19 +5,13 @@ var formidable = require('formidable');
 exports.createUserCard = (async (req, res) => {
     try {
       const { userId } = req.user
-      const {
-          identity,
-          address
-        } = req.body
-
-        console.log(address)
 
         let usersData = await Users.findOne({
           where: {userUid: userId}
         })
 
 
-    if (usersData.userLevel > 1 ) {
+    if (usersData.userLevel > 2 ) {
       fullName = usersData.fullName.split(' ');
       first_name = fullName[1]
       last_name = fullName[0]
@@ -26,6 +20,20 @@ exports.createUserCard = (async (req, res) => {
       const {bvn} = await BVN.findOne({
         where: {userUid: userId}
       })
+      address = {
+        "address": usersData.address,
+        "city": usersData.city,
+        "state": usersData.state,
+        "country": usersData.country,
+        "postal_code": usersData.postalCode,
+        "house_no": usersData.houseNo
+      }
+      identity = {
+        "id_type": usersData.id_type,
+        "id_no": usersData.id_no,
+        "id_image": usersData.id_image
+      }
+
       //if all data are complete create holder
       let cardResponse = await createCardHolder({
         userUid: userId,
@@ -37,6 +45,7 @@ exports.createUserCard = (async (req, res) => {
         identity,
         bvn
       })
+
       console.log('cardResponse', cardResponse)
       return res.status(cardResponse.statusCode).json(
         cardResponse.other
@@ -47,16 +56,16 @@ exports.createUserCard = (async (req, res) => {
         status: false,
         data: {},
         message: "Unauthorized operation",
-        body: req.body
       })
     }
       
 
     } catch (error) {
+      console.log(error)
       return res.status(409).json({
         status: false,
         data : error,
-        message: "error occur"
+        message: "error occurred"
     })
     }
     
