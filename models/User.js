@@ -194,6 +194,13 @@ const Users = db_con.define("users", {
         defaultValue: false
 
     },
+    memoji: {
+        allowNull: true,
+        type: Sequelize.TEXT,
+        validate : {
+           notEmpty: true
+        }
+    },
     "SecQueOne": {
         allowNull: true,
         type: Sequelize.STRING,
