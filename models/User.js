@@ -271,5 +271,12 @@ const Users = db_con.define("users", {
            notEmpty: true
         }
     },
+    "id_type": {
+        allowNull: true,
+        type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
 })
 module.exports = Users

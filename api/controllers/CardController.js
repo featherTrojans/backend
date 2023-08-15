@@ -1,4 +1,4 @@
-const {createCardHolder, getCardDetails, fundCard, idGenService} = require('../../services').services
+const {createCardHolder, getCardDetails, fundCard, idGenService, debitService} = require('../../services').services
 const {Users, BVN, Card, NairaToUsd} = require('../../models')
 var formidable = require('formidable');
 
@@ -118,7 +118,7 @@ exports.fundCard = (async (req, res) => {
               limit: 1,
             })
             let {rate} = usdRate[0]
-            let amount = Math.round((rate * amountUsd), 2)
+            let amount = Math.round((rate * (amountUsd + 1)), 2)
 
             if ( amount > user.walletBal) {
               return res.status(400).json({
@@ -128,7 +128,7 @@ exports.fundCard = (async (req, res) => {
               })
             } else {
               //debit naira and credit card
-              await debitService({userUid: userId, reference:ref, amount, description: `NGN${amount} for $ ${amountUsd} card funding  `, from: 'primary wallet', to: 'USD card', title: "Card Funding"})
+              await debitService({userUid: userId, reference:ref, amount, description: `NGN${amount} for $ ${amountUsd} card funding  `, from: 'primary wallet', to: 'USD card', title: "Card Funding", charges: "$1"})
               console.log("rate", usdRate)
               ref = idGenService(15)
               let fundRes = fundCard({
