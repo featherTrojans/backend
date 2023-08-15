@@ -23,7 +23,7 @@ exports.createHolder = async (data) => {
     };
 
     let response = await fetchApi(`${bc_url}/cardholder/register_cardholder_synchronously`, options);
-    // console.log(options)
+    console.log(options)
     console.log('response', response)
     let status = response.status
     response = await response.json()
@@ -37,7 +37,7 @@ exports.createHolder = async (data) => {
         cardholder_id,
 
       })
-      let create_card = this.createCard(
+       this.createCard(
         {
             "cardholder_id": cardholder_id,
             "card_type": "virtual",
@@ -45,7 +45,7 @@ exports.createHolder = async (data) => {
             "card_currency": "USD",
           }
       )
-      return create_card
+      
     } else {
       return ({statusCode: 400, other: {
         status: false,

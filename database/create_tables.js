@@ -6,7 +6,8 @@ const {
     Bills, Rating, Notification, BVN, Webhook, CollectionAccounts,
     VfdPayment,
     Agents,
-    Card
+    Card,
+    NairaToUsd
 } = require('../models/')
 const NewBills = require('../models/NewBills')
 
@@ -196,6 +197,15 @@ const create_cards_table = ()=>{
     })
 }
 
+const create_rates_table = ()=>{
+   NairaToUsd.sync({force: true}).then(()=>{
+    
+    config.logger.info('Naira to usd table created')
+    }).catch(err=>{
+        config.logger.debug(err)
+    })
+}
+
 // create_users_table();
 // create_user_levels_table();
 // create_transactions_table();
@@ -217,3 +227,4 @@ const create_cards_table = ()=>{
 // create_agents_table()
 // create_n_bills_table()
 // create_cards_table()
+create_rates_table()
