@@ -3,6 +3,9 @@ const cron = require('node-cron');
 const {logger, bc_url, bc_akey, bc_skey, environment} = config
 const fetchApi = require('node-fetch');
 const { Card } = require('../../models');
+const debitService = require('./debitService');
+const { handleTransaction } = require('./superAccountService');
+const idGenerator = require('../generateId');
 
 
 exports.createHolder = async (data) => {
@@ -31,7 +34,18 @@ exports.createHolder = async (data) => {
     if (status == 201 ) {
       //create card
       cardholder_id = response.data.cardholder_id
-
+      //debit user 
+      ref = idGenerator(15)
+      await debitService({
+        userUid: data.userId, reference: data.ref, amount: data.charges, description: `NGN${data.charges} for USD card creation  `, from: 'primary wallet', to: 'USD card', title: "Card Creation"
+      })
+      //plus to card payments and payment history
+      handleTransaction({
+        reference: ref,
+        description: `NGN${data.charges} for USD card creation  `,
+        amount: data.charges,
+        type: "minus"
+      })
       await Card.create({
         userUid: data.userUid,
         cardholder_id,

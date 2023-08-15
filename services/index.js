@@ -26,6 +26,7 @@ const requestService = require('./middlewares/requestServices')
 const cardService = require('./middlewares/cardServices')
 const mobilenigService = require('./middlewares/mobilenigService')
 const queryBills = require('./middlewares/queryBills')
+const superAccountService = require('./middlewares/superAccountService')
 
 
 exports.services = {
@@ -75,5 +76,6 @@ exports.services = {
     fundCard: cardService.fundCard,
     freezeCard: cardService.freezeCard,
     debitCard: cardService.unloadCard,
-    unfreezeCard: cardService.unfreezeCard
+    unfreezeCard: cardService.unfreezeCard,
+    handleTransaction: superAccountService.handleTransaction
 }
