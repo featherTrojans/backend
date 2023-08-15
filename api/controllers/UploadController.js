@@ -4,6 +4,7 @@ const {logger} = config;
 const {services} = require('../../services')
 const {cloudServices} = services
 var formidable = require('formidable');
+const { Users } = require("../../models");
 
 exports.uploadImages = (async (req, res) => {
     const errors = validationResult(req);
@@ -32,8 +33,23 @@ exports.uploadImages = (async (req, res) => {
                   console.error(err.message);
                   return;
                 } else {
-                    const {name} = fields
-                    if (files.file != null ) {
+                    const {name, index, color, isMemoji } = fields
+                    if (isMemoji){
+                        //upload memoji
+                        let memoji = JSON.stringify({index, color})
+                        Users.update({
+                            memoji
+                        }, {
+                            where: {
+                                userUid: userId
+                            }
+                        })
+                        return res.status(202).json({
+                            status: true,
+                            data: {},
+                            message: "Hey padi, your memoji hs been updated successfully"
+                        })
+                    } else if (files.file != null ) {
                         const {size, path, type} = files.file
 
                         if ( size > 2000000){
