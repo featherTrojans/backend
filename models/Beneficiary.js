@@ -2,9 +2,9 @@ const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
 
-const NairaToUsd = db_con.define("usdRates", {
+const Beneficiary = db_con.define("beneficiaries", {
     
-    "rate": {
+    "userUid": {
         allowNull: false,
         type: Sequelize.STRING,
         validate : {
@@ -12,24 +12,22 @@ const NairaToUsd = db_con.define("usdRates", {
         }
 
     },
-    "buyingRate": {
+    "data": {
         allowNull: false,
-        type: Sequelize.STRING,
-        validate : {
-           notEmpty: true
-        }
-
-    },
-    "staff": {
-        allowNull: false,
-        type: Sequelize.STRING,
-        defaultValue: "AUTOMATED",
+        type: Sequelize.TEXT,
         validate : {
            notEmpty: true
         }
     },
-    
+    "beneficiary_type": {
+        allowNull: false,
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        validate : {
+           notEmpty: true
+        }
+    },
     
 })
 
-module.exports = NairaToUsd
+module.exports = Beneficiary

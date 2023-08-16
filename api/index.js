@@ -94,5 +94,8 @@ exports.controller = {
     bridgeWebhok: Controller.BridgeWebhookController.bridgeCardwebhook,
     transactionBtwUSers: Controller.TransactionsController.transactionBtwUSers,
     fundCard: Controller.CardController.fundCard,
-    veteranUpgrade: Controller.VeteranController.veteranUpgrade
+    veteranUpgrade: Controller.VeteranController.veteranUpgrade,
+    getUsdRate: Controller.RateController.getRate,
+    createBeneficiary: Controller.BeneficiaryController.createBeneficiary,
+    getBeneficiary: Controller.BeneficiaryController.getBeneficiary
 }

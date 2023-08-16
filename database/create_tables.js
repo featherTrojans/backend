@@ -8,7 +8,8 @@ const {
     Agents,
     Card,
     NairaToUsd,
-    CardHistory
+    CardHistory,
+    Beneficiary
 } = require('../models/')
 const CardPayments = require('../models/CardPayments')
 const NewBills = require('../models/NewBills')
@@ -225,6 +226,15 @@ const create_card_payments_table = ()=>{
        })
    }
 
+   const create_beneficiaries_table = ()=>{
+    Beneficiary.sync({force: true}).then(()=>{
+        
+        config.logger.info(' beneficiaries table created')
+        }).catch(err=>{
+            config.logger.debug(err)
+        })
+    }
+
 // create_users_table();
 // create_user_levels_table();
 // create_transactions_table();
@@ -246,6 +256,7 @@ const create_card_payments_table = ()=>{
 // create_agents_table()
 // create_n_bills_table()
 // create_cards_table()
-// create_rates_table()
+create_rates_table()
 create_card_payments_table()
 create_card_histories_table()
+create_beneficiaries_table()
