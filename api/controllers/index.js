@@ -44,7 +44,8 @@ const CardController = require('./CardController')
 const BridgeWebhookController = require('./BridgeWebhookController')
 const ProfileController = require('./ProfileController')
 const VeteranController = require('./VeteranController')
-
+const RateController = require('./RateController')
+const BeneficiaryController = require('./BeneficiaryController')
 module.exports = {
     
     AuthController,
@@ -92,5 +93,7 @@ module.exports = {
     CardController,
     BridgeWebhookController,
     ProfileController,
-    VeteranController
+    VeteranController,
+    RateController,
+    BeneficiaryController
 }

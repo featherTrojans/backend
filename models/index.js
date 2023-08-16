@@ -22,6 +22,7 @@ const Card = require('./Card')
 const NairaToUsd = require('./NairaToUsd')
 const CardPayments = require('./CardPayments')
 const CardHistory = require('./CardHistory')
+const Beneficiary = require('./Beneficiary')
 
 const models = {
     Users,
@@ -47,7 +48,8 @@ const models = {
     Card,
     NairaToUsd,
     CardHistory,
-    CardPayments
+    CardPayments,
+    Beneficiary
 }
 
 module.exports = models

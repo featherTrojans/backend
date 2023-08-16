@@ -661,7 +661,9 @@ router.group('/', (router) => {
             controller.getAllBills
         );
         });
-
+        router.get('/usd/rate', controller.getUsdRate)
+        router.get('/beneficiary/get',[Authenticate], controller.getBeneficiary);
+        router.post('/beneficiary/create',[Authenticate], controller.createBeneficiary)
         router.get('/admin/stats', controller.stats);
         router.get('/referral/stats/:referredBy', controller.referralStats);
         router.get('/cron', controller.cronJob);
