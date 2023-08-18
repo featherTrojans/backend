@@ -1,6 +1,6 @@
 const { config } = require("../../config");
 const { Transactions, Users, Withdrawal } = require("../../models");
-const logger = config.logger
+const {logger, Op} = config
 
 exports.transactions = ( async (req, res) => {
 
@@ -90,7 +90,7 @@ exports.transactionBtwUSers = ( async (req, res) => {
     const {otherUsername } = req.body
     try
     {
-        checkOtherUsername = Users.findOne({
+        checkOtherUsername = await Users.findOne({
             where: {
                 [Op.or]: {
                     username: otherUsername,
