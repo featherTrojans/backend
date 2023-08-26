@@ -305,7 +305,7 @@ router.group('/', (router) => {
         controller.getTransactions
         );
 
-        router.get('/transactions/users',
+        router.get('/transactions/users/:phoneNumber',
         [   
             Authenticate
             
