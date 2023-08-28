@@ -130,7 +130,7 @@ exports.buyAirtime = ( async (req, res) => {
                                     data : {
                                         network,
                                         phone,
-                                        amount
+                                        amount,
                                     },
                                     message: "Cannot purchase airtime at the moment please try again later"
                     
@@ -175,7 +175,18 @@ exports.buyAirtime = ( async (req, res) => {
 
                     return res.status(200).json({
                         status: true,
-                        data: {},
+                        data: {
+                            network,
+                            amount,
+                            phone,
+                            transId: reference,
+                            description: `NGN${amount} ${network} airtime purchased on ${phone}`,
+                            title: "Airtime Purchase",
+                            direction: "out",
+                            status: "PROCESSING",
+                            createdAt: Date.now()
+                            
+                        },
                         message: "Hey padi, your order is processing"
                     })
                     

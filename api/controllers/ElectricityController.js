@@ -46,8 +46,8 @@ exports.buyElect = ( async (req, res) => {
             })
         } else{
         
-            const reference = '8' + await idGenService(7);
-            const creditReference = 'FTHR' + await idGenService(7)
+            const reference = '8' + idGenService(7);
+            const creditReference = 'FTHR' + idGenService(7)
             const transId =  timeService.serverTime().timeToUse + userId + walletBal;
             const insert = await DoubleSpent.create({
                 transId,
@@ -87,7 +87,10 @@ exports.buyElect = ( async (req, res) => {
                                 service,
                                 phone,
                                 amount,
-                                meter_number
+                                meter_number,
+                                description: `NGN${amount} ${variation} ${service} token reversal purchase on ${meter_number}`,
+                                transId,
+                                createdAt: Date.now()
                             },
                             message: "Cannot purchase token at the moment please try again later"
             

@@ -91,11 +91,14 @@ exports.veteranUpgrade = (async( req, res)=> {
                                         message: `Hey padi, your veteran upgrade has been successful. You now enjoy our unlimited services`
                                     })
                             })
-                            .catch(err => res.status(500).json({
+                            .catch(err => {
+                                console.log("err", err)
+                                return res.status(500).json({
                                 status: false,
                                 data: {},
                                 message: `Could not upload ${id_image}`
-                            })  )
+                            })
+                        })
 
                         }
                    }  else {

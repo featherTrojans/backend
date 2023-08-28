@@ -87,15 +87,15 @@ exports.transactions = ( async (req, res) => {
 exports.transactionBtwUSers = ( async (req, res) => {
 
     const { userId } = req.user
-    const {otherUsername } = req.body
+    const {phoneNumber } = req.params
     try
     {
         checkOtherUsername = await Users.findOne({
             where: {
                 [Op.or]: {
-                    username: otherUsername,
-                    phoneNumber: otherUsername,
-                    userUid: otherUsername,
+                    username: phoneNumber,
+                    phoneNumber: phoneNumber,
+                    userUid: phoneNumber,
                 },
             }
         })
