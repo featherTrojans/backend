@@ -112,7 +112,10 @@ exports.transferFunds = ( async (req, res) => {
                         data : {
                             "from": username,
                             "to": transferTo,
-                            amount
+                            amount,
+                            description: `NGN${amount} transferred from ${username}  ${narration}`,
+                            transId, 
+                            createdAt: Date.now()
                         },
                         message: `#${amount} transferred to ${transferTo} successfully`
             
@@ -258,7 +261,9 @@ exports.transferFundsToAgent = ( async (req, res) => {
                                     data : {
                                         "from": username,
                                         "to": business_name,
-                                        amount
+                                        amount,
+                                        transId, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, 
+                                        createdAt: Date.now()
                                     },
                                     message: `#${amount} transferred to ${business_name} successfully`
                         
