@@ -32,7 +32,7 @@ exports.createBeneficiary = (async (req, res) => {
                 status: true,
                 data: {beneficiaries},
                 message: `${data} added to beneficiary type ${type} successfully`
-            })
+            }) 
         }
     } catch (error) {
         logger.info(error)
@@ -47,7 +47,7 @@ exports.createBeneficiary = (async (req, res) => {
 exports.getBeneficiary = (async (req, res) => {
     try{
         const {userId} = req.user
-        const {type} = req.body
+        const {type} = req.param
         let beneficiaries = await Beneficiary.findAll({
             where: {
                 userUid: userId,

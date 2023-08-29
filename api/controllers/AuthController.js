@@ -240,32 +240,32 @@ exports.signupTwo = ( async (req, res) => {
 
 exports.resendCode = ( async (req, res) => {
     try {
-        const { email } = req.body
+        const { detail } = req.body
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
 
             return res.status(403).json({ errors: errors.array() });
   
-        } else if (!(email) ){
+        } else if (!(detail) ){
             return res.status(400).json({
                 status : false,
                 data: {
                     
                 },
-                message: "Email is required"
+                message: "detail is required"
             }) 
         }else {
-            code = await services.codeGenerator(6)
-            const {fullName, phoneNumber, userUid, username} = await Users.findOne({where: {[Op.or]: {
-                email: email,
-                phoneNumber: email
+            code = services.codeGenerator(6)
+            const {phoneNumber, userUid} = await Users.findOne({where: {[Op.or]: {
+                email: detail,
+                phoneNumber: detail
             } }})
             const userId = userUid
             Users.update({
                 code
             }, {where: {[Op.or]: {
-                email: email,
-                phoneNumber: email
+                email: detail,
+                phoneNumber: detail
             } }}).then( (data) => {
 
                 logger.info(data);

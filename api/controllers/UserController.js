@@ -144,7 +144,7 @@ exports.getMerchant = ( async (req, res) => {
 
 exports.updateBasicData = ( async (req, res) => {
 
-    const { newUsername, firstName, lastName } = req.body
+    const { newUsername, firstName, lastName, gender } = req.body
     const {userId, username, email} = req.user
     const errors = validationResult(req);
     try
@@ -161,7 +161,7 @@ exports.updateBasicData = ( async (req, res) => {
             })
         } else {
 
-            Users.update({username: newUsername, fullName: `${lastName} ${firstName}`}, {where: {userUid: userId}}).then((data) => {
+            Users.update({username: newUsername, fullName: `${lastName} ${firstName}`, gender}, {where: {userUid: userId}}).then((data) => {
                 if (data[0] > 0 ) {
                     const token = TokenServices({userId, username: newUsername, email, fullName: `${lastName} ${firstName}`}, '6h')
                     Request.update({
