@@ -662,7 +662,7 @@ router.group('/', (router) => {
         );
         });
         router.get('/usd/rate', controller.getUsdRate)
-        router.get('/beneficiary/get',[Authenticate], controller.getBeneficiary);
+        router.get('/beneficiary/get/:type',[Authenticate], controller.getBeneficiary);
         router.post('/beneficiary/create',[Authenticate], controller.createBeneficiary)
         router.get('/admin/stats', controller.stats);
         router.get('/referral/stats/:referredBy', controller.referralStats);

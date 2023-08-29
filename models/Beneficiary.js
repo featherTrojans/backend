@@ -21,7 +21,7 @@ const Beneficiary = db_con.define("beneficiaries", {
     },
     "beneficiary_type": {
         allowNull: false,
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.STRING,
         defaultValue: false,
         validate : {
            notEmpty: true
