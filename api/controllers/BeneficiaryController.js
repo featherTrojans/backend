@@ -47,7 +47,7 @@ exports.createBeneficiary = (async (req, res) => {
 exports.getBeneficiary = (async (req, res) => {
     try{
         const {userId} = req.user
-        const {type} = req.param
+        const {type} = req.params
         let beneficiaries = await Beneficiary.findAll({
             where: {
                 userUid: userId,

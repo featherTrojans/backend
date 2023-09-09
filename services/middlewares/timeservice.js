@@ -14,5 +14,5 @@ exports.serverTime = () => {
     var timeToUse = date_ob.getTime();
     let fifteen_mins_ago = time - ( 75 * 60 * 1000) + (3600 * 1000) // in utc since the server timezone is utc
     date_ob.setSeconds(0,0);
-    return {now, fullYear: `${year}-${month}-${date}`, today, yesterday, timeToUse, fifteen_mins_ago}
+    return {now, fullYear: `${year}-${month}-${date}`, today, yesterday, timeToUse, fifteen_mins_ago, year, month, date}
 }
