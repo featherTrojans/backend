@@ -112,7 +112,11 @@ exports.transactionBtwUSers = ( async (req, res) => {
         const transactions = await Transactions.findAll({
 
             attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'charges', 'description', 'from', 'to', 'direction', 'title', 'createdAt', 'trans_type'],
-            where: {userUid: userId},
+            where: {userUid: userId, 
+                [Op.or]: {
+                from: phoneNumber,
+                to: phoneNumber,
+            }},
             order: [['createdAt', 'DESC']],
             include: [{
                 model: Users,
