@@ -184,9 +184,20 @@ exports.withdrawFund = async (payload) => {
             reference: payload.reference
 
           })
+
+          console.log({
+
+            source: "balance",
+            reason: payload.narration,
+            amount: (payload.amount * 100),
+            recipient: payload.account_code,
+            reference: payload.reference
+
+          })
         
           if(status == false){
               logger.info(message)
+              logger.info(status)
               return false;
           }else{
               // insert into db

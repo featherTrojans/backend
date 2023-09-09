@@ -46,6 +46,9 @@ const ProfileController = require('./ProfileController')
 const VeteranController = require('./VeteranController')
 const RateController = require('./RateController')
 const BeneficiaryController = require('./BeneficiaryController')
+const LimitController = require('./LimitController')
+const CablePricingController = require('./CablePricingController')
+
 module.exports = {
     
     AuthController,
@@ -95,5 +98,7 @@ module.exports = {
     ProfileController,
     VeteranController,
     RateController,
-    BeneficiaryController
+    BeneficiaryController,
+    LimitController,
+    CablePricingController
 }
