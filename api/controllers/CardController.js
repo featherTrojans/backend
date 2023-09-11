@@ -20,7 +20,7 @@ exports.createUserCard = (async (req, res) => {
       let {rate} = usdRate[0]
       charges = Math.round((rate * 2), 2)
 
-      if (charges > usersData.walletBal ) {
+      if (usersData.walletBal > charges ) {
         fullName = usersData.fullName.split(' ');
       first_name = fullName[1]
       last_name = fullName[0]

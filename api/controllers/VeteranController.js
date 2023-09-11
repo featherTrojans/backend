@@ -27,7 +27,13 @@ exports.veteranUpgrade = (async( req, res)=> {
                 data : {},
                 message: "Hey padi, you are not authorized to perform this operation"
               })
-        } else {
+        }  else if (userCheck.UserLevels > 2) {
+            return res.status(400).json({
+                status: false,
+                data : {},
+                message: "Hey padi, you are not authorized to perform this operation as you are previously upgraded to veteran"
+              })
+        }else {
         if (!errors.isEmpty()) {
 
             return res.status(403).json({ errors: errors.array() });
@@ -78,7 +84,7 @@ exports.veteranUpgrade = (async( req, res)=> {
                                     address, city, state, country, postalCode: postal_code, 
                                     houseNo: house_no, 
                                     id_type, id_no,
-                                    userLevel: 4,
+                                    userLevel: 3,
                                 }, {
                                     where: {
                                         userUid: userId
