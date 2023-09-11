@@ -27,7 +27,7 @@ exports.webhook = (async (req, res) => {
         // console.log('auth_token', auth_token)
         // console.log('token', auth_token) // log token
          if (environment == 'live') {
-            if ( (ip != '::ffff:35.178.240.72' && ip != '::ffff:191.101.42.78') && auth_token != 'VfdFeatheR$%$' ) {
+            if ( auth_token != 'VfdFeatheR$%$' ) {
             
 
                 // logger.info('Auth Token  not correct')
