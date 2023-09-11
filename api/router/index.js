@@ -31,7 +31,6 @@ router.group('/', (router) => {
             router.put('/location/update', [Authenticate], controller.updateLocation)
 
             router.get('/dashboard', [Authenticate], controller.agentDashboard)
-
         })
         router.group('/auth', (router) => {
 
@@ -287,6 +286,7 @@ router.group('/', (router) => {
         ], 
         controller.dashboard
         );
+        router.get('/limitrange', [Authenticate], controller.limitData)
 
         router.post('/forgot/password', 
             controller.sendForgotPswdCode
@@ -659,7 +659,10 @@ router.group('/', (router) => {
                 Authenticate,
             ], 
             controller.getAllBills
-        );
+            );
+
+            router.get('/prices/:package', [Authenticate], controller.cablePrices)
+            router.post('/details', [Authenticate], controller.cableDetails)
         });
         router.get('/usd/rate', controller.getUsdRate)
         router.get('/beneficiary/get/:type',[Authenticate], controller.getBeneficiary);

@@ -97,5 +97,8 @@ exports.controller = {
     veteranUpgrade: Controller.VeteranController.veteranUpgrade,
     getUsdRate: Controller.RateController.getRate,
     createBeneficiary: Controller.BeneficiaryController.createBeneficiary,
-    getBeneficiary: Controller.BeneficiaryController.getBeneficiary
+    getBeneficiary: Controller.BeneficiaryController.getBeneficiary,
+    limitData: Controller.LimitController.limitRange,
+    cablePrices: Controller.CablePricingController.getPricing,
+    cableDetails: Controller.CablePricingController.getCableDetail
 }

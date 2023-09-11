@@ -52,6 +52,8 @@ exports.services = {
     getBalance: balanceService.getBalance,
     getRequest: requestServices.getRequest,
     buyAirtimeData: payBillService.buyAirtimeData,
+    buyData: payBillService.buyData,
+    pricing: payBillService.pricing,
     buyLight: payBillService.buyLight,
     buyCable: payBillService.buyCable,
     awsService: awsService.uploadFile,
@@ -77,5 +79,6 @@ exports.services = {
     freezeCard: cardService.freezeCard,
     debitCard: cardService.unloadCard,
     unfreezeCard: cardService.unfreezeCard,
-    handleTransaction: superAccountService.handleTransaction
+    handleTransaction: superAccountService.handleTransaction,
+    getCablePricing: mobilenigService.getCablePrices
 }

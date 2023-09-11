@@ -45,6 +45,19 @@ const getServiceId = (network) => {
         case "kano-electric": return "AFA";
         case "portharcout-electric": return "ADB";
         case "jos-electric": return "ACB";
+        case "mtn-data": return "BCA";
+        case "glo-data": return "BCC";
+        case "9mobile-data": return "BCB";
+        case "airtel-data": return "BCD";
+        case "gotv": return "AKA";
+        case "dstv": return "AKC";
+        case "startimes": return "AKB";
+        case "showmax": return "SMA";
+        case "smile": return "ALA";
+        case "waec": return "AJA";
+        case "neco": return "AJC";
+        case "jamb": return "AJB";
+        case "spectranet": return "ALB";
         default: return false
     }
 }
@@ -58,7 +71,7 @@ const fetchApiPost = async (data) => {
                     },
             body: data?.body ?? ''
         })
-        console.log(data.body)
+        console.log("body", data.body)
 
         response = await response.json()
         //  logger.info(response);
@@ -123,13 +136,12 @@ exports.getWalletHistory = async (start, end) => {
 
 exports.buyAirtimeData = async ({phone, network, amount, type, trans_id}) =>{
 
-    if (type == 'airtime') {
         //buy airtime for user
         var url = `${mobilenig_url}services/`
         const body = JSON.stringify({
             "service_id": getServiceId(network),
             trans_id,
-            "service_type": network.toLowerCase() == 'airtel' ? "STANDARD" : 'STANDARD',
+            "service_type": "PREMIUM",
             "phoneNumber": phone,
             amount
         })
@@ -152,24 +164,43 @@ exports.buyAirtimeData = async ({phone, network, amount, type, trans_id}) =>{
         }else{
             return false
         }
-    } else if (type == 'data') {
-        var url = `${paygold_url}data?username=${paygold_username}&password=${paygold_pass}&network_id=${network}&phone=${phone}&variation_id=${amount}`
+   
+}
 
-        const data = await fetchApi(url)
+exports.buyData = async ({phone, network, amount, value, trans_id}) => {
+    var url = `${mobilenig_url}services/`
+        let service_id = getServiceId(network + "-data")
+        let codeRes = await this.getCode({service_id, value, charge: amount})
+        console.log(codeRes)
+        if (codeRes.status !== false ) {
+            console.log('code: ', codeRes.data.code )
+            let {code , price} = codeRes.data
+            const body = JSON.stringify({
+                service_id,
+                trans_id,
+                "service_type": "SME",
+                "beneficiary": phone,
+                amount: price,
+                code
+            })
+            const data = await fetchApiPost({url, key: mobilenig_sk_key, body})
         if (data !== false){
             /**
              * 
-             * {"code":"success","message":"Data successfully delivered","data":{"network":"MTN","data_plan":"MTN Data 1GB (SME) – 30 Days","phone":"07045461790","amount":"NGN319","request_id":"fb69ed8a39ac5684"}}
+             * {
+                    message: 'success',
+                    statusCode: '202',
+                    details: 'Your request status is pending, kindly use the query request after two minutes to get the final status.'
+                }
              */
             return data
         }else{
             return false
         }
-    } else {
-
-        return false
-
-    }
+        } else {
+            return false
+        }
+        
 }
 
 exports.buyLight = async({service, amount, meter_number, trans_id}) => {
@@ -207,10 +238,24 @@ exports.buyLight = async({service, amount, meter_number, trans_id}) => {
     }
 }
 
-exports.buyCable = async({phone, service, smartcard_number, variation}) => {
-    var url = `${paygold_url}tv?username=${paygold_username}&password=${paygold_pass}&phone=${phone}&service_id=${service}&smartcard_number=${smartcard_number}&variation_id=${variation}`;
-
-    const data = await fetchApi(url)
+exports.buyCable = async({trans_id, phone, service, smartcard_number, variation}) => {
+    var url = `${mobilenig_url}services/`;
+    const body = JSON.stringify({
+        "service_id": getServiceId(service),
+        trans_id,
+        meterNumber,
+        customerDistrict,
+        customerAddress,
+        customerName,
+        amount,
+        accountNumber,
+        customerDtNumber,
+        customerNumber,
+        customerAccountType,
+        customerReference: meterNumber,
+    })
+    const data = await fetchApiPost({url, key: mobilenig_sk_key, body})
+    console.log('data', data)
     if (data !== false){
         /**
          *
@@ -229,16 +274,88 @@ exports.pricing = async({service_id, requestType}) => {
             service_id,
             requestType
         })
-        const data = await fetchApiPost({url, key: mobilenig_sk_key, body})
-        console.log('data', data)
+        
+        const data = await fetchApiPost({url, key: mobilenig_pk_key, body: body})
+        // console.log('data', data)
         if (data !== false){
             return data
-
         }else{
             return false
         }
     
 }
+
+exports.getCablePrices = ( async(data) => {
+    let service_id = getServiceId(data)
+    let detail = await this.pricing({service_id, requestType: "SME"})
+    let result = []
+
+    if (detail == false) {
+        return false;
+    } else {
+        console.log( typeof detail)
+        if (detail[0] != undefined) {
+
+            detail.forEach(ele => {
+                delete ele.productCode
+                result.push(
+                    ele
+                )
+            })
+            return result
+
+        } else {
+            return detail
+        }
+        
+    }
+})
+
+exports.getCableDetail = ( async(data) => {
+    console.log(data.package)
+    let {package, decoderNo} = data
+    
+    let detail = await getDetails({
+        service: package,
+        meter_number: decoderNo
+    })
+
+    if (detail == false) {
+        return false;
+    } else {
+
+        return detail
+        
+        
+    }
+})
+
+exports.getCode = ( async (data) => {
+    let {service_id, value, charge} = data
+    let details = await this.pricing({service_id, requestType :'SME'})
+    let result = {status: false}
+    details.forEach(element => {
+        if ( service_id == 'BCA') {
+            console.log("element: ", element)
+        } else {
+            dataToGB = value/1000
+            dataToBuy = dataToGB >= 1 ? dataToGB + "GB" : value + "MB"
+            if (element.name.includes(dataToBuy)) {
+                if (charge > element.price) {
+                    console.log("dataToBuy: ", element)
+                    result = {
+                        status: 'success',
+                        data: {code: element.productCode, price: element.price}
+                    }
+                }
+
+            }
+
+        }
+
+    });
+    return result
+})
 
 exports.query_trans = async (trans_id) => {
     var url = `${mobilenig_url
@@ -262,10 +379,13 @@ exports.query_trans = async (trans_id) => {
     }
 
 }
-// this.buyAirtimeData({phone: "07068006837", network: "mtn", amount: "100", type: "airtime", trans_id: "FTH-BILLs-09898766"})
+// this.buyAirtimeData({phone: "08012345678", network: "9mobile", amount: "300", type: "data", trans_id: "3vD3xcoCFey"})
+
+// this.buyData({phone: "08012345678", network: "9mobile", amount: "300", type: "data", value: 500, trans_id: "3vD3xpoCiey"})
 // this.buyLight({phone: "07068006837", service: "ibadan-electric", amount: "500", variation: "prepaid", meter_number: "7867766660"})
 
 // this.getBalance()
 
 // this.query_trans('3vD3xcoCFew')
-// this.pricing('BCA', 'SME')
+// this.pricing({service_id: 'AKA', requestType :'SME'})
+// this.getCode({service_id: 'BCD', value: 1000, charge: 300})
