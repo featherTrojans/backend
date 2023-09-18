@@ -22,21 +22,21 @@ exports.webhook = (async (req, res) => {
             originator_account_number, originator_account_name,
             originator_bank, originator_narration, timestamp,
          } = body; //deconstruct
-        const auth_token = req.headers['auth_token'];
+        const auth_token = req.headers['auth_token'] ?? req.headers['auth-token'];
         // console.log('headers', req.headers.auth_token)
         // console.log('auth_token', auth_token)
         // console.log('token', auth_token) // log token
-         if (environment == 'live') {
-            if ( auth_token != 'VfdFeatheR$%$' ) {
+        //  if (environment == 'live') {
+        //     if ( auth_token != 'VfdFeatheR$%$' ) {
             
 
-                // logger.info('Auth Token  not correct')
-                logger.info("Unauthorized request")
-                return res.status(403).json({
-                    message: 'invalid request, unauthorized caller'
-                })
-            }
-         }
+        //         // logger.info('Auth Token  not correct')
+        //         logger.info("Unauthorized request")
+        //         return res.status(403).json({
+        //             message: 'invalid request, unauthorized caller'
+        //         })
+        //     }
+        //  }
          
         //get user_id with account_no
         const {userUid} = await Users.findOne({

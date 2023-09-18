@@ -238,21 +238,16 @@ exports.buyLight = async({service, amount, meter_number, trans_id}) => {
     }
 }
 
-exports.buyCable = async({trans_id, phone, service, smartcard_number, variation}) => {
+exports.buyCable = async({trans_id, phone, service, smartcard_number, productCode, amount, customerName}) => {
     var url = `${mobilenig_url}services/`;
     const body = JSON.stringify({
         "service_id": getServiceId(service),
         trans_id,
-        meterNumber,
-        customerDistrict,
-        customerAddress,
+        smartcardNumber: smartcard_number,
+        productCode,
         customerName,
         amount,
-        accountNumber,
-        customerDtNumber,
-        customerNumber,
-        customerAccountType,
-        customerReference: meterNumber,
+        customerNumber: phone,
     })
     const data = await fetchApiPost({url, key: mobilenig_sk_key, body})
     console.log('data', data)
@@ -294,19 +289,7 @@ exports.getCablePrices = ( async(data) => {
         return false;
     } else {
         console.log( typeof detail)
-        if (detail[0] != undefined) {
-
-            detail.forEach(ele => {
-                delete ele.productCode
-                result.push(
-                    ele
-                )
-            })
-            return result
-
-        } else {
-            return detail
-        }
+        return detail
         
     }
 })
@@ -382,7 +365,7 @@ exports.query_trans = async (trans_id) => {
 // this.buyAirtimeData({phone: "08012345678", network: "9mobile", amount: "300", type: "data", trans_id: "3vD3xcoCFey"})
 
 // this.buyData({phone: "08012345678", network: "9mobile", amount: "300", type: "data", value: 500, trans_id: "3vD3xpoCiey"})
-// this.buyLight({phone: "07068006837", service: "ibadan-electric", amount: "500", variation: "prepaid", meter_number: "7867766660"})
+// this.buyLight({phone: "09023656565655", service: "eko-electric", amount: "500", variation: "prepaid", meter_number: "7867766660"})
 
 // this.getBalance()
 

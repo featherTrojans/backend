@@ -1,5 +1,5 @@
 const {
-    buyAirtimeData, 
+    buyCable, 
     debitService,
     idGenService,
     timeService
@@ -9,15 +9,14 @@ const {logger, environment} = require('../../config/').config
 const bcrypt = require('bcryptjs');
 
 exports.buyCable = ( async (req, res) => {
-
     const {userId, username} = req.user
-    const { phone, network, amount, userPin } = req.body
+    const { service, smartcard_number, productCode, userPin, amount, customerName} = req.body
 
 
     try{
 
 
-        const {walletBal, pin, userLevel} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin', 'userLevel']})
+        const {walletBal, pin, userLevel, phoneNumber} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin', 'userLevel', 'phoneNumber']})
         const verifyPin = await bcrypt.compare(userPin, pin);
 
         // get level details
@@ -39,7 +38,7 @@ exports.buyCable = ( async (req, res) => {
                     phone,
                     amount
                 },
-                message: "Cannot purchase airtime at the moment because your balance is not enough "
+                message: `Cannot purchase cable (${service}) at the moment because your balance is not enough `
 
             })
         }else if (environment == 'live' && (parseFloat(walletBal)) > JSON.parse(privilege).wallet){
@@ -48,21 +47,13 @@ exports.buyCable = ( async (req, res) => {
                 data: {},
                 message: `Hi Padi, your account has been suspended, kindly upgrade to continue enjoying our services or contact support`
             })
-        }else if (amount < 100 ) {
-            return res.status(400).json({
-
-                status: false,
-                data : {},
-                message: "Oops Padi!!! You can not purchase airtime lower than NGN100. Kindly try with NGN100 or more"
-    
-            })
         }
-        else if (network === null || network === '' ) {
+        else if (service === null || service === '' ) {
             return res.status(400).json({
 
                 status: false,
                 data : {},
-                message: "Oops Padi!!! You can not purchase airtime at the moment please contact support!!!"
+                message: `Oops Padi!!! You can not purchase cable (${service}) at the moment please contact support!!!`
     
             })
         } else if (amount === null || amount === '' ) {
@@ -70,15 +61,7 @@ exports.buyCable = ( async (req, res) => {
 
                 status: false,
                 data : {},
-                message: "Oops Padi!!! You can not purchase airtime!!! Amount is required"
-    
-            })
-        } else if (phone === null || phone === '' ) {
-            return res.status(400).json({
-
-                status: false,
-                data : {},
-                message: "Oops Padi!!! Phone Number is required to proceed!!!"
+                message: `Oops Padi!!! You can not make ${service} transaction at the moment!!! Amount is required`
     
             })
         } else if (userPin === null || userPin === '' ) {
@@ -102,7 +85,7 @@ exports.buyCable = ( async (req, res) => {
             if (insert) {
                 new Promise(function(resolve, reject) {
 
-                    const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: network, to: phone.toString(), title: "Airtime Purchase"});
+                    const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${service}  purchased on ${smartcard_number}`, from: service, to: smartcard_number.toString(), title: "PayBills Purchase"});
 
                     debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                     // set timer to  9 secs to give room for db updates
@@ -112,41 +95,41 @@ exports.buyCable = ( async (req, res) => {
                     NewBills.create({
                         userUid: userId,
                         amount,
-                        beneficiary: phone,
+                        beneficiary: smartcard_number,
                         reference,
                         transId: reference,
-                        network,
-                        description: `NGN${amount} ${network} airtime purchased on ${phone}`
+                        network: service,
+                        description: `NGN${amount} ${service} purchased on ${smartcard_number}`
                     }).then(()=> {
 
-                        buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference}).then((buyAirtime) => {
-                            console.log('buyAirtime', buyAirtime)
-                            if ( buyAirtime == false) {
+                        buyCable({trans_id: reference, phone: phoneNumber, service, smartcard_number, productCode, amount, customerName}).then((buyCable) => {
+                            console.log('buyCable', buyCable)
+                            if ( buyCable == false) {
     
                                 //update NewBills status 
                                 NewBills.update({status: "FAILED"}, {where: {reference}})
                                console.log(json({
                                     status: false,
                                     data : {
-                                        network,
-                                        phone,
+                                        service,
+                                        smartcard_number,
                                         amount
                                     },
-                                    message: "Cannot purchase airtime at the moment please try again later"
+                                    message: "Cannot perform transaction at the moment please try again later"
                     
                                 }))
-                            } else if (buyAirtime.message == 'success' || buyAirtime.message == '') {
+                            } else if (buyCable.message == 'success' || buyCable.message == '') {
                                 //update NewBills table
                                 NewBills.update({
-                                    status: "SUCCESS", transId: buyAirtime.request_id,
+                                    status: "SUCCESS", transId: buyCable.request_id,
                                     
                                 }, {where: {reference}})
                                 console.log(json({
                                     status: true,
                                     data: {
-                                        network,
+                                        service,
                                         amount,
-                                        phone
+                                        smartcard_number
                                     },
                                     message: "Hi padi, Successfully purchased"
                                 }))

@@ -48,6 +48,7 @@ const RateController = require('./RateController')
 const BeneficiaryController = require('./BeneficiaryController')
 const LimitController = require('./LimitController')
 const CablePricingController = require('./CablePricingController')
+const CableController = require('./CableController')
 
 module.exports = {
     
@@ -100,5 +101,6 @@ module.exports = {
     RateController,
     BeneficiaryController,
     LimitController,
-    CablePricingController
+    CablePricingController,
+    CableController,
 }
