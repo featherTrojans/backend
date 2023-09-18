@@ -108,7 +108,7 @@ exports.buyCable = ( async (req, res) => {
     
                                 //update NewBills status 
                                 NewBills.update({status: "FAILED"}, {where: {reference}})
-                               console.log(json({
+                               console.log(({
                                     status: false,
                                     data : {
                                         service,
@@ -121,10 +121,11 @@ exports.buyCable = ( async (req, res) => {
                             } else if (buyCable.message == 'success' || buyCable.message == '') {
                                 //update NewBills table
                                 NewBills.update({
-                                    status: "SUCCESS", transId: buyCable.request_id,
+                                    status: "SUCCESS"
                                     
                                 }, {where: {reference}})
-                                console.log(json({
+                            
+                                console.log(({
                                     status: true,
                                     data: {
                                         service,
@@ -137,7 +138,7 @@ exports.buyCable = ( async (req, res) => {
                         }).catch(err => {
                             logger.info(err)
                             // return res.status(400).
-                            console.log(json({
+                            console.log(({
                                 status: false,
                                 data : err,
                                 message: "Hi padi an error occurred"

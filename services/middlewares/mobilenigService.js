@@ -7,8 +7,7 @@ const {
 } = require('../../config/').config
 
 const fetch = require('node-fetch');
-
-
+const { NewBills } = require('../../models')
 const fetchApi = async (url) => {
     try{
         let data =  await fetch(url, {
@@ -240,7 +239,15 @@ exports.buyLight = async({service, amount, meter_number, trans_id}) => {
 
 exports.buyCable = async({trans_id, phone, service, smartcard_number, productCode, amount, customerName}) => {
     var url = `${mobilenig_url}services/`;
-    const body = JSON.stringify({
+    const body = service.toLowerCase() == 'waec' || service.toLowerCase() == 'neco' ? JSON.stringify({
+        "service_id": getServiceId(service),
+        trans_id,
+        quantity: smartcard_number,
+        amount,
+        productCode
+    }) 
+        :
+        JSON.stringify({
         "service_id": getServiceId(service),
         trans_id,
         smartcardNumber: smartcard_number,
@@ -256,6 +263,13 @@ exports.buyCable = async({trans_id, phone, service, smartcard_number, productCod
          *
          * {"code":"success","message":"Electricity bill successfully paid","data":{"electricity":"Ikeja (IKEDC)","meter_number":"62418234034","token":"Token: 5345 8765 3456 3456 1232","phone":"07045461790","amount":"NGN8000","amount_charged":"NGN7920","request_id":"4251595499876226"}} 
         */
+         if (service.toLowerCase() == 'waec' || service.toLowerCase() == 'neco') {
+            NewBills.update({
+                status: "SUCCESS",
+                description: JSON.stringify(data.details.pins),
+                
+            }, {where: {transId: trans_id}})
+        }
         return data
     }else{
         return false
