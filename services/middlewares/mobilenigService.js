@@ -7,8 +7,7 @@ const {
 } = require('../../config/').config
 
 const fetch = require('node-fetch');
-
-
+const { NewBills } = require('../../models')
 const fetchApi = async (url) => {
     try{
         let data =  await fetch(url, {
@@ -238,21 +237,24 @@ exports.buyLight = async({service, amount, meter_number, trans_id}) => {
     }
 }
 
-exports.buyCable = async({trans_id, phone, service, smartcard_number, variation}) => {
+exports.buyCable = async({trans_id, phone, service, smartcard_number, productCode, amount, customerName}) => {
     var url = `${mobilenig_url}services/`;
-    const body = JSON.stringify({
+    const body = service.toLowerCase() == 'waec' || service.toLowerCase() == 'neco' ? JSON.stringify({
         "service_id": getServiceId(service),
         trans_id,
-        meterNumber,
-        customerDistrict,
-        customerAddress,
+        quantity: smartcard_number,
+        amount,
+        productCode
+    }) 
+        :
+        JSON.stringify({
+        "service_id": getServiceId(service),
+        trans_id,
+        smartcardNumber: smartcard_number,
+        productCode,
         customerName,
         amount,
-        accountNumber,
-        customerDtNumber,
-        customerNumber,
-        customerAccountType,
-        customerReference: meterNumber,
+        customerNumber: phone,
     })
     const data = await fetchApiPost({url, key: mobilenig_sk_key, body})
     console.log('data', data)
@@ -261,6 +263,13 @@ exports.buyCable = async({trans_id, phone, service, smartcard_number, variation}
          *
          * {"code":"success","message":"Electricity bill successfully paid","data":{"electricity":"Ikeja (IKEDC)","meter_number":"62418234034","token":"Token: 5345 8765 3456 3456 1232","phone":"07045461790","amount":"NGN8000","amount_charged":"NGN7920","request_id":"4251595499876226"}} 
         */
+         if (service.toLowerCase() == 'waec' || service.toLowerCase() == 'neco') {
+            NewBills.update({
+                status: "SUCCESS",
+                description: JSON.stringify(data.details.pins),
+                
+            }, {where: {transId: trans_id}})
+        }
         return data
     }else{
         return false
@@ -294,19 +303,7 @@ exports.getCablePrices = ( async(data) => {
         return false;
     } else {
         console.log( typeof detail)
-        if (detail[0] != undefined) {
-
-            detail.forEach(ele => {
-                delete ele.productCode
-                result.push(
-                    ele
-                )
-            })
-            return result
-
-        } else {
-            return detail
-        }
+        return detail
         
     }
 })
@@ -382,7 +379,7 @@ exports.query_trans = async (trans_id) => {
 // this.buyAirtimeData({phone: "08012345678", network: "9mobile", amount: "300", type: "data", trans_id: "3vD3xcoCFey"})
 
 // this.buyData({phone: "08012345678", network: "9mobile", amount: "300", type: "data", value: 500, trans_id: "3vD3xpoCiey"})
-// this.buyLight({phone: "07068006837", service: "ibadan-electric", amount: "500", variation: "prepaid", meter_number: "7867766660"})
+// this.buyLight({phone: "09023656565655", service: "eko-electric", amount: "500", variation: "prepaid", meter_number: "7867766660"})
 
 // this.getBalance()
 

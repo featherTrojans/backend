@@ -100,5 +100,6 @@ exports.controller = {
     getBeneficiary: Controller.BeneficiaryController.getBeneficiary,
     limitData: Controller.LimitController.limitRange,
     cablePrices: Controller.CablePricingController.getPricing,
-    cableDetails: Controller.CablePricingController.getCableDetail
+    cableDetails: Controller.CablePricingController.getCableDetail,
+    cableSub: Controller.CableController.buyCable
 }

@@ -663,6 +663,7 @@ router.group('/', (router) => {
 
             router.get('/prices/:package', [Authenticate], controller.cablePrices)
             router.post('/details', [Authenticate], controller.cableDetails)
+            router.post('/subscribe', [Authenticate], controller.cableSub)
         });
         router.get('/usd/rate', controller.getUsdRate)
         router.get('/beneficiary/get/:type',[Authenticate], controller.getBeneficiary);

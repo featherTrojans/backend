@@ -111,7 +111,7 @@ eventEmitter.on('message', async (data) => {
 eventEmitter.on('signin', async (data) => {
     //send sms
     const message = data.message;
-    const phone = data.phoneNumber.length == 11 ? "234" + data.phoneNumber.substring(1) : data.phoneNumber;
+    const phone = data.phoneNumber.length == 11 ? "+234" + data.phoneNumber.substring(1) : data.phoneNumber;
     try {
         sendSMS({to: phone, message, type: "OTP"})
 
