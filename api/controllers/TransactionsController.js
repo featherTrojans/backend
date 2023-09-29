@@ -26,12 +26,18 @@ exports.transactions = ( async (req, res) => {
             //get agentDetails
             if (value.dataValues.direction == 'out') {
                 otherUser = await Users.findOne({
-                    where: {username: value.dataValues.to},
+                    where: {[Op.or]: {
+                        username: value.dataValues.to,
+                        phoneNumber: value.dataValues.to
+                    }},
                     attributes: ['fullName', 'imageUrl']
                 })
             } else if (value.dataValues.direction == 'in') {
                 otherUser = await Users.findOne({
-                    where: {username: value.dataValues.from},
+                    where: {[Op.or]: {
+                        username: value.dataValues.from,
+                        phoneNumber: value.dataValues.from
+                    }},
                     attributes: ['fullName', 'imageUrl']
                 })
             }
@@ -130,12 +136,18 @@ exports.transactionBtwUSers = ( async (req, res) => {
             //get agentDetails
             if (value.dataValues.direction == 'out') {
                 otherUser = await Users.findOne({
-                    where: {username: value.dataValues.to},
+                    where: {[Op.or] : {
+                        username: value.dataValues.to,
+                        phoneNumber: value.dataValues.to
+                    }},
                     attributes: ['fullName', 'imageUrl']
                 })
             } else if (value.dataValues.direction == 'in') {
                 otherUser = await Users.findOne({
-                    where: {username: value.dataValues.from},
+                    where: {[Op.or]: {
+                        username: value.dataValues.from,
+                        phoneNumber: value.dataValues.from
+                    }},
                     attributes: ['fullName', 'imageUrl']
                 })
             }

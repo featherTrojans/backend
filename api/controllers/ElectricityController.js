@@ -5,7 +5,7 @@ const {
     idGenService,
     timeService
 } = require('../../services').services
-const {Users, Bills, DoubleSpent} = require('../../models')
+const {Users, NewBills, DoubleSpent} = require('../../models')
 const {logger} = require('../../config/').config
 const bcrypt = require('bcryptjs');
 
@@ -64,7 +64,7 @@ exports.buyElect = ( async (req, res) => {
 
             }).then(() => {
 
-                Bills.create({
+                NewBills.create({
                     userUid: userId,
                     amount,
                     beneficiary: meter_number,
@@ -79,8 +79,8 @@ exports.buyElect = ( async (req, res) => {
 
                         //return charged amount
                         creditService({userUid: userId, reference: creditReference, amount, from: 'pay bills', to: 'primary wallet', description: `NGN${amount} ${variation} ${service} token reversal purchase on ${meter_number}`, title: 'Fund Reversal'})
-                        //update bills status 
-                        Bills.update({status: "FAILED"}, {where: {reference}})
+                        //update NewBills status 
+                        NewBills.update({status: "FAILED"}, {where: {reference}})
                         return res.status(400).json({
                             status: false,
                             data : {
@@ -96,8 +96,8 @@ exports.buyElect = ( async (req, res) => {
             
                         })
                     } else {
-                        //update bills table
-                        Bills.update({status: "SUCCESS", transId: buyElect.request_id, description: `NGN${amount} ${variation} ${service} token purchased on ${meter_number} Token: ${buyElect.token}`}, {where: {reference}})
+                        //update NewBills table
+                        NewBills.update({status: "SUCCESS", transId: buyElect.request_id, description: `NGN${amount} ${variation} ${service} token purchased on ${meter_number} Token: ${buyElect.token}`}, {where: {reference}})
                         return res.status(200).json({
                             status: true,
                             data: {
