@@ -174,6 +174,7 @@ exports.queryBvn = async(data) => {
     const url = vfdUrl + `/client?${queryString}`
     // console.log(url)
     const res = await fetchApi({url, key: vfdTestKey, userId: data.userId, bvn: data.bvn, phoneNumber: data.phoneNumber})
+    console.log(res)
     return res
 }
 
