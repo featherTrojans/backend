@@ -90,7 +90,8 @@ exports.config = {
     bc_url: process.env.B_URL,
     bc_akey: process.env.B_AKEY,
     bc_skey: process.env.B_SKEY,
-    merchant_url: process.env.M_URL
+    merchant_url: process.env.M_URL,
+    vfd_a_token: process.env.V_A_TOKEN
     
 
 }

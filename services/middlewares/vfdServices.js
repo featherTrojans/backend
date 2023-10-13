@@ -14,7 +14,28 @@ const fetch = require('node-fetch');
 const codeGenerator = require('../generateCode')
 require('../../subscribers')
 
-
+const fetchApiGet = async (params) => {
+    try {
+        let data =  await fetch(params.url, {
+            headers: {
+                Authorization: `Bearer ${params.key}`,
+                "Content-Type": "application/json"
+            }
+        })
+         response = await data.json()
+        logger.info(response)
+        if (response.status == '00') {
+            console.log("response", response)
+            return response.data
+        } else {
+            console.log("response", response)
+            return false;
+        }
+    }catch (err) {
+        logger.info(err);
+        return false
+    }
+}
 const fetchApi = async (params) => {
     try{
         let data =  await fetch(params.url, {
@@ -87,7 +108,31 @@ const fetchApi = async (params) => {
 
 }
 
-
+const fetchApiPostP = async (data) => {
+    try{
+        console.log(data.url)
+        let response =  await fetch(data.url, {
+            method: 'POST',
+            headers: {
+                      Authorization: `Bearer ${data.key}`,
+                      "Content-Type": "application/json"
+                    }
+            ,body: JSON.stringify(data.body)
+        })
+        response = await response.json()
+        console.log(data.body)
+        //  logger.info(response);
+        console.log('response', response)
+        if (response.status == '00' || response.status == "01") {
+            logger.info(response)
+        } else {
+            return false
+        }
+    } catch (err) {
+        logger.info(err);
+        return false
+    }
+}
 const fetchApiPost = async (data) => {
     try{
         console.log(data.url)
@@ -97,12 +142,13 @@ const fetchApiPost = async (data) => {
                       Authorization: `Bearer ${data.key}`,
                       "Content-Type": "application/json"
                     }
-            // ,body: data.body
+            ,body: JSON.stringify(data.body)
         })
         response = await response.json()
+        console.log(data.body)
         //  logger.info(response);
         console.log('response', response)
-        if (response.status == '00') {
+        if (response.status == '00' || response.status == "01") {
             logger.info(response)
             let check = await Users.findOne({
                 where: {accountNo: response.data.accountNo}
@@ -124,7 +170,7 @@ const fetchApiPost = async (data) => {
                     accountNo: response.data.accountNo
                 })
         
-
+                this.bvnConsent({bvn: data.body.bvn})
                 return true
             }
                 
@@ -142,25 +188,21 @@ const fetchApiPost = async (data) => {
 
 exports.createAccount = async(data) => {
 
-    // const body = {
-    //     "wallet-credentials": vfdWalletCreden,
-    //     "bvn": data.bvn,
-    //     "phone": data.phone,
-    //     "firstname": data.firstname,
-    //     "lastname": data.lastname,
-    //     "middlename": data.middlename,
-    //     "gender": data.gender,
-    //     "dob": `${data.dob}`,
-    // }
     const body = {
         "wallet-credentials": vfdWalletCreden,
-        "bvn": data.bvn,
-        "dateOfBirth": data.dob
     }
+    let bodyToSend = {
+        "bvn": data.bvn,
+        "dob": data.dob,
+        "firstname": data.firstname,
+        "lastname": data.lastname,
+        "phone": data.phone
+    }
+    console.log('vfdWalletCreden', vfdWalletCreden) 
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
     // console.log(queryString)
-    const url = vfdUrl + `/client/create?${queryString}`
-    const res = await fetchApiPost({url, key: vfdTestKey, userId: data.userId})
+    const url = vfdUrl + `wallet2/client/individual?${queryString}`
+    const res = await fetchApiPost({url, key: vfdTestKey, userId: data.userId, body: bodyToSend})
     return res
 }
 
@@ -171,13 +213,51 @@ exports.queryBvn = async(data) => {
         "wallet-credentials": vfdWalletCreden,
     }
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
-    const url = vfdUrl + `/client?${queryString}`
-    // console.log(url)
+    const url = vfdUrl + `wallet2/client?${queryString}`
+    console.log(url)
     const res = await fetchApi({url, key: vfdTestKey, userId: data.userId, bvn: data.bvn, phoneNumber: data.phoneNumber})
+    console.log(res)
+    return res
+
+}
+
+exports.bvnConsent = async(data) => {
+
+    const body = {
+        "bvn": data.bvn,
+        "wallet-credentials": vfdWalletCreden,
+        "type": "02"
+    }
+    const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
+    const url = vfdUrl + `wallet2/bvn-consent?${queryString}`
+    console.log(url)
+    const res = await fetchApiGet({url, key: vfdTestKey})
+    console.log(res?.url)
+    return res?.url ?? "https://services.vfdtech.ng/"
+
+}
+
+
+exports.releaseAccount = async(data) => {
+
+    const body = {
+        "wallet-credentials": vfdWalletCreden,
+    }
+    let bodyToSend = {
+        "accountNo": data.accountNo
+    }
+
+    const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
+    // console.log(queryString)
+    const url = vfdUrl + `wallet2/client/release?${queryString}`
+    const res = await fetchApiPostP({url, key: vfdTestKey, body: bodyToSend})
     return res
 }
 
 
-// this.createAccount({bvn: "22222222223", dob: "05-Apr-1994", userId: "aw08HmcKBP" })
+// this.createAccount({bvn: "1111111133", dob: "04 October 1960", userId: "aw08HmcKBP", firstname: "Goodluck", lastname: "Jonatham", phone: "08135542261" }) 
 
 // this.queryBvn({bvn: "22222222223", userId: "aw08HmcKBP" })
+// this.bvnConsent({bvn: "2222222225"})
+
+// this.releaseAccount({accountNo: "1001456721"})

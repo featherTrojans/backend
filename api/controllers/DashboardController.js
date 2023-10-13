@@ -1,7 +1,7 @@
 const { config } = require("../../config");
 const { Users, Transactions, Withdrawal } = require("../../models");
 const bcrypt = require('bcryptjs')
-const logger = config.logger
+const {logger, Op} = config
 
 exports.dashboard = ( async (req, res) => {
 
@@ -10,7 +10,8 @@ exports.dashboard = ( async (req, res) => {
     {
         const userDetails = await Users.findOne({attributes: {exclude: ['id', 'pin_attempts', 'password', 'updatedAt', 'referredBy', 'code']}, where: {userUid: userId}});
         const bal = parseFloat(userDetails.walletBal) + parseFloat(userDetails.escrowBal) //wallet bal + escrow bal
-        userDetails.pin  = await bcrypt.compare("0000", userDetails.pin) == true ? false : true 
+        console.log('pin before: ', userDetails.pin)
+        userDetails.pin  = await bcrypt.compare("0000", userDetails.pin) == true ? false : true; 
         let results = []
         const transactions = await Transactions.findAll({
             attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'description', 'from', 'to', 'direction', 'title', 'createdAt', 'charges', 'trans_type'],
@@ -31,12 +32,18 @@ exports.dashboard = ( async (req, res) => {
             //get agentDetails
             if (value.dataValues.direction == 'out') {
                 otherUser = await Users.findOne({
-                    where: {username: value.dataValues.to},
+                    where: {[Op.or]:{
+                        username: value.dataValues.to,
+                        phoneNumber: value.dataValues.to
+                    }},
                     attributes: ['fullName', 'imageUrl']
                 })
             } else if (value.dataValues.direction == 'in') {
                 otherUser = await Users.findOne({
-                    where: {username: value.dataValues.from},
+                    where: {[Op.or]: {
+                        username: value.dataValues.from,
+                        phoneNumber: value.dataValues.from
+                    }},
                     attributes: ['fullName', 'imageUrl']
                 })
             }
