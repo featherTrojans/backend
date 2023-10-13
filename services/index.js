@@ -80,5 +80,6 @@ exports.services = {
     debitCard: cardService.unloadCard,
     unfreezeCard: cardService.unfreezeCard,
     handleTransaction: superAccountService.handleTransaction,
-    getCablePricing: mobilenigService.getCablePrices
+    getCablePricing: mobilenigService.getCablePrices,
+    createAccount: vfdServices.createAccount
 }

@@ -3,13 +3,13 @@ const { validationResult } = require('express-validator');
 const {logger, environment, eventEmitter, Op} = config;
 const {services} = require('../../services');
 const { Users, BVN } = require("../../models");
-const {verifyBvn, queryBvn} = services
+const {verifyBvn, queryBvn, createAccount} = services
 require('../../subscribers')
 
 exports.upgradeUser = (async (req, res) => {
     const errors = validationResult(req);
-    const {userId, fullName} = req.user
-    const {bvn, bank_name, acc_num, dob } = req.body
+    const {userId} = req.user
+    const {bvn, dob } = req.body
 
     const check = await BVN.findOne({where: {
             [Op.or]:{
@@ -19,11 +19,11 @@ exports.upgradeUser = (async (req, res) => {
         }, attributes: ['bvn', 'isVerified', 'codeToSend', 'phoneNumber']})
 // console.log(check['isVerified'])
     try{
-        const {phoneNumber, userLevel} = await Users.findOne({
+        const {phoneNumber, userLevel, fullName, accountNo} = await Users.findOne({
             where: {
             userUid: userId
             },
-            attributes: ['phoneNumber', 'userLevel']
+            attributes: ['phoneNumber', 'userLevel', 'fullName', 'accountNo']
         })
 
         if (!errors.isEmpty()) {
@@ -42,7 +42,7 @@ exports.upgradeUser = (async (req, res) => {
                 data: {},
                 message: "Hi Padi, you have previously been verified"
             })
-        }else if (check != null && check['isVerified'] && bvn != check['bvn']) {
+        }else if (accountNo != null && userLevel > 1) {
             return res.status(400).json({
                 status: false,
                 data: {},
@@ -54,45 +54,31 @@ exports.upgradeUser = (async (req, res) => {
                 data: {},
                 message: "Hi Padi, you can't verify with this bvn as it has already been previously used"
             })
-        } else if (check != null && !check['isVerified']){
+        } else if (accountNo != null && userLevel < 2){
             // resend verification code
-            phone = environment == 'live' ? check['phoneNumber'] : phoneNumber;
-            codeToSend = check['codeToSend']
-            message = `Hi Padi, your verification code to ugrade your account to Odogwu level is: ${codeToSend}. Valid for 30 minutes, one-time use only. DO NOT DISCLOSE TO ANYONE`;
-            const sendCode = await eventEmitter.emit('sendMessage', {
-                phoneNumber: phone, message
-            })
-            console.log(sendCode)
             if (sendCode) {
                 return res.status(200).json({
                     status: true,
-                    data: {},
+                    data: {url: "https://services.vfdtech.ng/"},
                     message: "Hey Padi!!! Your details has been recieved kindly verify the otp to be succesfully verified and upgraded to Odogwu Level"
-                })
-            } else {
-                console.log(sendCode)
-                return res.status(400).json({
-                    status: false,
-                    data: {verifyUser},
-                    message: "Hi Padi, error occured could not verify you at the moment. Kindly try again"
                 })
             }
         }else if (check != null ) {
             return res.status(400).json({
                 status: false,
                 data: {},
-                message: "Hi Padi, you can't verify again. You have previously tried to verify"
+                message: "Hi Padi, you can't be verified again. You have previously tried to verify"
             })
         }   else {
-            // const first_name = (fullName.split(" "))[1];
-            // const last_name = (fullName.split(" "))[0]
+            const firstname = (fullName.split(" "))[1];
+            const lastname = (fullName.split(" "))[0]
             // const verifyUser = await verifyBvn({bvn, bank_name, acc_num, first_name, last_name, userId, dob})
             
-            const verifyUser = await queryBvn({bvn, userId, phoneNumber})
+            const verifyUser = await createAccount({bvn, dob, userId, firstname, lastname, phone: phoneNumber })
             if (verifyUser ){
                 return res.status(200).json({
                     status: true,
-                    data: {},
+                    data: {"url": "https://services.vfdtech.ng/"},
                     message: "Hey Padi!!! Your details has been recieved kindly verify the otp to be succesfully verified and upgraded to Odogwu Level"
                 })
             } else {
