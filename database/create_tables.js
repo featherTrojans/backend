@@ -240,8 +240,8 @@ const create_card_payments_table = ()=>{
 // create_transactions_table();
 // create_double_spent_table();
 // create_payments_table();
-create_location_table()
-create_location_histories_table()
+// create_location_table()
+// create_location_histories_table()
 // create_requests_table()
 // create_statuses_table()
 // create_bank_accounts_table()
@@ -255,8 +255,8 @@ create_location_histories_table()
 // create_vfd_payments_table()
 // create_agents_table()
 // create_n_bills_table()
-create_cards_table()
-// create_rates_table()
-create_card_payments_table()
-create_card_histories_table()
+// create_cards_table()
+// // create_rates_table()
+// create_card_payments_table()
+// create_card_histories_table()
 // create_beneficiaries_table()
