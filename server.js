@@ -55,7 +55,6 @@ const options = config.environment == 'development'  ? {
 
 const server = http.createServer(options, app);
 
-
 server.on('error', errorHandler);
 server.on('listening', () => {
   const address = server.address();
@@ -63,6 +62,7 @@ server.on('listening', () => {
   config.logger.info('Listening on ' + bind);
 
 });
+
 
 server.listen(port);
 
