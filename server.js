@@ -1,4 +1,4 @@
-const http = require('https'); // import http
+const http = require('http'); // import http
 const fs = require('fs');
 const app = require('./app'); //import app
 const config = require('./config').config
@@ -53,7 +53,7 @@ const options = config.environment == 'development'  ? {
   cert: fs.readFileSync('cert.pem')
 } ;
 
-const server = http.createServer(options, app);
+const server = http.createServer(app);
 
 server.on('error', errorHandler);
 server.on('listening', () => {
