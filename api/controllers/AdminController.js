@@ -72,8 +72,8 @@ exports.stats = ( async (req, res) => {
             data: {
                 users: {
                 totalUsers,
-                totalWalletBal: parseFloat(totalEscrowBal + 
-                    totalWalletBal)
+                totalWalletBal: parseFloat(totalEscrowBal) + 
+                    parseFloat(totalWalletBal)
                 },
                 // Balances: {
                 //     Paystack: paystackBal,
