@@ -3,6 +3,7 @@ node_modules/
 .env.development
 t.env.development
 .env.live
+.env.current
 output.log
 db.out.log
 cert.pem

@@ -46,9 +46,7 @@ const errorHandler = error => {
 const options = config.environment == 'development'  ? {
   key: fs.readFileSync('../../../etc/letsencrypt/live/feather.com.ng/privkey.pem'),
   cert: fs.readFileSync('../../../etc/letsencrypt/live/feather.com.ng/fullchain.pem')
-}: config.environment == 'live' ? {
-  key: fs.readFileSync('../../../etc/letsencrypt/live/featherafrica.co/privkey.pem'),
-  cert: fs.readFileSync('../../../etc/letsencrypt/live/featherafrica.co/fullchain.pem')}: {
+}: config.environment == 'live' ? {}: {
   key: fs.readFileSync('key.pem'),
   cert: fs.readFileSync('cert.pem')
 } ;
