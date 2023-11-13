@@ -56,13 +56,13 @@ exports.upgradeUser = (async (req, res) => {
             })
         } else if (accountNo != null && userLevel < 2){
             // resend verification code
-            if (sendCode) {
+           
                 return res.status(200).json({
                     status: true,
                     data: {url: "https://services.vfdtech.ng/"},
                     message: "Hey Padi!!! Your details has been recieved kindly verify the otp to be succesfully verified and upgraded to Odogwu Level"
                 })
-            }
+            
         }
         else if (check != null ) {
             return res.status(400).json({
