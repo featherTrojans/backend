@@ -16,7 +16,7 @@ exports.createSecurityQuestions = async (req, res) => {
         return res.status(403).json({ errors: errors.array() });
 
       } else {
-            const userCheck = await Users.findOne({
+            let userCheck = await Users.findOne({
                 where: {userUid: userId}
             })
 
@@ -34,11 +34,19 @@ exports.createSecurityQuestions = async (req, res) => {
               })
           } else {
             //update user
-            let updated =  await Users.update({secQueOne: secQue1, secAnsOne: secAns1, secQueTwo: secQue2 , secAnsTwo: secAns2}, 
-                {where: {userUid: userId}})
-            console.log(updated)
-            logger.info(updated)
 
+            let updated =  await Users.update(
+                {
+                    secQueOne: secQue1, 
+                    secAnsOne: secAns1, 
+                    secQueTwo: secQue2, 
+                    secAnsTwo: secAns2
+                }, 
+                {
+                    where: {userUid: userId}
+                }
+            )
+            console.log(updated)
             if (updated[0] > 0) {
                 res.status(200).json({
                     status: 'true',
