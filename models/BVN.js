@@ -40,7 +40,7 @@ const BVN = db_con.define("bvns", {
         type: Sequelize.STRING,
     },
     "gender": {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
@@ -69,7 +69,7 @@ const BVN = db_con.define("bvns", {
         }
     },
     "codeToSend": {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true

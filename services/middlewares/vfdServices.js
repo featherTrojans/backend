@@ -135,17 +135,30 @@ const fetchApiPostP = async (data) => {
 }
 const fetchApiPost = async (data) => {
     try{
-        console.log(data.url)
-        let response =  await fetch(data.url, {
-            method: 'POST',
-            headers: {
-                      Authorization: `Bearer ${data.key}`,
-                      "Content-Type": "application/json"
-                    }
-            ,body: JSON.stringify(data.body)
-        })
-        response = await response.json()
-        console.log(data.body)
+        // console.log(data.url)
+        // let response =  await fetch(data.url, {
+        //     method: 'POST',
+        //     headers: {
+        //               Authorization: `Bearer ${data.key}`,
+        //               "Content-Type": "application/json"
+        //             }
+        //     ,body: JSON.stringify(data.body)
+        // })
+        // response = await response.json()
+        response = {
+            status: '00',
+            message: 'Successful Creation',
+            data: {
+              firstname: 'Feather-EZEKIEL',
+              middlename: '',
+              lastname: 'ADEJOBI',
+              bvn: '22222222221',
+              phone: '07068006830',
+              dob: '04 April 2004',
+              accountNo: '1001596487'
+            }
+          }
+        // console.log(data.body)
         //  logger.info(response);
         console.log('response', response)
         if (response.status == '00' || response.status == "01") {
@@ -154,29 +167,40 @@ const fetchApiPost = async (data) => {
                 where: {accountNo: response.data.accountNo}
             })
             logger.info('check', check);
-            if (check != null) {
-                return false
-            } else {
+            if (check == null) {
                 Users.update({accountNo: response.data.accountNo}, {where: {userUid: data.userId}})
 
-                await CollectionAccounts.create({
+                let insert = await CollectionAccounts.create({
                     userUid: data.userId,
                     firstname: response.data.firstname,
-                    middlename: response.data.middlename ?? null,
+                    middlename: response.data?.middlename && (response.data.middlename).length > 1 ? response.data.middlename : null,
                     lastname: response.data.lastname,
                     bvn: response.data.bvn,
                     phone: response.data.phone,
                     dob: response.data.dob,
                     accountNo: response.data.accountNo
                 })
-        
+                //log bvn data
+                BVN.create({
+                    userUid: data.userId,
+                    firstname: response.data.firstname,
+                    middlename: response.data?.middlename && (response.data.middlename).length > 1 ? response.data.middlename : null,
+                    lastname: response.data.lastname,
+                    bvn: response.data.bvn,
+                    phoneNumber: response.data.phone,
+                    dateOfBirth: response.data.dob,
+                    gender: null,
+                    codeToSend: null
+                })
                 this.bvnConsent({bvn: data.body.bvn})
                 return true
+            } else {
+                return false
             }
                 
         } else {
             logger.info(response)
-            return response.message
+            return false
         }
     } catch (err) {
         logger.info(err);
