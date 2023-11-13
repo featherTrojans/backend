@@ -136,39 +136,27 @@ const fetchApiPostP = async (data) => {
 const fetchApiPost = async (data) => {
     try{
         // console.log(data.url)
-        // let response =  await fetch(data.url, {
-        //     method: 'POST',
-        //     headers: {
-        //               Authorization: `Bearer ${data.key}`,
-        //               "Content-Type": "application/json"
-        //             }
-        //     ,body: JSON.stringify(data.body)
-        // })
-        // response = await response.json()
-        response = {
-            status: '00',
-            message: 'Successful Creation',
-            data: {
-              firstname: 'Feather-EZEKIEL',
-              middlename: '',
-              lastname: 'ADEJOBI',
-              bvn: '22222222221',
-              phone: '07068006830',
-              dob: '04 April 2004',
-              accountNo: '1001596487'
-            }
-          }
+        let response =  await fetch(data.url, {
+            method: 'POST',
+            headers: {
+                      Authorization: `Bearer ${data.key}`,
+                      "Content-Type": "application/json"
+                    }
+            ,body: JSON.stringify(data.body)
+        })
+        response = await response.json()
+
         // console.log(data.body)
         //  logger.info(response);
         console.log('response', response)
-        if (response.status == '00' || response.status == "01") {
+        if (response.status == '00' ) {
             logger.info(response)
             let check = await Users.findOne({
                 where: {accountNo: response.data.accountNo}
             })
             logger.info('check', check);
             if (check == null) {
-                Users.update({accountNo: response.data.accountNo}, {where: {userUid: data.userId}})
+                Users.update({accountNo: response.data.accountNo, dateOfBirth: response.data.dob}, {where: {userUid: data.userId}})
 
                 let insert = await CollectionAccounts.create({
                     userUid: data.userId,
@@ -198,6 +186,39 @@ const fetchApiPost = async (data) => {
                 return false
             }
                 
+        } else if (response.status == '01') {
+            let check = await Users.findOne({
+                where: {accountNo: response.data.accountNo}
+            })
+
+            if (check == null) {
+                Users.update({accountNo: response.data.accountNo, dateOfBirth: data.dob}, {where: {userUid: data.userId}})
+
+                let insert = await CollectionAccounts.create({
+                    userUid: data.userId,
+                    firstname: data.body.firstname,
+                    middlename: null,
+                    lastname: data.body.lastname,
+                    bvn: data.body.bvn,
+                    phone: data.body.phone,
+                    dob: data.body.dob,
+                    accountNo: response.data.accountNo
+                })
+                //log bvn data
+                BVN.create({
+                    userUid: data.userId,
+                    firstname: 'Feather-' + data.body.firstname,
+                    middlename: null,
+                    lastname: data.body.lastname,
+                    bvn: data.body.bvn,
+                    phoneNumber: data.body.phone,
+                    dateOfBirth: data.body.dob,
+                    gender: null,
+                    codeToSend: null
+                })
+                this.bvnConsent({bvn: data.body.bvn})
+                return true
+            }
         } else {
             logger.info(response)
             return false
