@@ -136,28 +136,16 @@ const fetchApiPostP = async (data) => {
 const fetchApiPost = async (data) => {
     try{
         // console.log(data.url)
-        // let response =  await fetch(data.url, {
-        //     method: 'POST',
-        //     headers: {
-        //               Authorization: `Bearer ${data.key}`,
-        //               "Content-Type": "application/json"
-        //             }
-        //     ,body: JSON.stringify(data.body)
-        // })
-        // response = await response.json()
-        response = {
-            status: '00',
-            message: 'Successful Creation',
-            data: {
-              firstname: 'Feather-EZEKIEL',
-              middlename: '',
-              lastname: 'ADEJOBI',
-              bvn: '22222222221',
-              phone: '07068006830',
-              dob: '04 April 2004',
-              accountNo: '1001596487'
-            }
-          }
+        let response =  await fetch(data.url, {
+            method: 'POST',
+            headers: {
+                      Authorization: `Bearer ${data.key}`,
+                      "Content-Type": "application/json"
+                    }
+            ,body: JSON.stringify(data.body)
+        })
+        response = await response.json()
+
         // console.log(data.body)
         //  logger.info(response);
         console.log('response', response)
