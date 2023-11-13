@@ -25,9 +25,9 @@ const queryAirtime = async (fifteen_mins_ago = timeService.serverTime().fifteen_
             let {amount, userUid, reference, status, createdAt} = value
             query_transaction = await query_trans(reference)
             
-            console.log(createdAt > Date.parse('2023-05-07 23:59:00'));
+            console.log(Date.parse(createdAt) > Date.parse('2023-05-07 23:59:00'));
 
-            if ((query_transaction.statusCode === 'EXC020' || query_transaction.statusCode === 'EXC013') && status.toLowerCase() == 'processing' && createdAt > Date.parse('2023-11-01 23:59:00')) {
+            if ((query_transaction.statusCode === 'EXC020' || query_transaction.statusCode === 'EXC013') && status.toLowerCase() == 'processing' && Date.parse(createdAt) > Date.parse('2023-11-01 23:59:00')) {
                 // console.log(`${amount}`)
 
                 //refund
