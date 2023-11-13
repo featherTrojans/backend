@@ -1,6 +1,7 @@
 const { config } = require('../../config');
-const { DoubleSpent, Webhook, Users, VfdPayment } = require('../../models');
+const { DoubleSpent, Webhook, Users, VfdPayment, BVN, CollectionAccounts } = require('../../models');
 const { services } = require('../../services');
+const { releaseAccount, queryBvn } = require('../../services/middlewares/vfdServices');
 const {logger, environment} = config
 const { timeService} = services
 
@@ -113,3 +114,76 @@ exports.webhook = (async (req, res) => {
     }
     
 });
+
+exports.igree = (async(req, res) => {
+    const {status, message, data} = req.body
+    try {
+        var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+        Webhook.create({
+            ip,
+            data: JSON.stringify(body)
+        })
+        if (data.status) {
+            //check for bvn 
+            let check = await BVN.findOne({
+                where: {
+                    bvn: data.bvn
+                }
+            })
+
+            if ( check != null) {
+                //update bvn status to verified
+                BVN.update({
+                    isVerified: true
+                }, {
+                    where: {
+                        bvn: data.bvn
+                    }
+                })
+                Users.update({
+                    userLevel: 2
+                }, {where: {
+                    userUid: check.userUid
+                }})
+                let findAccount = await CollectionAccounts.findOne({
+                    where: {
+                        bvn: data.bvn
+                    }
+                })
+                if ( findAccount != null){
+                    //release Account
+                    let {accountNo} = findAccount
+                    releaseAccount({
+                        accountNo
+                    })
+                } else {
+                    //create account with the bvn route stuff
+                    queryBvn({
+                        userId: check.userUid,
+                        bvn: data.bvn,
+                        phoneNumber: check.phoneNumber
+                    })
+                }
+
+                
+            }
+            return res.status(200).json({
+                status: true,
+                data: {},
+                message: "Successful"
+            })
+            }else{
+                return res.status(404).json({
+                    status: false,
+                    data: {},
+                    message: "Not found"
+                })
+            }
+            
+    } catch(error) {
+        logger.info(error)
+        return res.status(500).json({
+            message: "Internal error"
+        })
+    }
+})

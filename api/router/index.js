@@ -346,6 +346,9 @@ router.group('/', (router) => {
         router.post('/vfd/webhook',
             controller.vfdwebhook
         );
+        router.post('/vfd/webhook/igree',
+        controller.igreewebhook
+    );
         router.post('/paybills/webhook',
             controller.mnig_webhook
         );

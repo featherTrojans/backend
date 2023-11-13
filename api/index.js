@@ -101,5 +101,6 @@ exports.controller = {
     limitData: Controller.LimitController.limitRange,
     cablePrices: Controller.CablePricingController.getPricing,
     cableDetails: Controller.CablePricingController.getCableDetail,
-    cableSub: Controller.CableController.buyCable
+    cableSub: Controller.CableController.buyCable,
+    igreewebhook: Controller.VfdWebhookController.igree,
 }
