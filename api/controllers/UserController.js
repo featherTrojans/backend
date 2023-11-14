@@ -160,19 +160,28 @@ exports.updateBasicData = ( async (req, res) => {
                 message: "all fields are required"
             })
         } else {
-
+            let {phoneNumber} = await Users.findOne({
+                where: {userUid: userId}
+            })
             Users.update({username: newUsername, fullName: `${lastName} ${firstName}`, gender}, {where: {userUid: userId}}).then((data) => {
                 if (data[0] > 0 ) {
                     const token = TokenServices({userId, username: newUsername, email, fullName: `${lastName} ${firstName}`}, '6h')
                     Request.update({
                         agentUsername: newUsername,
                         agent: `${lastName} ${firstName}`
-                    }, {where: {agentUsername: username}})
+                    }, {where: {userUid: userId}})
 
-                    Transactions.update({to: newUsername}, {where: {to: username}})
-                    Transactions.update({from: newUsername}, {where: {from: username}})
+                    Transactions.update({to: newUsername}, {where: {[Op.or]: {
+                        to: username,
+                        to: phoneNumber
+                    }
+                    }})
+                    Transactions.update({from: newUsername}, {where: {[Op.or]: {
+                        from: username,
+                        from: phoneNumber
+                    }}})
 
-                    Status.update({username: newUsername, fullName: `${lastName} ${firstName}`}, {where: {username}}).then(() => {
+                    Status.update({username: newUsername, fullName: `${lastName} ${firstName}`}, {where: {userUid: userId}}).then(() => {
                         logger.info('status username updated');
                     }).catch((err) => {
                         logger.info(err)
