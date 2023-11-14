@@ -5,12 +5,19 @@ const {logger, Op} = config
 exports.transactions = ( async (req, res) => {
 
     const { userId } = req.user
+    let {page, data} = req.query
     try
     {
+
+        page = page != null ? page : 1; data = data != null ? parseInt(data) : 30
+        const limit = data
+        const offset = page == 1 ? 0 : parseInt(data * (page - 1));
+
         let results = []
         const transactions = await Transactions.findAll({
-
-            attributes: ['transId', 'initialBal', 'amount', 'finalBal', 'charges', 'description', 'from', 'to', 'direction', 'title', 'createdAt', 'trans_type'],
+            limit,
+            offset,
+            attributes: ['id','transId', 'initialBal', 'amount', 'finalBal', 'charges', 'description', 'from', 'to', 'direction', 'title', 'createdAt', 'trans_type'],
             where: {userUid: userId},
             order: [['createdAt', 'DESC']],
             include: [{
