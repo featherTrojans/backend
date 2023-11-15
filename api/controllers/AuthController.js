@@ -518,15 +518,16 @@ exports.setUsername = (async (req, res) => {
             const checkUsername = await services.confirmData({data: username, type: 'username'})
             const checkNewUsername = await services.confirmData({data: newUsername, type: 'username'})
 
-            if ( checkUsername == null) {
+            // if ( checkUsername == null) {
 
-                return res.status(403).json({
-                    status: false,
-                    data : {},
-                    message: "Unauthorized request"
-                })
+            //     return res.status(403).json({
+            //         status: false,
+            //         data : {},
+            //         message: "Unauthorized request"
+            //     })
 
-            } else if (checkNewUsername != null){
+            // } else 
+            if (checkNewUsername != null){
 
                 return res.status(400).json({
                     status: false,
