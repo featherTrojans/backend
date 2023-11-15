@@ -515,7 +515,7 @@ exports.setUsername = (async (req, res) => {
             return res.status(403).json({ errors: errors.array() });
   
         } else {
-            const checkUsername = await services.confirmData({data: username, type: 'username'})
+            // const checkUsername = await services.confirmData({data: username, type: 'username'})
             const checkNewUsername = await services.confirmData({data: newUsername, type: 'username'})
 
             // if ( checkUsername == null) {
