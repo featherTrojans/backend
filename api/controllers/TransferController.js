@@ -221,6 +221,8 @@ exports.transferFundsToAgent = ( async (req, res) => {
                 const transId =  timeService.serverTime().timeToUse + userId + walletBal;
                 const reference = services.idGenService(10);
                 const creditReference = services.idGenService(10);
+                let chargesCal = Math.fround(amount * 0.01, 2)
+                let charges = chargesCal <= 200 ? chargesCal : 200
                 DoubleSpent.create({
                     transId,
                     username,
@@ -228,10 +230,10 @@ exports.transferFundsToAgent = ( async (req, res) => {
                 }).then(() => {
 
                     //use promise so that the process will be asynchronous
-
+                    amountToDebit = amount - charges
                     new Promise(function(resolve, reject) {
 
-                        const debitService = services.debitService({userUid: userId, reference, amount, description: `NGN${amount} transferred to ${business_name}`, from: username, to: business_name, id: transId, title: 'Wallet Debit', type: "Feather2Agent"});
+                        const debitService = services.debitService({userUid: userId, reference, amount: amountToDebit, description: `NGN${amountToDebit} transferred to ${business_name}`, from: username, to: business_name, id: transId, title: 'Wallet Debit', type: "Feather2Agent", charges});
 
                         debitService ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                         // set timer to 7 secs to give room for db updates
@@ -240,7 +242,7 @@ exports.transferFundsToAgent = ( async (req, res) => {
 
                         // credit after successful debit
                         // services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, id: transId, title: 'Wallet Credit', type: "Feather2Feather"})
-                        let data = {peerFullName: fullName, reference, creditReference, amount, peerUsername: username, agentId, transId }
+                        let data = {peerFullName: fullName, reference, creditReference, amountToDebit, peerUsername: username, agentId, transId }
                         //send to agent 
                         fetchApi(`${merchant_url}/peer/transfer`,
                         {
@@ -261,8 +263,8 @@ exports.transferFundsToAgent = ( async (req, res) => {
                                     data : {
                                         "from": username,
                                         "to": business_name,
-                                        amount,
-                                        transId, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, 
+                                        charges,
+                                        transId, amount: amountToDebit, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, 
                                         createdAt: Date.now()
                                     },
                                     message: `#${amount} transferred to ${business_name} successfully`
