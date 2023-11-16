@@ -35,17 +35,12 @@ exports.createSecurityQuestions = async (req, res) => {
           } else {
             //update user
 
-            let updated =  await Users.update(
-                {
-                    secQueOne: secQue1, 
-                    secAnsOne: secAns1, 
-                    secQueTwo: secQue2, 
-                    secAnsTwo: secAns2
-                }, 
-                {
-                    where: {userUid: userId}
-                }
-            )
+            let updated =  await Users.update({
+                SecQueOne: secQue1,
+                SecQueTwo: secQue2,
+                SecAnsOne: secAns1,
+                SecAnsTwo: secAns2
+            }, {where : {userUid: userId}})
             console.log(updated)
             if (updated[0] > 0) {
                 res.status(200).json({
