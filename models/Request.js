@@ -95,9 +95,6 @@ const Request = db_con.define("requests", {
     "reasonForCancel": {
         allowNull: true,
         type: Sequelize.STRING,
-        validate: {
-           notEmpty: true
-        }
     },
     "meetupPoint": {
         allowNull: false,
@@ -110,9 +107,6 @@ const Request = db_con.define("requests", {
         allowNull: true,
         type: Sequelize.STRING,
         defaultValue: null,
-        validate: {
-           notEmpty: true
-        }
     },
     
 })
