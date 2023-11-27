@@ -8,7 +8,7 @@ require('../../subscribers')
 
  exports.createRequest = ( async (data) => {
     
-    const { userUid, username, email, amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee  , transId, agentImage} = data
+    const { userUid, username, email, amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee  , transId, agentImage, businessCategory, businessName} = data
 
 
     try
@@ -101,6 +101,10 @@ require('../../subscribers')
                         data: {
                             amount,
                             agent,
+                            meetupPoint,
+                            agentImage,
+                            businessName,
+                            businessCategory,
                             "message": "Hey padi, Cash request created successfully"
                         },
                         message: "success"
