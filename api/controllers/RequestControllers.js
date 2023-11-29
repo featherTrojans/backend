@@ -15,7 +15,7 @@ exports.getPendingRequests = (  async (req, res) => {
     {
         let results = []
         const data = await Request.findAll({
-            attributes: ['reference', 'amount', 'charges', 'total', 'agent', 'agentUsername', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
+            attributes: ['reference', 'amount', 'charges', 'total', 'agent', 'agentUsername', 'status', 'agentImage', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
             where: {userUid: userId, status: 'PENDING'}
         })
 
@@ -70,7 +70,7 @@ exports.getAcceptedRequests = (  async (req, res) => {
     {
         let results = []
         const data = await Request.findAll({
-            attributes: ['reference', 'amount', 'charges', 'total', 'agent', 'agentUsername', 'status', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
+            attributes: ['reference', 'amount', 'charges', 'total', 'agent', 'agentUsername', 'status', 'agentImage', 'meetupPoint', 'negotiatedFee', 'createdAt' ],
             where: {userUid: userId, status: 'ACCEPTED'}
         })
 

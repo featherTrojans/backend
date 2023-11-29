@@ -320,7 +320,7 @@ exports.findStatus = async (req, res) => {
                 }
                 
             } else {
-                console.log("message :", "Insufficient balance")
+                console.log("message :", "Insufficient balance amount: ", amount, walletBal)
                 return res.status(403).json({
                     status: false,
                     data: {},
