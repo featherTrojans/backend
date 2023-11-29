@@ -86,6 +86,8 @@ require('../../subscribers')
                         meetupPoint,
                         status: 'ACCEPTED',
                         agentImage,
+                        businessCategory, 
+                        businessName,
                         negotiatedFee: negotiatedFee ? negotiatedFee : 0
         
                     })
