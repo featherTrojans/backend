@@ -8,7 +8,9 @@ require('../../subscribers')
 
  exports.createRequest = ( async (data) => {
     
-    const { userUid, username, email, amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee  , transId, agentImage, businessCategory, businessName} = data
+    const { userUid, username, email, amount, charges, agent, agentUsername, statusId, meetupPoint, negotiatedFee  , transId, agentImage, businessCategory, businessName, longitude,
+        latitude,timeSpan
+    } = data
 
 
     try
@@ -88,7 +90,10 @@ require('../../subscribers')
                         agentImage,
                         businessCategory, 
                         businessName,
-                        negotiatedFee: negotiatedFee ? negotiatedFee : 0
+                        negotiatedFee: negotiatedFee ? negotiatedFee : 0,
+                        longitude,
+                        latitude,
+                        timeSpan
         
                     })
 
