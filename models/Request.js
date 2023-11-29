@@ -118,6 +118,21 @@ const Request = db_con.define("requests", {
         type: Sequelize.TEXT,
         defaultValue: null,
     },
+    "longitude": {
+        allowNull: true,
+        type: Sequelize.TEXT,
+        defaultValue: null,
+    },
+    "latitude": {
+        allowNull: true,
+        type: Sequelize.TEXT,
+        defaultValue: null,
+    },
+    "timeSpan": {
+        allowNull: true,
+        type: Sequelize.TEXT,
+        defaultValue: null,
+    },
     
 })
 
