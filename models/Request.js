@@ -108,6 +108,16 @@ const Request = db_con.define("requests", {
         type: Sequelize.STRING,
         defaultValue: null,
     },
+    "businessName": {
+        allowNull: true,
+        type: Sequelize.TEXT,
+        defaultValue: null,
+    },
+    "businessCategory": {
+        allowNull: true,
+        type: Sequelize.TEXT,
+        defaultValue: null,
+    },
     
 })
 
