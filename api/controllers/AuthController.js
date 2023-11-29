@@ -454,7 +454,11 @@ exports.setPin = (async (req, res) => {
             return res.status(403).json({ errors: errors.array() });
   
         } else {
-            const checkUsername = await services.confirmData({data: username, type: 'username'})
+            const checkUsername = await Users.findOne({
+                where: {
+                    userUid: userId
+                }
+            })
             logger.info(checkUsername);
             const hashedPin = await bcrypt.hash(pin, 10);
             
