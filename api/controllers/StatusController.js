@@ -260,7 +260,7 @@ exports.findStatus = async (req, res) => {
     {
         const charges = 0; //Math.ceil(amount / 5000) * 50 //50 per 5000
         if (!errors.isEmpty()) {
-
+            console.log("errors :", errors.array())
             return res.status(403).json({ errors: errors.array() });
   
         }else if (!(amount || location)) {
