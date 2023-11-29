@@ -39,10 +39,13 @@ exports.getPendingRequests = (  async (req, res) => {
                     status: value.dataValues.status,
                     meetupPoint: value.dataValues.meetupPoint,
                     createdAt: value.dataValues.createdAt,
-                    image: agent.imageUrl,
+                    agentImage: value.dataValues.agentImage,
                     agentId: agent.userUid,
                     businessName: value.dataValues.businessName,
-                    businessCategory: value.dataValues.businessCategory
+                    businessCategory: value.dataValues.businessCategory,
+                    longitude: value.dataValues.longitude,
+                    latitude: value.dataValues.latitude,
+                    timeSpan: value.dataValues.timeSpan,
                 })
 
 
@@ -97,7 +100,10 @@ exports.getAcceptedRequests = (  async (req, res) => {
                     agentImage: value.dataValues.agentImage,
                     agentId: value.dataValues.statusId,
                     businessName: value.dataValues.businessName,
-                    businessCategory: value.dataValues.businessCategory
+                    businessCategory: value.dataValues.businessCategory,
+                    longitude: value.dataValues.longitude,
+                    latitude: value.dataValues.latitude,
+                    timeSpan: value.dataValues.timeSpan,
 
                 })
 
