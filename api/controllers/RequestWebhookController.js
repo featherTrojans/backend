@@ -27,7 +27,7 @@ exports.webhook = (async (req, res) => {
          } = body; //deconstruct
         //  console.log("body: ", body)
          if (environment == 'live') {
-            if ( (ip != '::ffff:44.195.222.116' && ip != '::ffff:191.101.42.78') ) {
+            if ( (ip != '::ffff:54.204.199.73' && ip != '::ffff:191.101.42.78') ) {
 
                 // logger.info('Auth Token  not correct')
                 logger.info("Unauthorized request")
