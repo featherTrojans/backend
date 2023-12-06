@@ -72,7 +72,7 @@ require('../../subscribers')
 
                     // })
                     // credit user escrow balance
-                    Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal) - parseFloat(total)}, {where: {userUid}});
+                    // Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal) - parseFloat(total)}, {where: {userUid}});
                     
                     await Request.create({
 
