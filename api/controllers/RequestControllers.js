@@ -175,7 +175,7 @@ exports.cancelRequests = ( async (req, res) => {
 
                     if ( updated[0] > 0 ) {
 
-                        Users.update({escrowBal: newEscrowBal, walletBal: newWalletBal }, {where: {userUid}});
+                        // Users.update({escrowBal: newEscrowBal, walletBal: newWalletBal }, {where: {userUid}});
                         sendRequestWebhook({
                             reference,
                             status: 'CANCELLED'
@@ -211,13 +211,13 @@ exports.cancelRequests = ( async (req, res) => {
                     
                     if (data[0] > 0 ) {
 
-                        Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
+                        // Users.update({escrowBal: newEscrowBal }, {where: {userUid}});
                         sendRequestWebhook({
                             reference,
                             status: 'CANCELLED'
                         })
                         //return and debit escrow
-                        creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
+                        // creditService({userUid, reference: transId, amount: total, description: `NGN${total} cash withdrawal reversal`, from: agentUsername, to: 'primary wallet', title: 'Wallet Credit'});
                         return res.status(202).json({
                             status: true,
                             data: {
@@ -322,7 +322,7 @@ exports.createRequest = ( async (req, res) => {
 
                     // })
                     // credit user escrow balance
-                    Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal) - parseFloat(total)}, {where: {userUid: userId}});
+                    // Users.update({escrowBal: newEscrowBal, walletBal: parseFloat(walletBal) - parseFloat(total)}, {where: {userUid: userId}});
                     const agentData = await Users.findOne({
                         where: {username: agentUsername},
                         attributes: ['email', 'fullName', 'username', 'phoneNumber', 'userUid']
