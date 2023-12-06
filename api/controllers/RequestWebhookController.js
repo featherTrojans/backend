@@ -2,7 +2,7 @@ const { config } = require('../../config');
 const { DoubleSpent, Webhook, Users, Request } = require('../../models');
 const { services } = require('../../services');
 const {logger, environment} = config
-const { creditService} = services
+const { creditService, debitService} = services
 const refundUser = require('../../services/middlewares/refundUser')
 require('../../subscribers')
 
@@ -41,7 +41,7 @@ exports.webhook = (async (req, res) => {
             attributes: ['userUid', 'amount']
 
         })
-        let {userUid, amount} = request
+        let {userUid, amount, agent} = request
         if ( request.status != 'PENDING' && request.status != 'ACCEPTED'){
             return res.status(403).json({
                 status: false,
@@ -54,47 +54,61 @@ exports.webhook = (async (req, res) => {
              if (status == 'SUCCESS'){
                  //get user_id with reference
     
-                // totalAmount = parseFloat(amount) + parseFloat(agreedCharge)
+                totalAmount = parseFloat(amount) + parseFloat(agreedCharge)
+                
+                const check = await DoubleSpent.create({
+                    transId: reference,
+                    amount: totalAmount,
+                    username: userUid
+                })
+                
+                if (userUid && userUid != null) {
+                    let userDetails = await Users.findOne({
+                        where: {
+                            userUid
+                        },
+                        attributes: ['walletBal']
+                    })
+
+                    if (userDetails.walletBal >= totalAmount) {
+                        if ( !check ) {
+                            logger.info('Already used')
+                            return res.status(400).json({
+                                message: 'Already credited'
+                            })
+                        } else {
+                            Request.update({status, charges: agreedCharge, total: totalAmount}, {where: {
+                                reference, 
+                                status: ["PENDING", "ACCEPTED"]
+                               }})
+                            //denit user
+                            debitService({userUid, charges: agreedCharge, reference, amount: totalAmount, description: `cash withdrawal to merchant ${agent}`})
+                            eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal has been successfully completed`, redirectTo: 'Notifications'})
+                            return res.status(200).json({
+                                message: 'Withdrawal successful'
+                            });
+                
+                            
+                        }
+                    } else {
+                        return res.status(400).json({
+                            message: "Amount is greater than wallet balance"
+                        })
+                    }
     
-                // const check = await DoubleSpent.create({
-                //     transId: reference,
-                //     amount: totalAmount,
-                //     username: userUid
-                // })
-                // Request.update({status, charges: agreedCharge, total: totalAmount}, {where: {
-                //     reference, 
-                //     status: ["PENDING", "ACCEPTED"]
-                //    }})
-                // if (userUid && userUid != null) {
-                    
-    
-                //     if ( !check ) {
-                //         logger.info('Already used')
-                //         return res.status(200).json({
-                //             message: 'Already credited'
-                //         })
-                //     } else {
-                //         //update charge
-                //         //credit user
-                //         creditService({userUid, reference, amount: totalAmount, description: `cash withdrawal from refunded`})
-                //         return res.status(200).json({
-                //             message: 'credited successfully'
-                //         });
-            
-                        
-                //     }
-                // } else {
-                //     return res.status(404).json({
-                //         message: "Request does not belong to any user"
-                //     })
-                // }
+                   
+                } else {
+                    return res.status(404).json({
+                        message: "Request does not belong to any user"
+                    })
+                }
              } else if (status == 'CANCELLED') {
 
                 Request.update({status, reasonForCancel}, {where: {
                     reference, 
                     status: ["PENDING", "ACCEPTED"]
                    }})
-                   await refundUser(reference)
+                //    await refundUser(reference)
                  //update request status
                 eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal has been cancelled`, redirectTo: 'Notifications'})
                 return res.status(202).json({
