@@ -63,7 +63,7 @@ exports.approveRequest = ( async (req, res) => {
                 }).then ((data) => {
                     if (data[0] > 0 ) {
 
-                        Users.update({pin_attempts: 0, escrowBal: newEscrowBal,  walletBal: newWalletBal }, {where: {userUid}});
+                        Users.update({pin_attempts: 0,  walletBal: newWalletBal }, {where: {userUid}});
                         //notify withdrawal
                         eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been cancelled and your funds reversed`})
 
