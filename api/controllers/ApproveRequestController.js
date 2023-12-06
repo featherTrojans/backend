@@ -118,71 +118,79 @@ exports.approveRequest = ( async (req, res) => {
                         //     where: {agentUsername, status: 'SUCCESS'},
                         //     attributes: [[sequelize.fn('COUNT', sequelize.col('amount')), 'totalCounts']]
                         // })
-
-                        Request.update({status: 'SUCCESS'},{
-                            where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
-                        }).then ((data) => {
-
-                            if (data[0] > 0 ) {
-                                
-                                chargedBal = parseFloat(walletBal) - parseFloat(agreedCharge)
-
-                                Users.update({pin_attempts: 0, escrowBal: newEscrowBal, walletBal: chargedBal }, {where: {userUid}});
-
-                                //log debit data
-                                Transactions.create({
-                                    userUid,
-                                    transId: reference,
-                                    initialBal: parseFloat(walletBal) + parseFloat(escrowBal),
-                                    amount: parseFloat(total) +  parseFloat(agreedCharge),
-                                    finalBal: chargedBal,
-                                    description: `NGN${total} cash withdrawn`,
-                                    charges: agreedCharge,
-                                    from: 'primary wallet',
-                                    to: `${agent}-${agentUsername}`,
-                                    reference,
-                                    direction: "out",
-                                    title: "Cash Withdrawal",
-                                    isQueried: true,
-                                })
-
-                                eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
-
-                                
-                                sendRequestWebhook({
-                                    reference,
-                                    status: 'SUCCESS',
-                                    agreedCharge
-                                })
-
-                                return res.status(202).json({
-                                    status: true,
-                                    data: {
+                        if ( walletBal >= (parseFloat(total) +  parseFloat(agreedCharge)) ) { 
+                            Request.update({status: 'SUCCESS'},{
+                                where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
+                            }).then ((data) => {
+    
+                                if (data[0] > 0 ) {
+                                    
+                                    chargedBal = parseFloat(walletBal) - (parseFloat(total) +  parseFloat(agreedCharge))
+    
+                                    Users.update({pin_attempts: 0, walletBal: chargedBal }, {where: {userUid}});
+    
+                                    //log debit data
+                                    Transactions.create({
+                                        userUid,
+                                        transId: reference,
+                                        initialBal: parseFloat(walletBal),
+                                        amount: parseFloat(total) +  parseFloat(agreedCharge),
+                                        finalBal: chargedBal,
+                                        description: `NGN${total} cash withdrawn`,
+                                        charges: agreedCharge,
+                                        from: 'primary wallet',
+                                        to: `${agent}-${agentUsername}`,
                                         reference,
-                                        "message": "Approved successfully"
-                                    },
-                                    message: "success"
-                                })
-                                
-                            } else {
-
+                                        direction: "out",
+                                        title: "Cash Withdrawal",
+                                        isQueried: true,
+                                    })
+    
+                                    eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been successfully completed`})
+    
+                                    
+                                    sendRequestWebhook({
+                                        reference,
+                                        status: 'SUCCESS',
+                                        agreedCharge
+                                    })
+    
+                                    return res.status(202).json({
+                                        status: true,
+                                        data: {
+                                            reference,
+                                            "message": "Approved successfully"
+                                        },
+                                        message: "success"
+                                    })
+                                    
+                                } else {
+    
+                                    return res.status(404).json({
+                                        status: false,
+                                        data: {},
+                                        message: `Cannot approve request ${reference} or request does not exist`
+                                    }) 
+    
+                                }
+                                    
+                            }).catch((error) => {
+    
                                 return res.status(404).json({
                                     status: false,
-                                    data: {},
-                                    message: `Cannot approve request ${reference} or request does not exist`
-                                }) 
-
-                            }
-                                
-                        }).catch((error) => {
-
-                            return res.status(404).json({
-                                status: false,
-                                data : error,
-                                message: "Cannot modify data"
+                                    data : error,
+                                    message: "Cannot modify data"
+                                })
+    
                             })
-
-                        })
+                        } else {
+                            return res.status(400).json({
+                                status: false,
+                                data : {},
+                                message: "Insufficient Balance"
+                            })
+                        }
+                        
                     } else {
                         return res.status(404).json({
                             status: false,
