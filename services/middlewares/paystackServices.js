@@ -6,6 +6,7 @@ const {logger, paystack_secret_key, environment, Op} = config
 const fetch = require('node-fetch');
 let timeService = require("./timeservice");
 const creditService = require('./creditService');
+const { json } = require('sequelize');
 
 
 let APIKEY = paystack_secret_key;
@@ -170,9 +171,54 @@ exports.resolveAccount = async (payload) => {
         
 }
 
-
-
 exports.withdrawFund = async (payload) => {
+    try{
+        let dataToSend = {
+
+            source: "balance",
+            reason: payload.narration,
+            amount: (payload.amount * 100),
+            recipient: payload.account_code,
+            reference: payload.reference
+    
+        }
+        let response = await fetch('https://api.paystack.co/transfer', {
+            method: 'post',
+            headers: {
+                Authorization: `Bearer ${paystack_secret_key}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        })
+        response = await response.json()
+        console.log('response', response)
+        if ( response.status == true) {
+            data = response.data
+            await Withdrawal.create({
+                user_uid: payload.user_uid,
+                account_code: payload.account_code,
+                account_name: payload.account_name,
+                account_number: payload.account_number,
+                amount: payload.amount,
+                reference: payload.reference,
+                bank_name: payload.bank_name,
+                charges: payload.charges,
+                transfer_code: data.transfer_code,
+                reference: payload.reference
+            })
+            return response.data
+        } else {
+            return false
+        }
+        
+    } catch(err){
+        logger.info(err.message)
+        return false;
+    }
+    
+}
+
+exports.withdrawFundOld = async (payload) => {
     try {
 
         let { body: { status, message, data } } =  await paystack.initiateTransfer({
