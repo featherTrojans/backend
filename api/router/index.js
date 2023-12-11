@@ -578,7 +578,7 @@ router.group('/', (router) => {
         });
 
         router.group('/account', (router) => {
-            router.get('/get', 
+            router.post('/get', 
                 [
                     Authenticate,
                     body('bank_name').toUpperCase(),
