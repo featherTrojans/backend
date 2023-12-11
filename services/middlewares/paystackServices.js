@@ -104,6 +104,7 @@ exports.verifyTransaction = async (payload) => {
 
         
 } 
+
 exports.addAccount = async (payload) => {
     try{
         const {account_name} = await this.resolveAccount({acc_num: payload.account_number, bank_name: payload.bank_name})
