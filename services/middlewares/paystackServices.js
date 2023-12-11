@@ -103,10 +103,58 @@ exports.verifyTransaction = async (payload) => {
     }
 
         
+} 
+
+exports.addAccount = async (payload) => {
+    try{
+        const {account_name} = await this.resolveAccount({acc_num: payload.account_number, bank_name: payload.bank_name})
+
+        let dataToSend = {
+            type: "nuban",
+            name: account_name,
+            account_number: payload.account_number,
+            bank_code: this.sortCode(payload.bank_name),
+            currency: "NGN"
+          }
+        let response = await fetch('https://api.paystack.co/transferrecipient', {
+            method: 'post',
+            headers: {
+                Authorization: `Bearer ${paystack_secret_key}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSend)
+        })
+        response = await response.json()
+        console.log('response', response)
+        if ( response.status == true) {
+            await BankAccount.create({
+                user_uid: payload.user_uid,
+                account_code: data.recipient_code,
+                account_number: payload.account_number,
+                account_name,
+                bank_name: data.details.bank_name
+            })
+
+            return {
+              account_code: data.recipient_code,
+              account_number: payload.account_number,
+              account_name,
+              bank_name: data.details.bank_name,
+              is_beneficiary: false
+          };
+        } else {
+            return false
+        }
+        
+    } catch(err){
+        logger.info(err.message)
+        return false;
+    }
+    
 }
 
 
-exports.addAccount = async (payload) => {
+exports.addAccountOld = async (payload) => {
     try {
         const {account_name} = await this.resolveAccount({acc_num: payload.account_number, bank_name: payload.bank_name})
         let { body: { status, message, data } } =  await paystack.createTransferRecipient({
