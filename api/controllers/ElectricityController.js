@@ -13,11 +13,13 @@ exports.buyElect = ( async (req, res) => {
 
     const {userId, username} = req.user
     const { service, amount, meter_number, variation, phone , userPin} = req.body
+    const charges = 100
+    const totalAmount = parseFloat(charges) + parseFloat(amount)
 
     try{
         const {walletBal, pin} = await Users.findOne({where: {userUid: userId}, attributes: ['walletBal', 'pin']})
         const verifyPin = await bcrypt.compare(userPin, pin);
-        if ( amount > walletBal) {
+        if ( totalAmount > walletBal) {
             return res.status(400).json({
                 status: false,
                 data : {
@@ -57,7 +59,7 @@ exports.buyElect = ( async (req, res) => {
             if (insert) {
             new Promise(function(resolve, reject) {
 
-                const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${variation} ${service} token purchased on ${meter_number}`, from: "primary wallet", to: "pay bills", title: "Utility Payment"});
+                const debitUser = debitService({userUid: userId, reference, amount: totalAmount, charges, description: `NGN${amount} ${variation} ${service} token purchased on ${meter_number}`, from: "primary wallet", to: "pay bills", title: "Utility Payment"});
 
                 debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                 // set timer to 7 secs to give room for db updates
