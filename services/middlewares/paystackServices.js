@@ -108,7 +108,7 @@ exports.verifyTransaction = async (payload) => {
 exports.addAccount = async (payload) => {
     try{
         const {account_name} = await this.resolveAccount({acc_num: payload.account_number, bank_name: payload.bank_name})
-
+        console.log('payload', payload)
         let dataToSend = {
             type: "nuban",
             name: account_name,
@@ -126,7 +126,9 @@ exports.addAccount = async (payload) => {
         })
         response = await response.json()
         console.log('response', response)
+
         if ( response.status == true) {
+            let {data} = response
             await BankAccount.create({
                 user_uid: payload.user_uid,
                 account_code: data.recipient_code,
@@ -241,7 +243,7 @@ exports.withdrawFund = async (payload) => {
         response = await response.json()
         console.log('response', response)
         if ( response.status == true) {
-            data = response.data
+            let {data} = response
             await Withdrawal.create({
                 user_uid: payload.user_uid,
                 account_code: payload.account_code,
