@@ -11,6 +11,8 @@ const bcrypt = require('bcryptjs');
 exports.buyCable = ( async (req, res) => {
     const {userId, username} = req.user
     const { service, smartcard_number, productCode, userPin, amount, customerName} = req.body
+    charges = 100
+    const totalAmount = parseFloat(charges) + parseFloat (amount)
 
 
     try{
@@ -30,7 +32,7 @@ exports.buyCable = ( async (req, res) => {
                 message: "Pin is Incorrect"
     
             })
-        }else if ( amount > walletBal) {
+        }else if ( totalAmount > walletBal) {
             return res.status(400).json({
                 status: false,
                 data : {
@@ -85,7 +87,7 @@ exports.buyCable = ( async (req, res) => {
             if (insert) {
                 new Promise(function(resolve, reject) {
 
-                    const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${service}  purchased on ${smartcard_number}`, from: service, to: smartcard_number.toString(), title: "PayBills Purchase"});
+                    const debitUser = debitService({userUid: userId, reference, amount: totalAmount, charges, description: `NGN${amount} ${service}  purchased on ${smartcard_number}`, from: service, to: smartcard_number.toString(), title: "PayBills Purchase"});
 
                     debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
                     // set timer to  9 secs to give room for db updates

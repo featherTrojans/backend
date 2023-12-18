@@ -13,7 +13,7 @@ exports.withdrawFund = ( async (req, res) => {
     try
     {
         const { walletBal, pin } = await Users.findOne({attributes: ['walletBal', 'pin'], where: {userUid: userId}})
-        let charges = amount <= 5000 ? 10 : amount <= 50000 ? 25 : 50
+        let charges = 50;//amount <= 5000 ? 10 : amount <= 50000 ? 25 : 50
         const verifyPin = await bcrypt.compare(userPin, pin);
     
         if (!errors.isEmpty()) {
