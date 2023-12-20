@@ -29,12 +29,12 @@ require('../../subscribers')
                 data: {},
                 message: "Aww padi! Something occurred; please try again later"
             })
-        } else if (amount < 200 ) {
+        } else if (amount < 500 ) {
             return ({
                 code: 400,
                 status : false,
                 data: {},
-                message: "Invalid request amount. Make a request of NGN200 and above"
+                message: "Invalid request amount. Make a request of NGN500 and above"
             })
         } else {
 
