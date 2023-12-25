@@ -242,7 +242,7 @@ exports.transferFundsToAgent = ( async (req, res) => {
 
                         // credit after successful debit
                         // services.creditService({userUid, reference: creditReference, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, id: transId, title: 'Wallet Credit', type: "Feather2Feather"})
-                        let data = {peerFullName: fullName, reference, creditReference, amount: amountToDebit, peerUsername: username, agentId, transId }
+                        let data = {peerFullName: fullName, reference, creditReference, amount, peerUsername: username, agentId, transId }
                         //send to agent 
                         fetchApi(`${merchant_url}/peer/transfer`,
                         {
@@ -264,7 +264,7 @@ exports.transferFundsToAgent = ( async (req, res) => {
                                         "from": username,
                                         "to": business_name,
                                         charges,
-                                        transId, amount: amountToDebit, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, 
+                                        transId, amount, from: username, to: transferTo, description: `NGN${amount} transferred from ${username}`, 
                                         createdAt: Date.now()
                                     },
                                     message: `#${amount} transferred to ${business_name} successfully`
