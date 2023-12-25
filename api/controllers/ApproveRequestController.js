@@ -36,7 +36,7 @@ exports.approveRequest = ( async (req, res) => {
                 attributes: ['userUid', 'agentUsername', 'statusId', 'charges', 'negotiatedFee', 'amount', 'agent']
             });
 
-            const total = (parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee))
+            const total = (parseFloat(amount) + parseFloat(charges) + parseFloat(negotiatedFee) + parseFloat(agreedCharge))
 
             let {pin, pin_attempts, escrowBal, username, walletBal } = await Users.findOne({
                 where: {userUid},
@@ -47,13 +47,13 @@ exports.approveRequest = ( async (req, res) => {
 
             const newEscrowBal = parseFloat(escrowBal) - parseFloat(total);
             const newWalletBal = parseFloat(walletBal) + parseFloat(total)
-            if (agreedCharge > walletBal){
+            if (agreedCharge < 0){
 
                 return res.status(400).json({
                     status: false,
                     data: {
                     },
-                    message: "Hey padi you don't have up to the agreed amount in your wallet..."
+                    message: "Hey padi agreed charge cannot be less than 0..."
                 })
 
             } else if (pin_attempts > 3 ){
@@ -63,9 +63,9 @@ exports.approveRequest = ( async (req, res) => {
                 }).then ((data) => {
                     if (data[0] > 0 ) {
 
-                        Users.update({pin_attempts: 0,  walletBal: newWalletBal }, {where: {userUid}});
+                        Users.update({pin_attempts: 0}, {where: {userUid}});
                         //notify withdrawal
-                        eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been cancelled and your funds reversed`})
+                        eventEmitter.emit('notification', {userUid, title: 'Cash Withdrawal', description: `Hey your cash withdrawal request has been cancelled`})
 
                         //refund & debit escrow
 
@@ -118,7 +118,7 @@ exports.approveRequest = ( async (req, res) => {
                         //     where: {agentUsername, status: 'SUCCESS'},
                         //     attributes: [[sequelize.fn('COUNT', sequelize.col('amount')), 'totalCounts']]
                         // })
-                        if ( walletBal >= (parseFloat(total) +  parseFloat(agreedCharge)) ) { 
+                        if ( walletBal >= (parseFloat(total)) ) { 
                             Request.update({status: 'SUCCESS'},{
                                 where: {userUid, reference, status: ["PENDING", "ACCEPTED"]}
                             }).then ((data) => {
@@ -187,7 +187,7 @@ exports.approveRequest = ( async (req, res) => {
                             return res.status(400).json({
                                 status: false,
                                 data : {},
-                                message: "Insufficient Balance"
+                                message: `Insufficient Balance Bal: ${walletBal} charge: ${agreedCharge}`
                             })
                         }
                         
