@@ -230,7 +230,7 @@ exports.transferFundsToAgent = ( async (req, res) => {
                 }).then(() => {
 
                     //use promise so that the process will be asynchronous
-                    amountToDebit = amount - charges
+                    amountToDebit = amount + charges
                     new Promise(function(resolve, reject) {
 
                         const debitService = services.debitService({userUid: userId, reference, amount: amountToDebit, description: `NGN${amountToDebit} transferred to ${business_name}`, from: username, to: business_name, id: transId, title: 'Wallet Debit', type: "Feather2Agent", charges});
