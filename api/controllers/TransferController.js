@@ -257,7 +257,7 @@ exports.transferFundsToAgent = ( async (req, res) => {
                         ).then( resp => resp.json())
                         .then(result => {
                             console.log("Transfer result: ", result)
-                            if (result.status) {
+                            if (result.message == 'credited successfully') {
                                 return res.status(200).json({
                                     status: true,
                                     data : {
