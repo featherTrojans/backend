@@ -125,7 +125,7 @@ exports.approveRequest = ( async (req, res) => {
     
                                 if (data[0] > 0 ) {
                                     
-                                    chargedBal = parseFloat(walletBal) - (parseFloat(total) +  parseFloat(agreedCharge))
+                                    chargedBal = parseFloat(walletBal) - (parseFloat(total))
     
                                     Users.update({pin_attempts: 0, walletBal: chargedBal }, {where: {userUid}});
     
@@ -134,7 +134,7 @@ exports.approveRequest = ( async (req, res) => {
                                         userUid,
                                         transId: reference,
                                         initialBal: parseFloat(walletBal),
-                                        amount: parseFloat(total) +  parseFloat(agreedCharge),
+                                        amount: parseFloat(total),
                                         finalBal: chargedBal,
                                         description: `NGN${total} cash withdrawn`,
                                         charges: agreedCharge,
