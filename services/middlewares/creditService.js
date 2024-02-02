@@ -8,7 +8,7 @@ const creditService = async (data) => {
     try {
         const { userUid, reference, amount } = data
         const { walletBal, escrowBal, username, phoneNumber, email, fullName } = await Users.findOne({attributes: ['walletBal', 'phoneNumber', 'username', 'email', 'fullName', 'escrowBal'], where: {userUid}})
-        const finalBal = parseFloat(amount) + parseFloat(walletBal)
+        const finalBal = (parseFloat(amount) + parseFloat(walletBal)).toFixed(2)
         //update
         //user wallet
         await Users.update({walletBal: finalBal}, {where: {userUid}});
