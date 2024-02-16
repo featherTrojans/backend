@@ -102,12 +102,13 @@ exports.buyAirtime = ( async (req, res) => {
             if (insert) {
                 new Promise(function(resolve, reject) {
 
-                    const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: network, to: phone.toString(), title: "Airtime Purchase"});
+                    const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: network, to: phone.toString(), title: 'Airtime Purchase'});
 
                     debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
-                    // set timer to  9 secs to give room for db updates
+                    // set timer to  7 secs to give room for db updates
 
                 }).then(() => {
+
 
                     NewBills.create({
                         userUid: userId,
@@ -118,48 +119,22 @@ exports.buyAirtime = ( async (req, res) => {
                         network,
                         description: `NGN${amount} ${network} airtime purchased on ${phone}`
                     }).then(()=> {
-
-                        buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference}).then((buyAirtime) => {
-                            console.log('buyAirtime', buyAirtime)
-                            if ( buyAirtime == false) {
-    
-                                //update NewBills status 
-                                NewBills.update({status: "PROCESSING"}, {where: {reference}})
-                               console.log(({
-                                    status: false,
-                                    data : {
-                                        network,
-                                        phone,
-                                        amount,
-                                    },
-                                    message: "Cannot purchase airtime at the moment please try again later"
-                    
-                                }))
-                            } else if (buyAirtime.message == 'success' || buyAirtime.message == '') {
-                                //update NewBills table
-                                NewBills.update({
-                                    status: "SUCCESS", transId: buyAirtime.request_id,
-                                    
-                                }, {where: {reference}})
-                                console.log(({
-                                    status: true,
-                                    data: {
-                                        network,
-                                        amount,
-                                        phone
-                                    },
-                                    message: "Hi padi, Successfully purchased"
-                                }))
-                            }
-                        }).catch(err => {
-                            logger.info(err)
-                            // return res.status(400).
-                            console.log(({
-                                status: false,
-                                data : err,
-                                message: "Hi padi an error occurred"
-    
-                            }))
+                        buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference})
+                        return res.status(200).json({
+                            status: true,
+                            data: {
+                                network,
+                                amount,
+                                phone,
+                                transId: reference,
+                                description: `NGN${amount} ${network} airtime purchased on ${phone}`,
+                                title: "Airtime Purchase",
+                                direction: "out",
+                                status: "PROCESSING",
+                                createdAt: Date.now()
+                                
+                            },
+                            message: "Hey padi, your order is processing"
                         })
     
                     }).catch(err => {
@@ -173,22 +148,6 @@ exports.buyAirtime = ( async (req, res) => {
                         }))
                     })
 
-                    return res.status(200).json({
-                        status: true,
-                        data: {
-                            network,
-                            amount,
-                            phone,
-                            transId: reference,
-                            description: `NGN${amount} ${network} airtime purchased on ${phone}`,
-                            title: "Airtime Purchase",
-                            direction: "out",
-                            status: "PROCESSING",
-                            createdAt: Date.now()
-                            
-                        },
-                        message: "Hey padi, your order is processing"
-                    })
                     
                     
                 }).catch(error => {

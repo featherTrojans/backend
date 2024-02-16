@@ -47,11 +47,11 @@ const debitService = async (data) => {
             userUid,
             walletBal: finalBal
         }
-        //update
+        //update firestore
         try{
-            let firebasUpdate = await firebaseDB.doc(userUid).set(obj)
+             firebaseDB.doc(userUid).set(obj)
             // console.log(firebasUpdate)
-            var firstname = (fullName.split(" "))[1]
+            // var firstname = (fullName.split(" "))[1]
             const message = `Feather: Dear ${fullName}, NGN${dollarUSLocale.format(amount)} has left your account. Your new balance is: NGN${finalBal}`;
             eventEmitter.emit('walletCredit', {email, message})
             eventEmitter.emit('send', {phoneNumber, message})
