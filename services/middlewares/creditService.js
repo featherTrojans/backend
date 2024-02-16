@@ -42,8 +42,8 @@ const creditService = async (data) => {
             userUid,
             walletBal: finalBal
         }
-        //update
-        let firebasUpdate = await firebaseDB.doc(userUid).set(obj)
+        //update firebase to give auto update
+        firebaseDB.doc(userUid).set(obj)
 
         // console.log(firebasUpdate)
         var firstname = (fullName.split(" "))[1]
