@@ -27,7 +27,7 @@ const cardService = require('./middlewares/cardServices')
 const mobilenigService = require('./middlewares/mobilenigService')
 const queryBills = require('./middlewares/queryBills')
 const superAccountService = require('./middlewares/superAccountService')
-
+require('./treatCodes')
 
 exports.services = {
     confirmAccount,
