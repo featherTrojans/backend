@@ -7,7 +7,7 @@ const creditService = require('./creditService');
 const { query_trans } = require('./mobilenigService');
 
 
-const queryAirtime = async (fifteen_mins_ago = timeService.serverTime().fifteen_mins_ago) => {
+const queryAirtime = async (fifteen_mins_ago = timeService.serverTime().five_mins_ago) => {
     //search withdrawals in the last 15 minutes
     console.log('fifteen_mins_ago', fifteen_mins_ago)
 
@@ -21,6 +21,11 @@ const queryAirtime = async (fifteen_mins_ago = timeService.serverTime().fifteen_
     // console.log(transactions)
     if ( transactions.length > 0 ) {
         for (const [key, value] of Object.entries(transactions)){
+            //update transaction status so as not to double credit
+            await NewBills.update(
+                {status: 'PROCESSED'},
+                {where: {reference}}
+            )
             // console.log(value.reference)
             let {amount, userUid, reference, status, createdAt} = value
             query_transaction = await query_trans(reference)
@@ -49,6 +54,11 @@ const queryAirtime = async (fifteen_mins_ago = timeService.serverTime().fifteen_
                 )
                 console.log(userUid, reference, 'status', query_transaction.statusCode, 'updated successfully')
             } else {
+                // return back to processing
+                NewBills.update(
+                    {status: 'PROCESSING'},
+                    {where: {reference}}
+                )
                 //continue
                 console.log('No condition met')
             }
