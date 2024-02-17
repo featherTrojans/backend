@@ -119,7 +119,50 @@ exports.buyAirtime = ( async (req, res) => {
                         network,
                         description: `NGN${amount} ${network} airtime purchased on ${phone}`
                     }).then(()=> {
-                        buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference})
+
+                        buyAirtimeData({phone,network, amount, type: 'airtime', trans_id: reference}).then((buyAirtime) => {
+                            console.log('buyAirtime', buyAirtime)
+                            if ( buyAirtime == false) {
+    
+                                //update NewBills status 
+                                NewBills.update({status: "PROCESSING"}, {where: {reference}})
+                               console.log(({
+                                    status: false,
+                                    data : {
+                                        network,
+                                        phone,
+                                        amount,
+                                    },
+                                    message: "Cannot purchase airtime at the moment please try again later"
+                    
+                                }))
+                            } else if (buyAirtime.message == 'success' || buyAirtime.message == '') {
+                                //update NewBills table
+                                NewBills.update({
+                                    status: "SUCCESS", transId: buyAirtime.request_id,
+                                    
+                                }, {where: {reference}})
+                                console.log(({
+                                    status: true,
+                                    data: {
+                                        network,
+                                        amount,
+                                        phone
+                                    },
+                                    message: "Hi padi, Successfully purchased"
+                                }))
+                            }
+                        }).catch(err => {
+                            logger.info(err)
+                            // return res.status(400).
+                            console.log(({
+                                status: false,
+                                data : err,
+                                message: "Hi padi an error occurred"
+    
+                            }))
+                        })
+
                         return res.status(200).json({
                             status: true,
                             data: {
