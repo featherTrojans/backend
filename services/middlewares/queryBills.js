@@ -22,12 +22,13 @@ const queryAirtime = async (fifteen_mins_ago = timeService.serverTime().five_min
     if ( transactions.length > 0 ) {
         for (const [key, value] of Object.entries(transactions)){
             //update transaction status so as not to double credit
+            
+            // console.log(value.reference)
+            let {amount, userUid, reference, status, createdAt} = value
             await NewBills.update(
                 {status: 'PROCESSED'},
                 {where: {reference}}
             )
-            // console.log(value.reference)
-            let {amount, userUid, reference, status, createdAt} = value
             query_transaction = await query_trans(reference)
             
             console.log(Date.parse(createdAt) > Date.parse('2023-05-07 23:59:00'));
