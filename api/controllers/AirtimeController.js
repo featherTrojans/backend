@@ -21,14 +21,17 @@ exports.buyAirtime = ( async (req, res) => {
         const verifyPin = await bcrypt.compare(userPin, pin);
 
         // get level details
-        let {privilege} = await UserLevels.findOne({where: {level: userLevel}})
+        let {privilege} = await UserLevels.findOne({
+            where: {level: userLevel},
+            attributes: ['privilege']}
+            )
 
         if (verifyPin != true ) {
             return res.status(403).json({
 
                 status: false,
                 data : {},
-                message: "Pin is Incorrect"
+                message: 'Pin is Incorrect'
     
             })
         }else if ( amount > walletBal) {
@@ -39,21 +42,21 @@ exports.buyAirtime = ( async (req, res) => {
                     phone,
                     amount
                 },
-                message: "Cannot purchase airtime at the moment because your balance is not enough "
+                message: 'Cannot purchase airtime at the moment because your balance is not enough '
 
             })
         }else if (environment == 'live' && (parseFloat(walletBal)) > JSON.parse(privilege).wallet){
             return res.status(403).json({
                 status: false,
                 data: {},
-                message: `Hi Padi, your account has been suspended, kindly upgrade to continue enjoying our services or contact support`
+                message: 'Hi Padi, your account has been suspended, kindly upgrade to continue enjoying our services or contact support'
             })
         }else if (amount < 100 ) {
             return res.status(400).json({
 
                 status: false,
                 data : {},
-                message: "Oops Padi!!! You can not purchase airtime lower than NGN100. Kindly try with NGN100 or more"
+                message: 'Oops Padi!!! You can not purchase airtime lower than NGN100. Kindly try with NGN100 or more'
     
             })
         }
@@ -62,7 +65,7 @@ exports.buyAirtime = ( async (req, res) => {
 
                 status: false,
                 data : {},
-                message: "Oops Padi!!! You can not purchase airtime at the moment please contact support!!!"
+                message: 'Oops Padi!!! You can not purchase airtime at the moment please contact support!!!'
     
             })
         } else if (amount === null || amount === '' ) {
@@ -70,7 +73,7 @@ exports.buyAirtime = ( async (req, res) => {
 
                 status: false,
                 data : {},
-                message: "Oops Padi!!! You can not purchase airtime!!! Amount is required"
+                message: 'Oops Padi!!! You can not purchase airtime!!! Amount is required'
     
             })
         } else if (phone === null || phone === '' ) {
@@ -78,7 +81,7 @@ exports.buyAirtime = ( async (req, res) => {
 
                 status: false,
                 data : {},
-                message: "Oops Padi!!! Phone Number is required to proceed!!!"
+                message: 'Oops Padi!!! Phone Number is required to proceed!!!'
     
             })
         } else if (userPin === null || userPin === '' ) {
@@ -86,7 +89,7 @@ exports.buyAirtime = ( async (req, res) => {
 
                 status: false,
                 data : {},
-                message: "Oops Padi!!! You have forgot to input your pin!!!"
+                message: 'Oops Padi!!! You have forgot to input your pin!!!'
     
             })
         }  
@@ -104,8 +107,8 @@ exports.buyAirtime = ( async (req, res) => {
 
                     const debitUser = debitService({userUid: userId, reference, amount, description: `NGN${amount} ${network} airtime purchased on ${phone}`, from: network, to: phone.toString(), title: 'Airtime Purchase'});
 
-                    debitUser ? setTimeout(() => resolve("done"), 7000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
-                    // set timer to  7 secs to give room for db updates
+                    debitUser ? setTimeout(() => resolve('done'), 6000) : setTimeout(() => reject( new Error(`Cannot debit ${username}`)));
+                    // set timer to  6 secs to give room for db updates
 
                 }).then(() => {
 
@@ -125,7 +128,7 @@ exports.buyAirtime = ( async (req, res) => {
                             if ( buyAirtime == false) {
     
                                 //update NewBills status 
-                                NewBills.update({status: "PROCESSING"}, {where: {reference}})
+                                NewBills.update({status: 'PROCESSING'}, {where: {reference}})
                                console.log(({
                                     status: false,
                                     data : {
@@ -133,13 +136,13 @@ exports.buyAirtime = ( async (req, res) => {
                                         phone,
                                         amount,
                                     },
-                                    message: "Cannot purchase airtime at the moment please try again later"
+                                    message: 'Cannot purchase airtime at the moment please try again later'
                     
                                 }))
                             } else if (buyAirtime.message == 'success' || buyAirtime.message == '') {
                                 //update NewBills table
                                 NewBills.update({
-                                    status: "SUCCESS", transId: buyAirtime.request_id,
+                                    status: 'SUCCESS', transId: buyAirtime.request_id,
                                     
                                 }, {where: {reference}})
                                 console.log(({
@@ -149,7 +152,7 @@ exports.buyAirtime = ( async (req, res) => {
                                         amount,
                                         phone
                                     },
-                                    message: "Hi padi, Successfully purchased"
+                                    message: 'Hi padi, Successfully purchased'
                                 }))
                             }
                         }).catch(err => {
@@ -158,7 +161,7 @@ exports.buyAirtime = ( async (req, res) => {
                             console.log(({
                                 status: false,
                                 data : err,
-                                message: "Hi padi an error occurred"
+                                message: 'Hi padi an error occurred'
     
                             }))
                         })
@@ -171,13 +174,13 @@ exports.buyAirtime = ( async (req, res) => {
                                 phone,
                                 transId: reference,
                                 description: `NGN${amount} ${network} airtime purchased on ${phone}`,
-                                title: "Airtime Purchase",
-                                direction: "out",
-                                status: "PROCESSING",
+                                title: 'Airtime Purchase',
+                                direction: 'out',
+                                status: 'PROCESSING',
                                 createdAt: Date.now()
                                 
                             },
-                            message: "Hey padi, your order is processing"
+                            message: 'Hey padi, your order is processing'
                         })
     
                     }).catch(err => {
@@ -186,7 +189,7 @@ exports.buyAirtime = ( async (req, res) => {
                         console.log(({
                             status: false,
                             data: err,
-                            message: "Hi padi, cannot create this at this time"
+                            message: 'Hi padi, cannot create this at this time'
 
                         }))
                     })
@@ -198,7 +201,7 @@ exports.buyAirtime = ( async (req, res) => {
                     return res.status(400).json({
                         status: false,
                         data : error,
-                        message: "Cannot create transaction"
+                        message: 'Cannot create transaction'
 
                     })
                 });
@@ -207,7 +210,7 @@ exports.buyAirtime = ( async (req, res) => {
                 return res.status(400).json({
                     status: false,
                     data : {},
-                    message: "Cannot make transaction"
+                    message: 'Cannot make transaction'
         
                 })
             
@@ -219,7 +222,7 @@ exports.buyAirtime = ( async (req, res) => {
         return res.status(409).json({
             status: false,
             data : error,
-            message: "error occured"
+            message: 'error occured'
         })
     }
 })
