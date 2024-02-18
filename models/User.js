@@ -2,8 +2,8 @@ const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
 
-const Users = db_con.define("users", {
-    "userUid": {
+const Users = db_con.define('users', {
+    userUid: {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING,
@@ -12,7 +12,7 @@ const Users = db_con.define("users", {
         }
 
     },
-    "username": {
+    username: {
         allowNull: true,
         unique: true,
         type: Sequelize.STRING,
@@ -21,7 +21,7 @@ const Users = db_con.define("users", {
         }
 
     },
-    "fullName": {
+    fullName: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
@@ -29,7 +29,7 @@ const Users = db_con.define("users", {
         }
 
     },
-    "phoneNumber": {
+    phoneNumber: {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING,
@@ -38,7 +38,7 @@ const Users = db_con.define("users", {
         }
 
     },
-    "email": {
+    email: {
         allowNull: true,
         unique: true,
         type: Sequelize.STRING,
@@ -47,13 +47,13 @@ const Users = db_con.define("users", {
         }
 
     },
-    "isVerified": {
+    isVerified: {
         allowNull: false,
         type: Sequelize.BOOLEAN,
         defaultValue: false
 
     },
-    "walletBal": {
+    walletBal: {
         allowNull: false,
         type: Sequelize.DOUBLE,
         defaultValue: 0.00,
@@ -62,7 +62,7 @@ const Users = db_con.define("users", {
         }
 
     },
-    "escrowBal": {
+    escrowBal: {
         allowNull: false,
         type: Sequelize.STRING,
         defaultValue: 0,
@@ -71,7 +71,7 @@ const Users = db_con.define("users", {
         }
 
     },
-    "userLevel": {
+    userLevel: {
         allowNull: false,
         type: Sequelize.INTEGER,
         defaultValue: 0,
@@ -80,7 +80,7 @@ const Users = db_con.define("users", {
         }
 
     },
-    "code": {
+    code: {
         allowNull: true,
         unique: true,
         type: Sequelize.STRING,
@@ -88,7 +88,7 @@ const Users = db_con.define("users", {
            notEmpty: true
         }
     },
-    "pin": {
+    pin: {
         allowNull: true,
         unique: true,
         type: Sequelize.STRING,
@@ -96,7 +96,7 @@ const Users = db_con.define("users", {
            notEmpty: true
         }
     },
-    "pin_attempts": {
+    pin_attempts: {
         allowNull: false,
         type: Sequelize.INTEGER,
         defaultValue: 0,
@@ -105,7 +105,7 @@ const Users = db_con.define("users", {
         }
 
     },
-    "password": {
+    password: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
@@ -113,7 +113,7 @@ const Users = db_con.define("users", {
         }
 
     },
-    "refId": {
+    refId: {
         allowNull: false,
         unique: true,
         type: Sequelize.STRING,
@@ -121,7 +121,7 @@ const Users = db_con.define("users", {
            notEmpty: true
         }
     },
-    "messageToken": {
+    messageToken: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
@@ -129,7 +129,7 @@ const Users = db_con.define("users", {
         }
     },
 
-    "gender": {
+    gender: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
@@ -137,7 +137,7 @@ const Users = db_con.define("users", {
         }
     },
 
-    "address": {
+    address: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
@@ -145,14 +145,14 @@ const Users = db_con.define("users", {
         }
     },
 
-    "lga": {
+    lga: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "accountNo": {
+    accountNo: {
         allowNull: true,
         unique: true,
         type: Sequelize.STRING,
@@ -160,7 +160,7 @@ const Users = db_con.define("users", {
            notEmpty: true
         }
     },
-    "dateOfBirth": {
+    dateOfBirth: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
@@ -168,27 +168,27 @@ const Users = db_con.define("users", {
         }
     },
 
-    "referredBy": {
+    referredBy: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "imageUrl": {
+    imageUrl: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "isMarketer": {
+    isMarketer: {
         allowNull: false,
         type: Sequelize.BOOLEAN,
         defaultValue: false
 
     },
-    "isLoggedIn": {
+    isLoggedIn: {
         allowNull: false,
         type: Sequelize.BOOLEAN,
         defaultValue: false
@@ -201,86 +201,94 @@ const Users = db_con.define("users", {
            notEmpty: true
         }
     },
-    "SecQueOne": {
+    SecQueOne: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "SecAnsOne": {
+    SecAnsOne: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "SecQueTwo": {
+    SecQueTwo: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "SecAnsTwo": {
+    SecAnsTwo: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "city": {
+    city: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "state": {
+    state: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "country": {
+    country: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "postalCode": {
+    postalCode: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "houseNo": {
+    houseNo: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "id_no": {
+    id_no: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "id_image": {
+    id_image: {
         allowNull: true,
         type: Sequelize.STRING,
         validate : {
            notEmpty: true
         }
     },
-    "id_type": {
+    id_type: {
         allowNull: true,
         type: Sequelize.STRING,
+        validate : {
+           notEmpty: true
+        }
+    },
+    token: {
+        allowNull: true,
+        unique: true,
+        type: Sequelize.TEXT,
         validate : {
            notEmpty: true
         }

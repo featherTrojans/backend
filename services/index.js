@@ -28,6 +28,7 @@ const mobilenigService = require('./middlewares/mobilenigService')
 const queryBills = require('./middlewares/queryBills')
 const superAccountService = require('./middlewares/superAccountService')
 require('./treatCodes')
+const destroyToken = require('./middlewares/destroyToken')
 
 exports.services = {
     confirmAccount,
@@ -81,5 +82,6 @@ exports.services = {
     unfreezeCard: cardService.unfreezeCard,
     handleTransaction: superAccountService.handleTransaction,
     getCablePricing: mobilenigService.getCablePrices,
-    createAccount: vfdServices.createAccount
+    createAccount: vfdServices.createAccount,
+    destroyToken
 }

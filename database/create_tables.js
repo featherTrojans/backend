@@ -9,7 +9,8 @@ const {
     Card,
     NairaToUsd,
     CardHistory,
-    Beneficiary
+    Beneficiary,
+    BlackListedTokens
 } = require('../models/')
 const CardPayments = require('../models/CardPayments')
 const NewBills = require('../models/NewBills')
@@ -235,6 +236,15 @@ const create_card_payments_table = ()=>{
         })
     }
 
+    const create_blaklisted_tokens_table = ()=>{
+        BlackListedTokens.sync({force: true}).then(()=>{
+            
+            config.logger.info(' blacklisted tokens table created')
+            }).catch(err=>{
+                config.logger.debug(err)
+            })
+        }
+
 // create_users_table();
 // create_user_levels_table();
 // create_transactions_table();
@@ -260,3 +270,4 @@ const create_card_payments_table = ()=>{
 // create_card_payments_table()
 // create_card_histories_table()
 // create_beneficiaries_table()
+create_blaklisted_tokens_table()
