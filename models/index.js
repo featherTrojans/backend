@@ -23,6 +23,7 @@ const NairaToUsd = require('./NairaToUsd')
 const CardPayments = require('./CardPayments')
 const CardHistory = require('./CardHistory')
 const Beneficiary = require('./Beneficiary')
+const BlackListedTokens = require('./BlackListedTokens')
 
 const models = {
     Users,
@@ -49,7 +50,8 @@ const models = {
     NairaToUsd,
     CardHistory,
     CardPayments,
-    Beneficiary
+    Beneficiary,
+    BlackListedTokens
 }
 
 module.exports = models
