@@ -1,12 +1,11 @@
-const { config } = require("../../config")
-const logger = config.logger
-const jwt = require('jsonwebtoken')
 
-const destroyToken = (token) => {
+
+const destroyToken = async (token) => {
     try{
-        jwt.sign(token, config.jwt_secret, {
-            expiresIn: "1h ago"
-        })
+      
+       await BlackListedTokens.create(
+           token
+       )
     } catch (err) {
         logger.info(err)
         return null;

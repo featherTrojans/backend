@@ -3,7 +3,8 @@ const bcrypt = require('bcryptjs')
 const { config } = require("../../config")
 const {logger, Op, eventEmitter} = config
 const {services} = require("../../services")
-const { Users } = require('../../models')
+const { Users, BlackListedTokens } = require('../../models')
+const destroyToken = require('../../services/middlewares/destroyToken')
 const {TokenServices} = services
 require('../../subscribers')
 
@@ -607,7 +608,7 @@ exports.signIn = async (req, res) => {
                     message: "Incorrect feather tag/ username"
                 })
             } else {
-                let {userUid, username, email, fullName, isLoggedIn} = checkUsername
+                let {userUid, username, email, fullName, isLoggedIn, token} = checkUsername
                 const verifyPassword = await bcrypt.compare(password, checkUsername.password)
                 username = username.toLowerCase()
 
@@ -626,14 +627,22 @@ exports.signIn = async (req, res) => {
                         message: "Incorrect password provided"
                     })
                 }else {
-
-                    const token = TokenServices({userId: userUid, username, email, fullName}, '168h')
+                    token == null ? '' : await BlackListedTokens.create({
+                        userUid,
+                        token
+                    })
+                    const newToken = TokenServices({userId: userUid, username, email, fullName}, '168h')
+                    Users.update(
+                        {
+                            token: newToken
+                        },
+                        {where: {userUid}})
                     return res.status(200).json({
                         status: true,
                         data: {
                             userId: userUid,
                             username,
-                            token
+                            token: newToken
                         },
                         message: "User signed in successfully"
                     })
@@ -731,7 +740,7 @@ exports.confirmLoginCode =  async ( req, res) => {
             const checkUser = await Users.findOne({
                 where: {code}
             })
-            console.log (checkUser)
+            // console.log (checkUser)
 
             if (checkUser === null) {
                 return res.status(404).json({
@@ -740,20 +749,24 @@ exports.confirmLoginCode =  async ( req, res) => {
                     message: 'Aww padi, the code you entered is invalid, please retry'
                 })
             } else{
-                const {userUid, username, email, fullName} = checkUser;  
-                const token = TokenServices({userId: userUid, username, email, fullName}, '168h') // set token to 12 years
+                const {userUid, username, email, fullName, token} = checkUser;
+                token == null ? '' : await BlackListedTokens.create({
+                    userUid,
+                    token
+                })
+                const newToken = TokenServices({userId: userUid, username, email, fullName}, '168h') // set token to 12 years
                 // set isLoggedIn to true
-                // Users.update(
-                // {
-                //     isLoggedIn: true
-                // },
-                // {where: {userUid}})
+                Users.update(
+                {
+                    token: newToken
+                },
+                {where: {userUid}})
                 return res.status(200).json({
                     status: true,
                     data: {
                         userId: userUid,
                         username,
-                        token
+                        token: newToken
                     },
                     message: "Hey padi, you have signed in successfully"
                 })

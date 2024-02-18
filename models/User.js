@@ -2,7 +2,7 @@ const db_con = require('../config/database').connection
 const Sequelize = require('sequelize')
 
 
-const Users = db_con.define(users, {
+const Users = db_con.define('users', {
     userUid: {
         allowNull: false,
         unique: true,
