@@ -36,7 +36,7 @@ const Authenticate = (async (req, res, next) =>{
             return res.status(419).json({
                 status: false,
                 data: {},
-                message: "Hey padi, you are logged out of this device at the moment kindly login again to access your account on this device"
+                message: "Hey padi, this request is Unauthorized"
             })
         }
         const decoded = jwt.verify(token, config.jwt_secret)
