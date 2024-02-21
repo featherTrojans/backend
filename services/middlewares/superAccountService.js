@@ -7,12 +7,13 @@ exports.handleTransaction = (async(data) => {
         order: [['createdAt', 'DESC']],
         limit: 1,
     })
-
-    initBal = lastCheck == null ? 0 : lastCheck[0].amount
+    console.log('lenght', lastCheck.length)
+    initBal = lastCheck == null || lastCheck.length == 0 ? 0 : lastCheck[0].amount
+    console.log('iniyBal', initBal)
     finalBal = type == 'add' ? Math.round((initBal + amount), 2) : Math.round((initBal - amount), 2)
 
     //update
-    lastCheck == null ? CardPayments.create({
+    lastCheck == null || lastCheck.length == 0 ? CardPayments.create({
         name: "cardAccount",
         amount: finalBal
     }) : CardPayments.update({
@@ -24,8 +25,9 @@ exports.handleTransaction = (async(data) => {
     //create history
     CardHistory.create({
         name: "cardAccount",
-        inital_bal: initBal,
+        initial_bal: initBal,
         final_bal: finalBal,
+        amount,
         reference,
         description
 
