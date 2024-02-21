@@ -1,4 +1,4 @@
-const {createCardHolder, getCardDetails, fundCard, idGenService, debitService} = require('../../services').services
+const {createCardHolder, getCardDetails, handleTransaction, fundCard, idGenService, debitService} = require('../../services').services
 const {Users, BVN, Card, NairaToUsd} = require('../../models')
 var formidable = require('formidable');
 
@@ -40,7 +40,8 @@ exports.createUserCard = (async (req, res) => {
       identity = {
         "id_type": usersData.id_type,
         "id_no": usersData.id_no,
-        "id_image": usersData.id_image
+        "selfie_image": usersData.id_image,
+        bvn
       }
 
       //if all data are complete create holder
@@ -52,7 +53,6 @@ exports.createUserCard = (async (req, res) => {
         phone,
         email_address,
         identity,
-        bvn,
         charges
       })
 
@@ -73,7 +73,7 @@ exports.createUserCard = (async (req, res) => {
       return res.status(403).json({
         status: false,
         data: {},
-        message: "Unauthorized operation",
+        message: "Unauthorized operation, upgrade your level",
       })
     }
       
@@ -164,7 +164,7 @@ exports.fundCard = (async (req, res) => {
                 amount: amount,
                 type: "minus"
               })
-              let fundRes = fundCard({
+              let fundRes = await fundCard({
                   "card_id": cardDetail.card_id,
                   "amount": amountUsd,
                   "transaction_reference": ref,

@@ -41,6 +41,7 @@
     "nodemailer": "^6.7.2",
     "paystack-node": "^0.3.0",
     "pino": "^7.6.2",
+    "request": "^2.88.2",
     "sequelize": "^6.12.5",
     "twilio": "^3.73.0",
     "uuid-v4": "^0.1.0",

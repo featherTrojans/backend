@@ -6,67 +6,89 @@ const { Card } = require('../../models');
 const debitService = require('./debitService');
 const { handleTransaction } = require('./superAccountService');
 const idGenerator = require('../generateId');
+var request = require('request');
+const refundUser = require('./refundUser');
 
+exports.createRequest = async (data) => {
+var options = {
+  'method': 'POST',
+  'url': `${bc_url}/cardholder/register_cardholder_synchronously`,
+  'headers': {
+    'token': `Bearer ${bc_akey}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+};
+request(options, function (error, response) {
+  if (error) throw new Error(error);
+  console.log(response.body);
+});
 
+}
 exports.createHolder = async (data) => {
 
   try {
     /**
      * id_type can be NIGERIAN_NIN or "NIGERIAN_INTERNATIONAL_PASSPORT" or "NIGERIAN_PVC" or "NIGERIAN_DRIVERS_LICENSE"
-     */
+    //  */
+    //  delete data.userUid
+    //  delete data.charges
     var options = {
-        method: 'POST',
-        headers : {
-          token: `Bearer ${bc_akey}`,
+        'method': 'POST',
+        // 'url': `${bc_url}/cardholder/register_cardholder_synchronously`,
+        'headers' : {
+          'token': `Bearer ${bc_akey}`,
           'Content-Type': 'application/json'
         },
 
-        body: 
+        'body': 
             JSON.stringify(data)
     };
-
     let response = await fetchApi(`${bc_url}/cardholder/register_cardholder_synchronously`, options);
-    console.log(options)
-    console.log('response', response)
-    let status = response.status
-    response = await response.json()
-    console.log('request: ', response)
-    if (status == 201 ) {
-      //create card
-      cardholder_id = response.data.cardholder_id
-      //debit user 
-      ref = idGenerator(15)
-      await debitService({
-        userUid: data.userId, reference: data.ref, amount: data.charges, description: `NGN${data.charges} for USD card creation  `, from: 'primary wallet', to: 'USD card', title: "Card Creation"
-      })
-      //plus to card payments and payment history
-      handleTransaction({
-        reference: ref,
-        description: `NGN${data.charges} for USD card creation  `,
-        amount: data.charges,
-        type: "minus"
-      })
-      await Card.create({
-        userUid: data.userUid,
-        cardholder_id,
-
-      })
-       this.createCard(
-        {
-            "cardholder_id": cardholder_id,
-            "card_type": "virtual",
-            "card_brand": "Visa2",
-            "card_currency": "USD",
-          }
-      )
-      
-    } else {
-      return ({statusCode: 400, other: {
-        status: false,
-        data: {},
-        message: response.message
-      }})
-    }
+    // request(options, function (error, response) {
+    //   if (error) throw new Error(error);
+    console.log('options', options)
+    let {status} = response;
+      result = await response.json()
+      console.log('result', result);
+      if (status == 201 ) {
+        //create card
+        cardholder_id = result.data.cardholder_id
+        //debit user 
+        ref = idGenerator(15)
+        await debitService({
+          userUid: data.userUid, reference: ref, amount: data.charges, description: `NGN${data.charges} for USD card creation  `, from: 'primary wallet', to: 'USD card', title: "Card Creation"
+        })
+        //plus to card payments and payment history
+        handleTransaction({
+          reference: ref,
+          description: `NGN${data.charges} for USD card creation  `,
+          amount: data.charges,
+          type: "minus"
+        })
+        await Card.create({
+          userUid: data.userUid,
+          cardholder_id,
+  
+        })
+         return await this.createCard(
+          {
+              "cardholder_id": cardholder_id,
+              "card_type": "virtual",
+              "card_brand": "Visa2",
+              "card_currency": "USD",
+            }
+        )
+        
+      } else {
+        return ({statusCode: 400, other: {
+          status: false,
+          data: {},
+          message: result.message
+        }})
+      }
+    // });
+    
   } catch (e){
     console.log('error', e)
     return ({statusCode: 400, other: {
@@ -161,6 +183,10 @@ exports.getCardDetails = async (data) => {
     }
   } catch (e){
     console.log('error', e)
+    return {
+      statusCode: 400,
+      other: {status: false, data: {}, message: "An error occurred"}
+    }
   }
 }
 
@@ -208,18 +234,30 @@ exports.fundCard = async (data) => {
             JSON.stringify(data)
     };
 
-    let response = await fetchApi(`${bc_url}/cards/fund_card`, options);
-    // console.log(options)
+    let response = await fetchApi(`${bc_url}/cards/fund_card_asynchronously`, options);
+    console.log(options)
     // console.log('response', response)
+    let {status} = response
     response = await response.json()
     console.log('request: ', response)
-    if (response.status == 'success'){
-      return response.data
+    if (status == 200 || status == 201 || status == 202){
+      return ({
+        statusCode: 200,
+        other: {status: true, data: response.data?? {}, message: "Card Successfully funded"}})
     } else {
-      return false
+      refundUser(data.transaction_reference, true)
+      return {
+        statusCode: 400,
+        other: {status: false, data: response.data?? {}, message: response.message}
+      }
     }
   } catch (e){
     console.log('error', e)
+    return {
+      statusCode: 400,
+      other: {status: false, data: {}, message: "An error occured"}
+    }
+    
   }
 }
 
@@ -445,4 +483,25 @@ exports.getCardTrans = async (data) => {
 
 // this.fundIssuingWallet({
 //   "amount": "100000"
+// })
+
+// this.createRequest({
+//   "first_name": "John",
+//   "last_name": "Doe",
+//   "address": {
+//     "address": "9 Jibowu Street",
+//     "city": "Aba North",
+//     "state": "Abia",
+//     "country": "Nigeria",
+//     "postal_code": "1000242",
+//     "house_no": "13"
+//   },
+//   "phone": "08122277789",
+//   "email_address": "testingboy@gmail.com",
+//   "identity": {
+//     "id_type": "NIGERIAN_BVN_VERIFICATION",
+//     "bvn": "22222222222222",
+//     "selfie_image": "https://image.com" 
+//   },    
+//   "meta_data":{"any_key": "any_value"}  
 // })
