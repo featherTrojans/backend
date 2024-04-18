@@ -70,7 +70,7 @@ exports.webhook = (async (req, res) => {
                         attributes: ['walletBal']
                     })
 
-                    if (userDetails.walletBal >= totalAmount) {
+                    if (parseFloat(userDetails.walletBal) >= totalAmount) {
                         if ( !check ) {
                             logger.info('Already used')
                             return res.status(400).json({
