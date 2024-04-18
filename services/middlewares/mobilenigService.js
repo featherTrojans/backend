@@ -7,7 +7,7 @@ const {
 } = require('../../config/').config
 
 const fetch = require('node-fetch');
-const { NewBills } = require('../../models')
+const { NewBills, DoubleSpent } = require('../../models')
 const fetchApi = async (url) => {
     try{
         let data =  await fetch(url, {
