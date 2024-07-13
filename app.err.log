@@ -5,3 +5,38 @@ No env file present for the current environment:  undefined
 Please migrate your code to use AWS SDK for JavaScript (v3).
 For more information, check the migration guide at https://a.co/7PzMCcy
 (Use `node --trace-warnings ...` to show where the warning was created)
+/Users/ezeko/node/feather/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92
+          throw new SequelizeErrors.ConnectionRefusedError(err);
+                ^
+
+ConnectionRefusedError [SequelizeConnectionRefusedError]: connect ECONNREFUSED 127.0.0.1:3306
+    at ConnectionManager.connect (/Users/ezeko/node/feather/node_modules/sequelize/lib/dialects/mysql/connection-manager.js:92:17)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async ConnectionManager._connect (/Users/ezeko/node/feather/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:222:24)
+    at async /Users/ezeko/node/feather/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:174:32
+    at async ConnectionManager.getConnection (/Users/ezeko/node/feather/node_modules/sequelize/lib/dialects/abstract/connection-manager.js:197:7)
+    at async /Users/ezeko/node/feather/node_modules/sequelize/lib/sequelize.js:305:26
+    at async MySQLQueryInterface.select (/Users/ezeko/node/feather/node_modules/sequelize/lib/dialects/abstract/query-interface.js:407:12)
+    at async transactions.findAll (/Users/ezeko/node/feather/node_modules/sequelize/lib/model.js:1140:21)
+    at async queryWithdrawals (/Users/ezeko/node/feather/services/middlewares/paystackServices.js:385:24) {
+  parent: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1595:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  },
+  original: Error: connect ECONNREFUSED 127.0.0.1:3306
+      at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1595:16) {
+    errno: -61,
+    code: 'ECONNREFUSED',
+    syscall: 'connect',
+    address: '127.0.0.1',
+    port: 3306,
+    fatal: true
+  }
+}
+
+Node.js v20.5.0

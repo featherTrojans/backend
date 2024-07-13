@@ -18,7 +18,7 @@ const fetchApiGet = async (params) => {
     try {
         let data =  await fetch(params.url, {
             headers: {
-                Authorization: `Bearer ${params.key}`,
+                AccessToken: `${params.key}`,
                 "Content-Type": "application/json"
             }
         })
@@ -40,7 +40,7 @@ const fetchApi = async (params) => {
     try{
         let data =  await fetch(params.url, {
             headers: {
-                Authorization: `Bearer ${params.key}`,
+                AccessToken: `${params.key}`,
                 "Content-Type": "application/json"
             }
         })
@@ -114,7 +114,7 @@ const fetchApiPostP = async (data) => {
         let response =  await fetch(data.url, {
             method: 'POST',
             headers: {
-                      Authorization: `Bearer ${data.key}`,
+                      AccessToken: `${data.key}`,
                       "Content-Type": "application/json"
                     }
             ,body: JSON.stringify(data.body)
@@ -139,7 +139,7 @@ const fetchApiPost = async (data) => {
         let response =  await fetch(data.url, {
             method: 'POST',
             headers: {
-                      Authorization: `Bearer ${data.key}`,
+                      AccessToken: `${data.key}`,
                       "Content-Type": "application/json"
                     }
             ,body: JSON.stringify(data.body)
@@ -180,10 +180,10 @@ const fetchApiPost = async (data) => {
                     gender: null,
                     codeToSend: null
                 })
-                this.bvnConsent({bvn: data.body.bvn})
-                return true
+               var consentUrl = await this.bvnConsent({bvn: data.body.bvn})
+                return ({status: true, url: consentUrl})
             } else {
-                return false
+                return {status: false}
             }
                 
         } else if (response.status == '01') {
@@ -216,16 +216,16 @@ const fetchApiPost = async (data) => {
                     gender: null,
                     codeToSend: null
                 })
-                this.bvnConsent({bvn: data.body.bvn})
-                return true
+               let consentUrl = await this.bvnConsent({bvn: data.body.bvn})
+                return ({status: true, url: consentUrl})
             }
         } else {
             logger.info(response)
-            return false
+            return {status: false}
         }
     } catch (err) {
         logger.info(err);
-        return false
+        return {status: false}
     }
 
 }
@@ -246,7 +246,8 @@ exports.createAccount = async(data) => {
     console.log('vfdWalletCreden', vfdWalletCreden) 
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
     // console.log(queryString)
-    const url = vfdUrl + `wallet2/client/individual?${queryString}`
+    const url = vfdUrl + `wallet2/client/individual` 
+    //?${queryString}`
     const res = await fetchApiPost({url, key: vfdTestKey, userId: data.userId, body: bodyToSend})
     return res
 }
@@ -258,7 +259,7 @@ exports.queryBvn = async(data) => {
         "wallet-credentials": vfdWalletCreden,
     }
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
-    const url = vfdUrl + `wallet2/client?${queryString}`
+    const url = vfdUrl + `wallet2/client` //?${queryString}`
     console.log(url)
     const res = await fetchApi({url, key: vfdTestKey, userId: data.userId, bvn: data.bvn, phoneNumber: data.phoneNumber})
     console.log(res)
@@ -274,7 +275,7 @@ exports.bvnConsent = async(data) => {
         "type": "02"
     }
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
-    const url = vfdUrl + `wallet2/bvn-consent?${queryString}`
+    const url = vfdUrl + `wallet2/bvn-consent` //?${queryString}`
     console.log(url)
     const res = await fetchApiGet({url, key: vfdTestKey})
     console.log(res?.url)
@@ -294,7 +295,7 @@ exports.releaseAccount = async(data) => {
 
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
     // console.log(queryString)
-    const url = vfdUrl + `wallet2/client/release?${queryString}`
+    const url = vfdUrl + `wallet2/client/release` //?${queryString}`
     const res = await fetchApiPostP({url, key: vfdTestKey, body: bodyToSend})
     return res
 }
