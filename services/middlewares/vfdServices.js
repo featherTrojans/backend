@@ -275,7 +275,7 @@ exports.bvnConsent = async(data) => {
         "type": "02"
     }
     const queryString = Object.keys(body).map(key => key + '=' + body[key]).join('&');
-    const url = vfdUrl + `wallet2/bvn-consent` //?${queryString}`
+    const url = vfdUrl + `wallet2/bvn-consent?${queryString}`
     console.log(url)
     const res = await fetchApiGet({url, key: vfdTestKey})
     console.log(res?.url)

@@ -83,6 +83,8 @@ exports.dashboard = ( async (req, res) => {
 
         }
 
+        userDetails.userLevel < 2 ? userDetails.accountNo = null : '';
+
         return res.status(200).json({
             status: true,
             data : {
