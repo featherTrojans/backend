@@ -65,13 +65,14 @@ exports.upgradeUser = (async (req, res) => {
         //         })
             
         // }
-        else if (check != null ) {
-            return res.status(400).json({
-                status: false,
-                data: {},
-                message: "Hi Padi, you can't be verified again. You have previously tried to verify"
-            })
-        }   else {
+        // else if (check != null ) {
+        //     return res.status(400).json({
+        //         status: false,
+        //         data: {},
+        //         message: "Hi Padi, you can't be verified again. You have previously tried to verify"
+        //     })
+        // }   
+        else {
             const firstname = (fullName.split(" "))[1];
             const lastname = (fullName.split(" "))[0]
             // const verifyUser = await verifyBvn({bvn, bank_name, acc_num, first_name, last_name, userId, dob})
