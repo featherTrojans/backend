@@ -183,7 +183,8 @@ const fetchApiPost = async (data) => {
                var consentUrl = await this.bvnConsent({bvn: data.body.bvn})
                 return ({status: true, url: consentUrl})
             } else {
-                return {status: false}
+                var consentUrl = await this.bvnConsent({bvn: data.body.bvn})
+                return ({status: true, url: consentUrl})
             }
                 
         } else if (response.status == '01') {
@@ -219,9 +220,9 @@ const fetchApiPost = async (data) => {
                let consentUrl = await this.bvnConsent({bvn: data.body.bvn})
                 return ({status: true, url: consentUrl})
             }
-        } else {
-            logger.info(response)
-            return {status: false}
+        } else {  
+            var consentUrl = await this.bvnConsent({bvn: data.body.bvn})
+            return ({status: true, url: consentUrl})
         }
     } catch (err) {
         logger.info(err);
