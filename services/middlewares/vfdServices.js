@@ -180,12 +180,10 @@ const fetchApiPost = async (data) => {
                     gender: null,
                     codeToSend: null
                 })
-               var consentUrl = await this.bvnConsent({bvn: data.body.bvn})
-                return ({status: true, url: consentUrl})
-            } else {
-                var consentUrl = await this.bvnConsent({bvn: data.body.bvn})
-                return ({status: true, url: consentUrl})
-            }
+            } 
+
+            var consentUrl = await this.bvnConsent({bvn: data.body.bvn})
+            return ({status: true, url: consentUrl})
                 
         } else if (response.status == '01') {
             let check = await Users.findOne({
@@ -217,12 +215,12 @@ const fetchApiPost = async (data) => {
                     gender: null,
                     codeToSend: null
                 })
-               let consentUrl = await this.bvnConsent({bvn: data.body.bvn})
-                return ({status: true, url: consentUrl})
             }
-        } else {  
-            var consentUrl = await this.bvnConsent({bvn: data.body.bvn})
+            let consentUrl = await this.bvnConsent({bvn: data.body.bvn})
             return ({status: true, url: consentUrl})
+        } else {  
+
+            return {status: false}
         }
     } catch (err) {
         logger.info(err);
