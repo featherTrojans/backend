@@ -54,16 +54,17 @@ exports.upgradeUser = (async (req, res) => {
                 data: {},
                 message: "Hi Padi, you can't verify with this bvn as it has already been previously used"
             })
-        } else if (accountNo != null && userLevel < 2){
-            // resend verification code
+        } 
+        // else if (accountNo != null && userLevel < 2){
+        //     // resend verification code
            
-                return res.status(200).json({
-                    status: true,
-                    data: {url: "https://services.vfdtech.ng/"},
-                    message: "Hey Padi!!! Your details has been recieved kindly verify the otp to be succesfully verified and upgraded to Odogwu Level"
-                })
+        //         return res.status(200).json({
+        //             status: true,
+        //             data: {url: "https://services.vfdtech.ng/"},
+        //             message: "Hey Padi!!! Your details has been recieved kindly verify the otp to be succesfully verified and upgraded to Odogwu Level"
+        //         })
             
-        }
+        // }
         else if (check != null ) {
             return res.status(400).json({
                 status: false,
@@ -76,10 +77,10 @@ exports.upgradeUser = (async (req, res) => {
             // const verifyUser = await verifyBvn({bvn, bank_name, acc_num, first_name, last_name, userId, dob})
             
             const verifyUser = await createAccount({bvn, dob, userId, firstname, lastname, phone: phoneNumber })
-            if (verifyUser ){
+            if (verifyUser.status ){
                 return res.status(200).json({
                     status: true,
-                    data: {"url": "https://services.vfdtech.ng/"},
+                    data: {"url": verifyUser.url},
                     message: "Hey Padi!!! Your details has been recieved kindly verify the otp to be succesfully verified and upgraded to Odogwu Level"
                 })
             } else {
